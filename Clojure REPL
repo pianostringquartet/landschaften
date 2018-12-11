@@ -1,0 +1,32 @@
+REPL Instructions
+
+Code can be entered at the bottom and executed by pressing shift+enter.
+
+Try it now by typing (+ 1 1) in the bottom section and pressing shift+enter.
+
+Working in another Clojure file and sending forms to the REPL is the most efficient way to work. Use the following key bindings to send code to the REPL. See the settings for more keybindings.
+
+ctrl-alt-, then b
+Execute block. Finds the block of Clojure code your cursor is in and executes that.
+
+ctrl-alt-, s
+Executes the selection. Sends the selected text to the REPL.
+
+You can disable this help text in the settings.
+Starting REPL with lein in /Users/concerto/cs/landschaften
+WARNING: boolean? already refers to: #'clojure.core/boolean? in namespace: clojure.tools.analyzer.utils, being replaced by: #'clojure.tools.analyzer.utils/boolean?
+WARNING: boolean? already refers to: #'clojure.core/boolean? in namespace: clojure.tools.analyzer, being replaced by: #'clojure.tools.analyzer.utils/boolean?
+WARNING: bounded-count already refers to: #'clojure.core/bounded-count in namespace: clojure.core.async, being replaced by: #'clojure.core.async/bounded-count
+2018-07-30 20:59:38,447 [main] DEBUG org.jboss.logging - Logging Provider: org.jboss.logging.Slf4jLoggerProvider 
+nREPL server started on port 65387 on host 127.0.0.1 - nrepl://127.0.0.1:65387
+Refreshing code...
+:reloading (mranderson048.garden.v1v3v3.garden.types mranderson048.garden.v1v3v3.garden.util markdown.common expound.util expound.paths expound.ansi expound.printer expound.problems cuerdas.regexp cuerdas.core landschaften.dev-middleware landschaften.env landschaften.config landschaften.db.core landschaften.layout landschaften.middleware landschaften.routes.home landschaften.handler landschaften.core re-frame.db re-frame.loggers re-frame.registrar re-frame.trace re-frame.interceptor re-frame.cofx re-frame.utils re-frame.subs re-frame.std-interceptors re-frame.events re-frame.router re-frame.fx re-frame.core mranderson048.garden.v1v3v3.garden.compression mranderson048.garden.v1v3v3.garden.units mranderson048.garden.v1v3v3.garden.selectors mranderson048.garden.v1v3v3.garden.color mranderson048.garden.v1v3v3.garden.compiler zprint.zfns zprint.zutil zprint.spec expound.alpha landschaften.clarifai landschaften.test.db.fixtures landschaften.db.wga-concepts landschaften.test.db.core reitit.impl reitit.segment mranderson048.re-frame.v0v10v2.re-frame.loggers
+ mranderson048.re-frame.v0v10v2.re-frame.trace markdown.links markdown.lists markdown.tables markdown.transformers struct.core landschaften.validation zprint.ansi zprint.focus mranderson048.re-frame.v0v10v2.re-frame.utils mranderson048.re-frame.v0v10v2.re-frame.registrar mranderson048.re-frame.v0v10v2.re-frame.interceptor mranderson048.re-frame.v0v10v2.re-frame.db mranderson048.re-frame.v0v10v2.re-frame.events mranderson048.garden.v1v3v3.garden.stylesheet ajax.protocols ajax.util landschaften.figwheel mranderson048.re-frame.v0v10v2.re-frame.router mranderson048.re-frame.v0v10v2.re-frame.fx mranderson048.re-frame.v0v10v2.re-frame.subs ajax.url ajax.interceptors ajax.formats ajax.simple zprint.sutil meta-merge.core reitit.core mranderson048.re-frame.v0v10v2.re-frame.cofx ajax.ring ajax.json ajax.transit ajax.easy mranderson048.re-frame.v0v10v2.re-frame.std-interceptors zprint.config zprint.zprint zprint.finish zprint.core cljs.stacktrace mranderson048.garden.v1v3v3.garden.core mranderson048.re-frame.v0v10v2.re-frame.core
+ landschaften.test.handler user landschaften.db.wga-csv ajax.core day8.re-frame-10x.metamorphic)
+(+ 1 1)
+2018-07-30 20:59:59,110 [nREPL-worker-1] INFO  landschaften.env - 
+-=[landschaften started successfully using the development profile]=- 
+:error-while-loading landschaften.db.wga-concepts
+java.lang.RuntimeException: could not start [#'landschaften.handler/app] due to, compiling:(landschaften/db/wga_concepts.clj:72:1)
+Refresh complete
+--------------------
