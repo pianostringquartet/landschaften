@@ -1,5 +1,5 @@
 (ns landschaften.api
-  (:require [landschaften.db.core :refer [*db*]]
+  (:require [landschaften.db.core :refer [*db* love]]
             [landschaften.db.wga-concepts :as wga-concepts]
             [proto-repl-charts.charts :as charts]
             [mount.core :as mount]
@@ -9,10 +9,18 @@
             [expound.alpha :as exp]
             [clojure.spec.gen.alpha :as gen]))
 
+
+;; QUERY CONCEPTS ETC. OF PAINTING-ROWS
+
+
 ;;
 ;;; REPL PLAY:
 
-(mount/start *db*)
+
+;; *db* won't be good until we've started the app
+; (mount/start *db*)
+
+; (prn love)
 
 
 
@@ -48,6 +56,7 @@
 
 (defn has-certainty-above [{value :value} certainty]
   (< certainty value))
+
 
 ;; -----------------------------------
 ;; specs for row
@@ -116,6 +125,14 @@
    false
    (boolean (some (apply every-pred preds) concepts))))
 
+
+(let [{concepts :concepts} preds]
+  (if (empty? preds)
+    false
+    (boolean (some (apply every-pred preds) concepts))))
+
+
+
 ;; (st/check `x) ... check whether the implementation of x satisfies x's spec
 (exp/explain-results (st/check `has-concept-satisfying))
 
@@ -177,6 +194,13 @@
 ; (first high-certainty-rows)
 ; (first high-certainty-rows)
 
+
+
+;; PROBLEM: this fn is totally ambiguous;
+;; concepts, not rows, have certainty,
+;; and this fn is returning any row that
+;; has AT LEAST ONE CONCEPT with certainty higher than `certainty`
+
 ;; returns list of rows
 (defn type-rows-above-certainty [painting-type certainty]
   (let [rows (map wga-concepts/with-model-concepts
@@ -185,6 +209,20 @@
      rows
      [#(has-certainty-above % certainty)])))
 
+
+
+;; ultimately you're not working with anything super nested:
+;; 1 painting per row
+;; first level attrs like :school, :timeframe, :type,
+;; a list of concepts
+
+;; NOTES:
+;; - 'form' is irrelevant bc your db only has form='painting')
+;; - the list of concepts might as well be a set -- you're never going to use the concepts' ORDER
+
+
+
+
 ;; if you take :concepts for a row, you are taking a list;
 ;; but we want a flat list in the end,
 ;; so we do flatmap ie mapcat
@@ -192,10 +230,13 @@
  (mapcat :concepts
   (type-rows-above-certainty "mythological" 0.98)))
 
+
+; (take 10 rs)
+
 ;; {:concept-name <how-many-times-it-appears> ...}
 ; (frequencies (map :name rs))
 
-;; the 10 most frequent concepts
+;; the 10 most frequent concepts and how often they appear
 (let [genre "mythological"
       cs (mapcat :concepts
            (type-rows-above-certainty genre 0.98))

@@ -5,6 +5,9 @@
             [expound.alpha :as expound]))
 
 
+;; INTERACT WITH CLARIFAI API VIA RAW REQUESTS`
+
+
 ;; TODO:
 ;; - clean this up; only use the minimum specs you need
 ;; - maybe store specs elsewhere?

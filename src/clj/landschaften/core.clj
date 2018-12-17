@@ -47,6 +47,7 @@
     (log/info component "started"))
   (.addShutdownHook (Runtime/getRuntime) (Thread. stop-app)))
 
+;; Your *db* state relies on env state
 (defn -main [& args]
   (mount/start #'landschaften.config/env)
   (cond
@@ -64,3 +65,5 @@
       (System/exit 0))
     :else
     (start-app args)))
+
+; (-main)
