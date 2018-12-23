@@ -1,4 +1,4 @@
-CREATE TABLE wga_concepts
+CREATE TABLE paintings
 (`id` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
  `author` VARCHAR(600),
 `title` varchar(600) NOT NULL,

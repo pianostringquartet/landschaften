@@ -43,7 +43,7 @@
                 (clojure.string/replace "/html" "/art")
                 (clojure.string/replace ".html" ".jpg"))]
     ; (assoc a-map :jpg (as-jpg url))))
-    (assoc a-map :jpg jpg url)))
+    (assoc a-map :jpg jpg)))
 
 (defn as-wga-csv-row [headers a-csv-row]
   (add-jpg
@@ -72,13 +72,13 @@
 (defn retrieve-wga-csv-rows []
   (jdbc/query *db* ["select * from wga_csv_rows"]))
 
-(defn retrieve-n-random-painting-rows [n]
-  (jdbc/query *db*
-    ["select * from wga_csv_rows where form = \"painting\" order by rand() limit ?" n]))
-
-(defn retrieve-n-random-painting-rows-of-type [n painting-type]
-  (jdbc/query *db*
-    ["select * from wga_csv_rows where form = \"painting\" and `type` = ? order by rand() limit ?" painting-type n]))
+; (defn retrieve-n-random-painting-rows [n]
+;   (jdbc/query *db*
+;     ["select * from wga_csv_rows where form = \"painting\" order by rand() limit ?" n]))
+;
+; (defn retrieve-n-random-painting-rows-of-type [n painting-type]
+;   (jdbc/query *db*
+;     ["select * from wga_csv_rows where form = \"painting\" and `type` = ? order by rand() limit ?" painting-type n]))
 
 ;  works:
 ; (retrieve-n-random-painting-rows-of-type 10 "genre")

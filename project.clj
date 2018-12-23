@@ -1,8 +1,6 @@
 (defproject landschaften "0.1.0-SNAPSHOT"
-
-  :description "FIXME: write description"
-  :url "http://example.com/FIXME"
-
+  :description "Analyzing paintings"
+  :url "https://github.com/pianostringquartet/landschaften"
   :dependencies [[clj-time "0.14.4"]
                  [cljs-ajax "0.7.3"]
                  [com.cognitect/transit-java "0.8.332"]
@@ -19,7 +17,7 @@
                  [metosin/ring-http-response "0.9.0"]
                  [mount "0.1.12"]
                  [mysql/mysql-connector-java "6.0.5"]
-                 [org.clojure/clojure "1.9.0"]
+                 [org.clojure/clojure "1.10.0"]
                  [org.clojure/clojurescript "1.10.339" :scope "provided"]
                  [org.clojure/tools.cli "0.3.7"]
                  [org.clojure/tools.logging "0.4.1"]
@@ -35,8 +33,7 @@
                  [secretary "1.2.3"]
                  [selmer "1.11.7"]
 
-                ; added:
-
+                 ;; added:
                  [org.clojure/test.check "0.10.0-alpha3"]
                  [org.clojure/data.json "0.2.6"]
                  [clarifai-clj "1.0.0"]
@@ -44,17 +41,15 @@
                  [org.clojure/data.csv "0.1.3"]
                  [proto-repl "0.3.1"]
                  [expound "0.7.1"]
-                 [proto-repl-charts "0.3.2"]]
-
+                 [proto-repl-charts "0.3.2"]
+                 [com.layerware/hugsql "0.4.9"]]
 
   :min-lein-version "2.0.0"
-
   :source-paths ["src/clj" "src/cljs" "src/cljc"]
   :test-paths ["test/clj"]
   :resource-paths ["resources" "target/cljsbuild"]
   :target-path "target/%s/"
   :main ^:skip-aot landschaften.core
-
   :plugins [[lein-cljsbuild "1.1.7"]
             [lein-immutant "2.1.0"]]
   :clean-targets ^{:protect false}
@@ -62,14 +57,8 @@
   :figwheel
   {:http-server-root "public"
    :nrepl-port 7002
-
-   ;; added
-   ; :validate-config false
-
    :css-dirs ["resources/public/css"]
    :nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]}
-
-
   :profiles
   {:uberjar {:omit-source true
              :prep-tasks ["compile" ["cljsbuild" "once" "min"]]
@@ -86,16 +75,12 @@
                  :closure-warnings
                  {:externs-validation :off :non-standard-jsdoc :off}
                  :externs ["react/externs/react.js"]}}}}
-
-
              :aot :all
              :uberjar-name "landschaften.jar"
              :source-paths ["env/prod/clj"]
              :resource-paths ["env/prod/resources"]}
-
    :dev           [:project/dev :profiles/dev]
    :test          [:project/dev :project/test :profiles/test]
-
    :project/dev  {:jvm-opts ["-Dconf=dev-config.edn"]
                   :dependencies [[binaryage/devtools "0.9.10"]
                                  [com.cemerick/piggieback "0.2.2"]
@@ -116,14 +101,9 @@
                    {:app
                     {:source-paths ["src/cljs" "src/cljc" "env/dev/cljs"]
                      :figwheel {:on-jsload "landschaften.core/mount-components"}
-
                      :compiler
                      {:main "landschaften.app"
                       :asset-path "/js/out"
-
-                      ;; added
-                      ; :aot-cache false
-
                       :output-to "target/cljsbuild/public/js/app.js"
                       :output-dir "target/cljsbuild/public/js/out"
                       :source-map true
@@ -131,9 +111,6 @@
                       :pretty-print true
                       :closure-defines {"re_frame.trace.trace_enabled_QMARK_" true}
                       :preloads [day8.re-frame-10x.preload]}}}}
-
-
-
                   :doo {:build "test"}
                   :source-paths ["env/dev/clj"]
                   :resource-paths ["env/dev/resources"]
@@ -151,7 +128,5 @@
                       :main "landschaften.doo-runner"
                       :optimizations :whitespace
                       :pretty-print true}}}}}
-
-
    :profiles/dev {}
    :profiles/test {}})

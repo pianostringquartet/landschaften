@@ -24,6 +24,7 @@
 
 ;; You were able to see that SOMETHING with probably wrong with *db*,
 ;; so you should have gone
+;
 (defstate ^:dynamic *db*
   :start (if-let [jdbc-url (env :database-url)]
            (do
@@ -35,7 +36,5 @@
              (prn "defstate for db called")
              *db*))
   :stop (conman/disconnect! *db*))
-
-(def love "LOVE")
 
 ; (conman/bind-connection *db* "sql/queries.sql")
