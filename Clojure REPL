@@ -1,40 +1,6 @@
-REPL Instructions
-
-Code can be entered at the bottom and executed by pressing shift+enter.
-
-Try it now by typing (+ 1 1) in the bottom section and pressing shift+enter.
-
-Working in another Clojure file and sending forms to the REPL is the most efficient way to work. Use the following key bindings to send code to the REPL. See the settings for more keybindings.
-
-ctrl-alt-, then b
-Execute block. Finds the block of Clojure code your cursor is in and executes that.
-
-ctrl-alt-, s
-Executes the selection. Sends the selected text to the REPL.
-
-You can disable this help text in the settings.
-Starting REPL with lein in /Users/concerto/cs/landschaften
-WARNING: boolean? already refers to: #'clojure.core/boolean? in namespace: clojure.tools.analyzer.utils, being replaced by: #'clojure.tools.analyzer.utils/boolean?
-WARNING: boolean? already refers to: #'clojure.core/boolean? in namespace: clojure.tools.analyzer, being replaced by: #'clojure.tools.analyzer.utils/boolean?
-WARNING: bounded-count already refers to: #'clojure.core/bounded-count in namespace: clojure.core.async, being replaced by: #'clojure.core.async/bounded-count
-2018-12-21 18:43:12,743 [main] DEBUG org.jboss.logging - Logging Provider: org.jboss.logging.Slf4jLoggerProvider 
-nREPL server started on port 61546 on host 127.0.0.1 - nrepl://127.0.0.1:61546
-Refreshing code...
-:reloading (landschaften.dev-middleware landschaften.env landschaften.config landschaften.db.core landschaften.layout landschaften.middleware landschaften.routes.home landschaften.handler landschaften.core landschaften.validation landschaften.clarifai landschaften.figwheel landschaften.db.paintings landschaften.db.paintings-concepts landschaften.test.handler user landschaften.db.wga-csv landschaften.test.db.fixtures)
-:error-while-loading landschaften.db.paintings-concepts
-Syntax error compiling at (paintings_concepts.clj:30:3).
-Refresh complete
 Clearing all and then refreshing code...
-:reloading (landschaften.dev-middleware landschaften.env landschaften.config landschaften.db.core landschaften.layout landschaften.middleware landschaften.routes.home landschaften.handler landschaften.core landschaften.validation landschaften.clarifai landschaften.figwheel landschaften.db.paintings landschaften.db.paintings-concepts landschaften.test.handler user landschaften.db.wga-csv landschaften.test.db.fixtures)
-:error-while-loading landschaften.db.paintings-concepts
-Syntax error compiling at (paintings_concepts.clj:30:3).
-Refresh complete
-Clearing all and then refreshing code...
-:reloading (landschaften.dev-middleware landschaften.env landschaften.config landschaften.db.core landschaften.layout landschaften.middleware landschaften.routes.home landschaften.handler landschaften.core landschaften.validation landschaften.clarifai landschaften.figwheel landschaften.db.paintings landschaften.db.paintings-concepts landschaften.test.handler user landschaften.db.wga-csv landschaften.test.db.fixtures)
-:error-while-loading landschaften.db.paintings-concepts
-Syntax error compiling at (paintings_concepts.clj:30:3).
-Refresh complete
-Clearing all and then refreshing code...
-:reloading (landschaften.dev-middleware landschaften.env landschaften.config landschaften.db.core landschaften.layout landschaften.middleware landschaften.routes.home landschaften.handler landschaften.core landschaften.validation landschaften.clarifai landschaften.figwheel landschaften.db.paintings landschaften.db.paintings-concepts landschaften.test.handler user landschaften.db.wga-csv landschaften.test.db.fixtures)
-Refresh complete
+2018-12-24 13:32:21,346 [nREPL-worker-237] INFO  landschaften.env - 
+-=[landschaften has shut down successfully]=- 
+2018-12-24 13:32:21,359 [nREPL-worker-237] INFO  landschaften.env - 
+-=[landschaften started successfully using the development profile]=- 
 --------------------

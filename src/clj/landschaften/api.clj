@@ -20,9 +20,6 @@
  :args (s/cat :constraints (s/coll-of ::entity/constraint))
  :ret (s/* ::entity/painting))
 
-; (defn paintings-satisfying [constraints]
-;   (take 3 (paintings/retrieve-paintings *db* constraints)))
-
 (defn paintings-satisfying [db constraints]
   (query/run-query db (query/build-query constraints)))
 

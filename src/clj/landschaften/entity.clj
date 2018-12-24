@@ -5,6 +5,8 @@
             [clojure.spec.gen.alpha :as gen]))
 
 
+
+
 ;; painting constraints
 (def type-constraint {:column "type" :values ["landschaften" "study"]})
 (def timeframe-constraint {:column "timeframe" :values ["1501-1500"]})
@@ -20,6 +22,18 @@
   #{type-constraint timeframe-constraint concept-name-constraint})
 (def malformed-constraints #{malformed-constraint})
 
+
+;; ----------------------------
+;; SPEC HELPERS
+;; ----------------------------
+
+(defn coerce [some-spec some-data]
+  (let [coerced-data (s/conform some-spec some-data)]
+    (if (= coerced-data :clojure.spec.alpha/invalid)
+      nil
+      coerced-data)))
+
+
 ;; ----------------------------
 ;; CONSTRAINT
 ;; ----------------------------
@@ -30,31 +44,15 @@
 (def PAINTINGS-CONCEPTS-COLUMNS
   #{"painting_id" "name" "value"})
 
+;; this is a problem for compiler?
+(def painting-column? (partial contains? PAINTINGS-COLUMNS))
+(def concept-column? (partial contains? PAINTINGS-CONCEPTS-COLUMNS))
+
 (s/def ::column
- (s/or :painting-constraint #(contains? PAINTINGS-COLUMNS %)
-       :concept-constraint  #(contains? PAINTINGS-CONCEPTS-COLUMNS %)))
+ (s/or :painting-constraint painting-column?
+       :concept-constraint  concept-colum?))
 (s/def ::values (s/* string?))
 (s/def ::constraint (s/keys :req-un [::column ::values]))
-
-
-(s/conform ::column (first PAINTINGS-COLUMNS))
-(s/conform ::column (second PAINTINGS-CONCEPTS-COLUMNS))
-
-(s/conform ::constraint type-constraint)
-(s/conform (s/coll-of ::constraint) painting-and-concept-constraints)
-
-(s/conform ::constraint malformed-constraint)
-
-
-(coerce ::constraint type-constraint)
-(coerce ::constraint malformed-constraint)
-
-(defn coerce [some-spec some-data]
-  (let [coerced-data (s/conform some-spec some-data)]
-    (if (= coerced-data :clojure.spec.alpha/invalid)
-      nil
-      coerced-data)))
-
 
 
 ;; ----------------------------
