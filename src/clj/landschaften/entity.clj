@@ -5,24 +5,6 @@
             [clojure.spec.gen.alpha :as gen]))
 
 
-
-
-;; painting constraints
-(def type-constraint {:column "type" :values ["landschaften" "study"]})
-(def timeframe-constraint {:column "timeframe" :values ["1501-1500"]})
-;; concept constraint
-(def concept-name-constraint {:column "name" :values ["no person"]})
-
-(def malformed-constraint {:column "malformed column" :values ["no person"]})
-
-(def no-constraints #{})
-(def painting-constraints #{type-constraint timeframe-constraint})
-(def concept-constraints #{concept-name-constraint})
-(def painting-and-concept-constraints
-  #{type-constraint timeframe-constraint concept-name-constraint})
-(def malformed-constraints #{malformed-constraint})
-
-
 ;; ----------------------------
 ;; SPEC HELPERS
 ;; ----------------------------
@@ -38,19 +20,30 @@
 ;; CONSTRAINT
 ;; ----------------------------
 
+(def type-constraint {:column "type" :values ["landscape" "study"]})
+(def timeframe-constraint {:column "timeframe" :values ["1501-1550"]})
+(def concept-name-constraint {:column "name" :values ["no person"]})
+(def malformed-constraint {:column "malformed column" :values ["no person"]})
+
+(def no-constraints #{})
+(def painting-constraints #{type-constraint timeframe-constraint})
+(def concept-constraints #{concept-name-constraint})
+(def painting-and-concept-constraints
+  #{type-constraint timeframe-constraint concept-name-constraint})
+(def malformed-constraints #{malformed-constraint})
+
 (def PAINTINGS-COLUMNS
   #{"id" "author" "title" "date" "form" "type" "school" "timeframe" "jpg" "concepts"})
 
 (def PAINTINGS-CONCEPTS-COLUMNS
   #{"painting_id" "name" "value"})
 
-;; this is a problem for compiler?
 (def painting-column? (partial contains? PAINTINGS-COLUMNS))
 (def concept-column? (partial contains? PAINTINGS-CONCEPTS-COLUMNS))
 
 (s/def ::column
  (s/or :painting-constraint painting-column?
-       :concept-constraint  concept-colum?))
+       :concept-constraint  concept-column?))
 (s/def ::values (s/* string?))
 (s/def ::constraint (s/keys :req-un [::column ::values]))
 

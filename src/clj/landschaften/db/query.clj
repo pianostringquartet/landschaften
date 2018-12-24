@@ -1,38 +1,15 @@
 (ns landschaften.db.query
-  (:require
-    [clojure.java.jdbc :as jdbc]
-    [landschaften.db.core :refer [*db*]]
-    [clojure.test :refer [is]]
-    [clojure.spec.alpha :as s]
-    [clojure.spec.test.alpha :as st]
-    [landschaften.entity :as entity]
-    [clojure.string :refer [join]]))
+  (:require [clojure.java.jdbc :as jdbc]
+            [clojure.spec.alpha :as s]
+            [landschaften.entity :as entity]))
 
 
 ;; Overall a bad approach:
 ;; - constructing sqlvec-style queries requires deeper and clearer abstractions
 ;;    e.g. placement of spaces is overgenerous and meaningless
 ;; - sacrified on scope: e.g. no "concept must have certainty above 0.96"
-;; - not reusable in any other context
+;; - not reusable in another context
 
-
-;; ----------------------------
-;; SAMPLE DATA
-;; ----------------------------
-
-;; painting constraints
-(def type-constraint {:column "type" :values ["landschaften" "study"]})
-(def timeframe-constraint {:column "timeframe" :values ["1501-1550"]})
-;; concept constraint
-(def concept-name-constraint {:column "name" :values ["no person"]})
-(def malformed-constraint {:column "malformed column" :values ["no person"]})
-
-(def no-constraints #{})
-(def painting-constraints #{type-constraint timeframe-constraint})
-(def concept-constraints #{concept-name-constraint})
-(def painting-and-concept-constraints
-  #{type-constraint timeframe-constraint concept-name-constraint})
-(def malformed-constraints #{malformed-constraint})
 
 ;; ----------------------------
 ;; BUILD QUERY
@@ -82,23 +59,6 @@
     (->sqlvec
       (into painting-snippets concept-snippets)
       (base constraints))))
-
-; ; (st/instrument `build-query)
-; ;
-; ;; all as expected :)
-; (= (build-query #{}) ["select * from paintings "]) ;; true
-; (= (build-query 5) ["select * from paintings "]) ;; fails spec, good!
-; (= (build-query painting-constraints) ;; true
-;   ["select t.* from paintings t where  t.timeframe in (?)  and  t.type in (?, ?) "
-;    "1501-1550"
-;    "landschaften"
-;    "study"])
-; (= (build-query painting-and-concept-constraints) ;; true
-;    ["select t.* from paintings t, paintings_concepts t2 where t.id = t2.painting_id and  t2.name in (?)  and  t.timeframe in (?)  and  t.type in (?, ?) "
-;     "no person"
-;     "1501-1550"
-;     "landschaften"
-;     "study"])
 
 
 ;; ----------------------------

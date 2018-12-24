@@ -180,6 +180,23 @@ and t2.value &gt;= 0.96; -- 9 rows with the restriction on
 
 
 
+select t.* from paintings t, paintings_concepts t2 where t.id = t2.painting_id and t2.name in ("no person") and t.timeframe in ("1501-1500")  and t.type in ("landschaften", "study");    
+
+select t.* from paintings t, paintings_concepts t2 
+where t.id = t2.painting_id 
+and t2.name in ("no person") 
+and t.timeframe in ("1501-1550")
+and t.type in ("landschaften", "study");    
+
+
+select t.* from paintings t where  t.timeframe in ("1501-1550")  and t.type in ("landschaften", "study");   
+
+
+select * from paintings limit 30;
+
+select t.* from paintings t where  t.timeframe in ("1501-1550")  and  t.type in ("landschaften", "study");
+
+
 
 select t2.name as 'concept_name', t.*  from paintings t, paintings_concepts t2 where `timeframe` = "1501-1550" and t2.name = "no person" limit 50;
 
@@ -230,6 +247,65 @@ FOREIGN KEY fk_cat(`painting_id`) REFERENCES paintings(`id`));</string>
 	<array/>
 	<key>queryHistory</key>
 	<array>
+		<string>select t.* from paintings t where  t.timeframe in ("1501-1550")  and  t.type in ("landschaften", "study")</string>
+		<string>select * from paintings limit 30</string>
+		<string>select * from paintings limit 3</string>
+		<string>select t.* from paintings t where  t.timeframe in ("1501-1550")  and t.type in ("landschaften", "study")</string>
+		<string>select t.* from paintings t, paintings_concepts t2 
+where t.id = t2.painting_id 
+and t2.name in ("no person") 
+and t.timeframe in ("1501-1550")
+and t.type in ("landschaften", "study")</string>
+		<string>select t.* from paintings t, paintings_concepts t2 
+where t.id = t2.painting_id 
+and t2.name in ("no person") 
+and t.timeframe in ('1501-1500')
+and t.type in ("landschaften", "study")</string>
+		<string>select t.* from paintings t, paintings_concepts t2 
+where t.id = t2.painting_id 
+and t2.name in ("no person") 
+-- and t.timeframe in ("1501-1500")
+and t.type in ("landschaften", "study")</string>
+		<string>select t.* from paintings t, paintings_concepts t2 
+where t.id = t2.painting_id 
+-- and t2.name in ("no person") 
+and t.timeframe in ("1501-1500")
+-- and t.type in ("landschaften", "study");    
+
+
+select t2.name as 'concept_name', t.*  from paintings t, paintings_concepts t2 where `timeframe` = "1501-1550" and t2.name = "no person" limit 50</string>
+		<string>select t.* from paintings t, paintings_concepts t2 
+where t.id = t2.painting_id 
+-- and t2.name in ("no person") 
+-- and t.timeframe in ("1501-1500")
+and t.type in ("landschaften", "study")</string>
+		<string>select t.* from paintings t, paintings_concepts t2 
+where t.id = t2.painting_id 
+-- and t2.name in ("no person") 
+and t.timeframe in ("1501-1500")
+and t.type in ("landschaften", "study")</string>
+		<string>select t.* from paintings t, paintings_concepts t2 
+where t.id = t2.painting_id 
+and t2.name in ("no person") 
+and t.timeframe in ("1501-1500")
+and t.type in ("landschaften", "study")</string>
+		<string>select t2.name as 'concept_name', t.*  from paintings t, paintings_concepts t2 where `timeframe` = "1501-1550" and t2.name = "no person" limit 50</string>
+		<string>select t.* from paintings t, paintings_concepts t2 
+where t.id = t2.painting_id 
+and t2.name in ("no person") 
+and t.timeframe in ("1501-1500")</string>
+		<string>-- 9 rows with the restriction on 
+
+
+
+
+select t.* from paintings t, paintings_concepts t2 where t.id = t2.painting_id and t2.name in ("no person")  and t.timeframe in ("1501-1500")  and t.type in ("landschaften", "study")</string>
+		<string>-- 9 rows with the restriction on 
+
+
+
+
+select t.* from paintings t, paintings_concepts t2 where t.id = t2.painting_id  t2.name in ("no person")  and t.timeframe in ("1501-1500")  and t.type in ("landschaften", "study")</string>
 		<string>select t.*  from paintings t, paintings_concepts t2, paintings_concepts t3
 where t.id = t2.painting_id and t.id = t3.painting_id
 and t.timeframe in ('1501-1550', '1551-1600')
@@ -263,97 +339,6 @@ and t3.name in ("castle")
 and t3.value &gt;= 0.95</string>
 		<string>-- 4424
 select * from wga_csv_rows where `type` in ('landscape', 'study')</string>
-		<string>-- 4424
-select * from wga_csv_rows where `type` in ('landscape' 'study')</string>
-		<string>-- 4424
-select * from wga_csv_rows where `type` in ('landscape','study')</string>
-		<string>-- 4424
-select * from wga_csv_rows where `type` in ('landscape',)</string>
-		<string>-- 4424
-select * from wga_csv_rows where `type` in ('landscape')</string>
-		<string>-- YOU MUST specify "paintings.id = paintings_concepts.painting_id" 
--- i.e. you must say, "the row in t2 that has the t2-oriented specifications, it must be connected to the row in t" 
--- painting and concept constraints
-select t.*  from paintings t, paintings_concepts t2
-where t.id = t2.painting_id
-and t.timeframe in ('1501-1550', '1551-1600')
-and t.type in ('mythological', 'landscape')
-and t2.name in ("no person", "castle")
-and t2.value &gt;= 0.96</string>
-		<string>-- YOU MUST specify "paintings.id = paintings_concepts.painting_id" 
--- i.e. you must say, "the row in t2 that has the t2-oriented specifications, it must be connected to the row in t" 
--- painting and concept constraints
-select t.*  from paintings t, paintings_concepts t2
-where t.id = t2.painting_id
-and t.`timeframe` in ('1501-1550', '1551-1600')
-and t.type in ('mythological', 'landscape')
-and t2.name in ("no person", "castle")
-and t2.value &gt;= 0.96</string>
-		<string>-- YOU MUST specify "paintings.id = paintings_concepts.painting_id" 
--- i.e. you must say, "the row in t2 that has the t2-oriented specifications, it must be connected to the row in t" 
--- painting and concept constraints
-select t.*  from paintings t, paintings_concepts t2
-where t.id = t2.painting_id
-and t.`timeframe` in ('1501-1550', '1551-1600')
-and t.`type` in ('mythological', 'landscape')
-and t2.name in ("no person", "castle")
-and t2.value &gt;= 0.96</string>
-		<string>-- get specific painting
-select t2.name, t2.value, t.*  from paintings t, paintings_concepts t2
-where t.id = t2.painting_id
-and t.id = 13
-and t2.value &gt;= 0.96</string>
-		<string>-- get specific painting
-select t2.name, t2.value, t.*  from paintings t, paintings_concepts t2
-where t.id = t2.painting_id
-and t.id = 13</string>
-		<string>-- get specific painting
-select t2.name, t.*  from paintings t, paintings_concepts t2
-where t.id = t2.painting_id
-and t.id = 13
--- and t.`timeframe` in ('1501-1550', '1551-1600')
--- and t.`type` in ('mythological', 'landscape')
--- and t2.name in ("no person", "castle")
-and t2.value &gt;= 0.96</string>
-		<string>-- get specific painting
-select t2.name, t.*  from paintings t, paintings_concepts t2
-where t.id = t2.painting_id
-and t.id = 13</string>
-		<string>-- get specific painting
-select t2.name, t.*  from paintings t, paintings_concepts t2
-where t.id = t2.painting_id
-and t.id = 13
--- and t.`timeframe` in ('1501-1550', '1551-1600')
--- and t.`type` in ('mythological', 'landscape')
--- and t2.name in ("no person", "castle")
--- and t2.value &gt;= 0.96;
-
-
-
-
-select t2.name as 'concept_name', t.*  from paintings t, paintings_concepts t2 where `timeframe` = "1501-1550" and t2.name = "no person" limit 50</string>
-		<string>-- get specific painting
-select t2.concept, t.*  from paintings t, paintings_concepts t2
-where t.id = t2.painting_id
-and t.id = 13
--- and t.`timeframe` in ('1501-1550', '1551-1600')
--- and t.`type` in ('mythological', 'landscape')
--- and t2.name in ("no person", "castle")
-and t2.value &gt;= 0.96</string>
-		<string>select t.*  from paintings t, paintings_concepts t2
-where 
-t.id = t2.painting_id
--- t.`timeframe` in ('1501-1550', '1551-1600')
--- and t.`type` in ('mythological', 'landscape');
-and t2.name in ("no person", "castle")
-and t2.value &gt;= 0.96</string>
-		<string>select t.*  from paintings t, paintings_concepts t2
-where 
-t.id = t2.painting_id and 
--- t.`timeframe` in ('1501-1550', '1551-1600')
--- and t.`type` in ('mythological', 'landscape');
-and t2.name in ("no person", "castle")
-and t2.value &gt;= 0.96</string>
 	</array>
 	<key>rdbms_type</key>
 	<string>mysql</string>
