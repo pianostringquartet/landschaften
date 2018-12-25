@@ -1,15 +1,6 @@
 (ns landschaften.db.paintings-concepts
   (:require [landschaften.db.core :refer [*db*]]
-           [clojure.java.jdbc :as jdbc]
-           [landschaften.clarifai :as clarifai]
-           [clojure.data.json :as json]
-           [clojure.test :refer [is]]
-           [clojure.spec.alpha :as s]
-           [clojure.spec.test.alpha :as st]
-           [expound.alpha :as exp]
-           [clojure.spec.gen.alpha :as gen]
-           [landschaften.db.paintings :as p]
-           [hugsql.core :as hugsql]))
+           [clojure.java.jdbc :as jdbc]))
 
 ;; denormalize a `paintings` row's concepts
 
@@ -25,7 +16,7 @@
 
 (defn insert-paintings-concepts-rows!
  "Example usage:
-    (insert-paintings-concepts-rows! *db* (p/retrieve-paintings *db* #{}))"
+    (insert-paintings-concepts-rows! *db* (retrieve-paintings *db* #{}))"
  [db p-rows]
  (let [pc-rows (mapcat p-row->pc-rows p-rows)]
   (jdbc/insert-multi! db PAINTINGS-CONCEPTS-TABLE pc-rows)))

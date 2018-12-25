@@ -19,18 +19,6 @@
 ;; PREPARING CSV-DB ROWS
 ;; ------------------------------------
 
-; (defn as-jpg
-;  "Convert a WGA painting's webpage url to just its JPG url.
-;    Example:
-;      (as-jpg \"https://www.wga.hu/html/p/pontormo/1/00leda.html\")
-;      => \"https://www.wga.hu/art/p/pontormo/1/00leda.jpg\"
-;   "
-;   [url-str]
-;   (-> url-str
-;     (clojure.string/replace "/html" "/art")
-;     (clojure.string/replace ".html" ".jpg")))
-
-
 (defn to-sql-column [a-str]
   (-> a-str
     (clojure.string/replace "-" "_")
