@@ -2768,3 +2768,771 @@ notifying browser that file changed:  target/cljsbuild/public/js/out/landschafte
 Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
 [32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.169 seconds.[0m
 notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 5.229 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/goog/deps.js
+notifying browser that file changed:  target/cljsbuild/public/js/out/cljs_deps.js
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 5.29 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/goog/deps.js
+notifying browser that file changed:  target/cljsbuild/public/js/out/cljs_deps.js
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 6.018 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.865 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[31mFailed to compile build :app from ["src/cljs" "src/cljc" "env/dev/cljs"] in 3.135 seconds.[0m
+[36m----  Could not Analyze  src/cljs/landschaften/views.cljs   line:38  column:10  ----[0m
+
+  [1mWrong number of args (0) passed to: cljs.core/string?[0m
+
+  [36m37[0m  [36m(defn bubble-button [concept][0m
+  [33m38[0m  [1m  {:pre [(string?)]}[0m
+  [0m  [0m  [33m         ^--- Wrong number of args (0) passed to: cljs.core/string?[0m
+  [36m39[0m  [36m  [rc/button[0m
+  [36m40[0m  [36m      :label concept[0m
+  [36m41[0m  [36m      :on-click (fn [] (js/console.log "clicked " concept))])[0m
+
+[36m----  Analysis Error : Please see src/cljs/landschaften/views.cljs  ----[0m
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 3.543 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 3.436 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.924 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 3.179 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.28 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.544 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.41 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.422 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.135 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.293 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.735 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.542 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.261 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.955 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.089 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.227 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.302 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.128 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.532 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.225 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[36m----  Compiler Warning on   src/cljs/landschaften/views.cljs   line:38  column:20  ----[0m
+
+  [1mCan't take value of macro cljs.spec.alpha/coll-of[0m
+
+  [36m34[0m  [36m [app])[0m
+  [36m35[0m  [36m[0m
+  [36m36[0m  [36m[0m
+  [36m37[0m  [36m(defn concept-bubbles [concepts][0m
+  [33m38[0m  [1m  {:pre [(s/valid? s/coll-of ::specs/concepts concepts)]})[0m
+  [0m  [0m  [33m                   ^--- Can't take value of macro cljs.spec.alpha/coll-of[0m
+  [36m39[0m  [36m  [0m
+  [36m40[0m  [36m[0m
+  [36m41[0m  [36m(defn bubble-button [{:keys [name value]}][0m
+  [36m42[0m  [36m  {:pre [(string? name)]}[0m
+  [36m43[0m  [36m  [rc/button[0m
+
+[36m----  Compiler Warning : Please see src/cljs/landschaften/views.cljs  ----[0m
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.519 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[36m----  Compiler Warning on   src/cljs/landschaften/views.cljs   line:39  column:14  ----[0m
+
+  [1mUse of undeclared Var landschaften.views/bubble-button[0m
+
+  [36m37[0m  [36m(defn concept-bubbles [concepts][0m
+  [36m38[0m  [36m  {:pre [(s/valid? (s/coll-of ::specs/concepts) concepts)]}[0m
+  [33m39[0m  [1m  [:div (map bubble-button concepts)])[0m
+  [0m  [0m  [33m             ^--- Use of undeclared Var landschaften.views/bubble-button[0m
+  [36m40[0m  [36m[0m
+  [36m41[0m  [36m[0m
+  [36m42[0m  [36m(defn bubble-button [{:keys [name value]}][0m
+  [36m43[0m  [36m  {:pre [(string? name)]}[0m
+  [36m44[0m  [36m  [rc/button[0m
+
+[36m----  Compiler Warning : Please see src/cljs/landschaften/views.cljs  ----[0m
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.862 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.393 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.266 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.073 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.316 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.266 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.574 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.385 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.349 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.792 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.817 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.157 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.014 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.034 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.04 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.036 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.015 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.063 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.362 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.014 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.193 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.286 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.358 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.261 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.469 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.269 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.416 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.414 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[31mFailed to compile build :app from ["src/cljs" "src/cljc" "env/dev/cljs"] in 1.101 seconds.[0m
+[36m----  Exception    ----[0m
+
+  [1mAssert failed: file:/Users/concerto/cs/landschaften/src/cljs/landschaften/screens/examine.cljs does not provide a namespace
+(first provides)[0m
+
+[36m----  Exception Stack Trace  ----[0m
+
+java.lang.AssertionError: Assert failed: file:/Users/concerto/cs/landschaften/src/cljs/landschaften/screens/examine.cljs does not provide a namespace
+(first provides)
+ at cljs.closure$javascript_file.invokeStatic (closure.clj:497)
+    cljs.closure$javascript_file.invoke (closure.clj:493)
+    cljs.closure$map__GT_javascript_file.invokeStatic (closure.clj:502)
+    cljs.closure$map__GT_javascript_file.invoke (closure.clj:500)
+    cljs.closure$compiled_file.invokeStatic (closure.clj:585)
+    cljs.closure$compiled_file.invoke (closure.clj:577)
+    cljs.closure$compile_file.invokeStatic (closure.clj:647)
+    cljs.closure$compile_file.invoke (closure.clj:625)
+    cljs.closure$fn__5175.invokeStatic (closure.clj:721)
+    cljs.closure/fn (closure.clj:715)
+    cljs.closure$fn__5088$G__5081__5095.invoke (closure.clj:543)
+    cljs.closure$compile_sources$iter__5301__5305$fn__5306.invoke (closure.clj:1081)
+    clojure.lang.LazySeq.sval (LazySeq.java:42)
+    clojure.lang.LazySeq.seq (LazySeq.java:51)
+    clojure.lang.Cons.next (Cons.java:39)
+    clojure.lang.RT.next (RT.java:709)
+    clojure.core$next__5371.invokeStatic (core.clj:64)
+    clojure.core$dorun.invokeStatic (core.clj:3142)
+    clojure.core$doall.invokeStatic (core.clj:3148)
+    clojure.core$doall.invoke (core.clj:3148)
+    cljs.closure$compile_sources.invokeStatic (closure.clj:1077)
+    cljs.closure$compile_sources.invoke (closure.clj:1066)
+    cljs.closure$build.invokeStatic (closure.clj:2930)
+    cljs.closure$build.invoke (closure.clj:2838)
+    cljs.build.api$build.invokeStatic (api.clj:208)
+    cljs.build.api$build.invoke (api.clj:189)
+    figwheel_sidecar.components.cljs_autobuild$cljs_build.invokeStatic (cljs_autobuild.clj:28)
+    figwheel_sidecar.components.cljs_autobuild$cljs_build.invoke (cljs_autobuild.clj:27)
+    figwheel_sidecar.build_middleware.injection$hook$fn__22121.invoke (injection.clj:94)
+    figwheel_sidecar.components.cljs_autobuild$notify_command_hook$fn__22443.invoke (cljs_autobuild.clj:69)
+    figwheel_sidecar.components.cljs_autobuild$figwheel_start_and_end_messages$fn__22433.invoke (cljs_autobuild.clj:48)
+    figwheel_sidecar.build_middleware.notifications$hook$fn__22302.invoke (notifications.clj:179)
+    figwheel_sidecar.build_middleware.clj_reloading$hook$fn__22359.invoke (clj_reloading.clj:111)
+    figwheel_sidecar.build_middleware.javascript_reloading$hook$fn__22392.invoke (javascript_reloading.clj:48)
+    figwheel_sidecar.components.cljs_autobuild$color_output$fn__22447.invoke (cljs_autobuild.clj:80)
+    figwheel_sidecar.components.cljs_autobuild$execute_build$fn__22489.invoke (cljs_autobuild.clj:234)
+    figwheel_sidecar.utils$sync_exec$fn__1485$fn__1486.invoke (utils.clj:13)
+    figwheel_sidecar.utils$sync_exec$fn__1485.invoke (utils.clj:12)
+    clojure.core$binding_conveyor_fn$fn__5739.invoke (core.clj:2033)
+    clojure.lang.AFn.applyToHelper (AFn.java:154)
+    clojure.lang.RestFn.applyTo (RestFn.java:132)
+    clojure.lang.Agent$Action.doRun (Agent.java:114)
+    clojure.lang.Agent$Action.run (Agent.java:163)
+    java.util.concurrent.ThreadPoolExecutor.runWorker (ThreadPoolExecutor.java:1142)
+    java.util.concurrent.ThreadPoolExecutor$Worker.run (ThreadPoolExecutor.java:617)
+    java.lang.Thread.run (Thread.java:745)
+
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[36m----  Compiler Warning on   src/cljs/landschaften/screens/examine.cljs   line:164  column:4  ----[0m
+
+  [1mconcept-bubbles at line 65 is being replaced[0m
+
+  [36m160[0m  [36m         :on-click (fn [] (js/console.log "clicked " name))[0m
+  [36m161[0m  [36m         :class "btn btn-primary" ; Bootstrap[0m
+  [36m162[0m  [36m         :style {:border-radius "30px"}]) ; curvier corners[0m
+  [36m163[0m  [36m[0m
+  [33m164[0m  [1m   (defn concept-bubbles [concepts][0m
+  [0m   [0m  [33m   ^--- concept-bubbles at line 65 is being replaced[0m
+  [36m165[0m  [36m     {:pre [(s/valid? ::specs/concepts concepts)]}[0m
+  [36m166[0m  [36m     [:div (map bubble-button concepts)])[0m
+  [36m167[0m  [36m[0m
+  [36m168[0m  [36m   (def p[0m
+  [36m169[0m  [36m     {:date "c. 1469",[0m
+
+[36m----  Compiler Warning : Please see src/cljs/landschaften/screens/examine.cljs  ----[0m
+[36m----  Compiler Warning on   src/cljs/landschaften/screens/examine.cljs   line:119  column:4  ----[0m
+
+  [1mcoerce at line 20 is being replaced[0m
+
+  [36m115[0m  [36m       (f data)[0m
+  [36m116[0m  [36m       (fallback-fn)))[0m
+  [36m117[0m  [36m[0m
+  [36m118[0m  [36m   ;; return data if data specifies spec, else nil[0m
+  [33m119[0m  [1m   (defn coerce [some-spec data][0m
+  [0m   [0m  [33m   ^--- coerce at line 20 is being replaced[0m
+  [36m120[0m  [36m     (when (s/valid? some-spec data) data))[0m
+  [36m121[0m  [36m[0m
+  [36m122[0m  [36m   (defn NO-IMAGE-AVAILABLE [][0m
+  [36m123[0m  [36m     [:img {:src "/img/no_image_available.jpeg"[0m
+  [36m124[0m  [36m            :style {:max-width 200[0m
+
+[36m----  Compiler Warning : Please see src/cljs/landschaften/screens/examine.cljs  ----[0m
+[36m----  Compiler Warning on   src/cljs/landschaften/screens/examine.cljs   line:133  column:6  ----[0m
+
+  [1mUse of undeclared Var landschaften.screens.examine/app[0m
+
+  [36m130[0m  [36m   (declare app)[0m
+  [36m131[0m  [36m[0m
+  [36m132[0m  [36m   (defn hello-world [][0m
+  [33m133[0m  [1m    [app])[0m
+  [0m   [0m  [33m     ^--- Use of undeclared Var landschaften.screens.examine/app[0m
+  [36m134[0m  [36m[0m
+  [36m135[0m  [36m   (defn page-title [][0m
+  [36m136[0m  [36m     [rc/label[0m
+  [36m137[0m  [36m         :label "EXAMINE PAINTING"[0m
+  [36m138[0m  [36m         :class "h1"])[0m
+
+[36m----  Compiler Warning : Please see src/cljs/landschaften/screens/examine.cljs  ----[0m
+[36m----  Compiler Warning on   src/cljs/landschaften/screens/examine.cljs   line:150  column:4  ----[0m
+
+  [1minfo at line 51 is being replaced[0m
+
+  [36m146[0m  [36m   (defn kv-str [map-entry][0m
+  [36m147[0m  [36m     (let [key-name (name (key map-entry))][0m
+  [36m148[0m  [36m      (str key-name ": " (val map-entry))))[0m
+  [36m149[0m  [36m[0m
+  [33m150[0m  [1m   (defn info [painting][0m
+  [0m   [0m  [33m   ^--- info at line 51 is being replaced[0m
+  [36m151[0m  [36m     [:div[0m
+  [36m152[0m  [36m       (map[0m
+  [36m153[0m  [36m         (fn [datum] [:div (kv-str (find painting datum))])[0m
+  [36m154[0m  [36m         '(:title :author :date :timeframe :type :school))])[0m
+
+[36m----  Compiler Warning : Please see src/cljs/landschaften/screens/examine.cljs  ----[0m
+[31mFailed to compile build :app from ["src/cljs" "src/cljc" "env/dev/cljs"] in 1.249 seconds.[0m
+[36m----  Could not Analyze  src/cljs/landschaften/screens/examine.cljs   line:100  column:4  ----[0m
+
+  [1mNamespace declarations must appear at the top-level. at line 100 src/cljs/landschaften/screens/examine.cljs[0m
+
+  [36m 98[0m  [36m   :jpg "https://www.wga.hu/art/b/botticel/7portrai/01youngm.jpg"[0m
+  [36m 99[0m  [36m[0m
+  [33m100[0m  [1m   (ns landschaften.views[0m
+  [0m   [0m  [33m   ^--- Namespace declarations must appear at the top-level. at line 100 src/cljs/landschaften/screens/examine.cljs[0m
+  [36m101[0m  [36m     (:require [reagent.core :as r][0m
+  [36m102[0m  [36m               [re-frame.core :as rf][0m
+  [36m103[0m  [36m               [re-com.core :as rc][0m
+
+[36m----  Analysis Error : Please see src/cljs/landschaften/screens/examine.cljs  ----[0m
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[36m----  Compiler Warning on   src/cljs/landschaften/screens/examine.cljs   line:164  column:4  ----[0m
+
+  [1mconcept-bubbles at line 65 is being replaced[0m
+
+  [36m160[0m  [36m         :on-click (fn [] (js/console.log "clicked " name))[0m
+  [36m161[0m  [36m         :class "btn btn-primary" ; Bootstrap[0m
+  [36m162[0m  [36m         :style {:border-radius "30px"}]) ; curvier corners[0m
+  [36m163[0m  [36m[0m
+  [33m164[0m  [1m   (defn concept-bubbles [concepts][0m
+  [0m   [0m  [33m   ^--- concept-bubbles at line 65 is being replaced[0m
+  [36m165[0m  [36m     {:pre [(s/valid? ::specs/concepts concepts)]}[0m
+  [36m166[0m  [36m     [:div (map bubble-button concepts)])[0m
+  [36m167[0m  [36m[0m
+  [36m168[0m  [36m   (def p[0m
+  [36m169[0m  [36m     {:date "c. 1469",[0m
+
+[36m----  Compiler Warning : Please see src/cljs/landschaften/screens/examine.cljs  ----[0m
+[36m----  Compiler Warning on   src/cljs/landschaften/screens/examine.cljs   line:119  column:4  ----[0m
+
+  [1mcoerce at line 20 is being replaced[0m
+
+  [36m115[0m  [36m       (f data)[0m
+  [36m116[0m  [36m       (fallback-fn)))[0m
+  [36m117[0m  [36m[0m
+  [36m118[0m  [36m   ;; return data if data specifies spec, else nil[0m
+  [33m119[0m  [1m   (defn coerce [some-spec data][0m
+  [0m   [0m  [33m   ^--- coerce at line 20 is being replaced[0m
+  [36m120[0m  [36m     (when (s/valid? some-spec data) data))[0m
+  [36m121[0m  [36m[0m
+  [36m122[0m  [36m   (defn NO-IMAGE-AVAILABLE [][0m
+  [36m123[0m  [36m     [:img {:src "/img/no_image_available.jpeg"[0m
+  [36m124[0m  [36m            :style {:max-width 200[0m
+
+[36m----  Compiler Warning : Please see src/cljs/landschaften/screens/examine.cljs  ----[0m
+[36m----  Compiler Warning on   src/cljs/landschaften/screens/examine.cljs   line:133  column:6  ----[0m
+
+  [1mUse of undeclared Var landschaften.screens.examine/app[0m
+
+  [36m130[0m  [36m   (declare app)[0m
+  [36m131[0m  [36m[0m
+  [36m132[0m  [36m   (defn hello-world [][0m
+  [33m133[0m  [1m    [app])[0m
+  [0m   [0m  [33m     ^--- Use of undeclared Var landschaften.screens.examine/app[0m
+  [36m134[0m  [36m[0m
+  [36m135[0m  [36m   (defn page-title [][0m
+  [36m136[0m  [36m     [rc/label[0m
+  [36m137[0m  [36m         :label "EXAMINE PAINTING"[0m
+  [36m138[0m  [36m         :class "h1"])[0m
+
+[36m----  Compiler Warning : Please see src/cljs/landschaften/screens/examine.cljs  ----[0m
+[36m----  Compiler Warning on   src/cljs/landschaften/screens/examine.cljs   line:150  column:4  ----[0m
+
+  [1minfo at line 51 is being replaced[0m
+
+  [36m146[0m  [36m   (defn kv-str [map-entry][0m
+  [36m147[0m  [36m     (let [key-name (name (key map-entry))][0m
+  [36m148[0m  [36m      (str key-name ": " (val map-entry))))[0m
+  [36m149[0m  [36m[0m
+  [33m150[0m  [1m   (defn info [painting][0m
+  [0m   [0m  [33m   ^--- info at line 51 is being replaced[0m
+  [36m151[0m  [36m     [:div[0m
+  [36m152[0m  [36m       (map[0m
+  [36m153[0m  [36m         (fn [datum] [:div (kv-str (find painting datum))])[0m
+  [36m154[0m  [36m         '(:title :author :date :timeframe :type :school))])[0m
+
+[36m----  Compiler Warning : Please see src/cljs/landschaften/screens/examine.cljs  ----[0m
+[31mFailed to compile build :app from ["src/cljs" "src/cljc" "env/dev/cljs"] in 1.092 seconds.[0m
+[36m----  Could not Analyze  src/cljs/landschaften/screens/examine.cljs   line:100  column:4  ----[0m
+
+  [1mNamespace declarations must appear at the top-level. at line 100 src/cljs/landschaften/screens/examine.cljs[0m
+
+  [36m 98[0m  [36m   :jpg "https://www.wga.hu/art/b/botticel/7portrai/01youngm.jpg"[0m
+  [36m 99[0m  [36m[0m
+  [33m100[0m  [1m   (ns landschaften.views[0m
+  [0m   [0m  [33m   ^--- Namespace declarations must appear at the top-level. at line 100 src/cljs/landschaften/screens/examine.cljs[0m
+  [36m101[0m  [36m     (:require [reagent.core :as r][0m
+  [36m102[0m  [36m               [re-frame.core :as rf][0m
+  [36m103[0m  [36m               [re-com.core :as rc][0m
+
+[36m----  Analysis Error : Please see src/cljs/landschaften/screens/examine.cljs  ----[0m
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[36m----  Compiler Warning on   src/cljs/landschaften/screens/examine.cljs   line:164  column:4  ----[0m
+
+  [1mconcept-bubbles at line 65 is being replaced[0m
+
+  [36m160[0m  [36m         :on-click (fn [] (js/console.log "clicked " name))[0m
+  [36m161[0m  [36m         :class "btn btn-primary" ; Bootstrap[0m
+  [36m162[0m  [36m         :style {:border-radius "30px"}]) ; curvier corners[0m
+  [36m163[0m  [36m[0m
+  [33m164[0m  [1m   (defn concept-bubbles [concepts][0m
+  [0m   [0m  [33m   ^--- concept-bubbles at line 65 is being replaced[0m
+  [36m165[0m  [36m     {:pre [(s/valid? ::specs/concepts concepts)]}[0m
+  [36m166[0m  [36m     [:div (map bubble-button concepts)])[0m
+  [36m167[0m  [36m[0m
+  [36m168[0m  [36m   (def p[0m
+  [36m169[0m  [36m     {:date "c. 1469",[0m
+
+[36m----  Compiler Warning : Please see src/cljs/landschaften/screens/examine.cljs  ----[0m
+[36m----  Compiler Warning on   src/cljs/landschaften/screens/examine.cljs   line:119  column:4  ----[0m
+
+  [1mcoerce at line 20 is being replaced[0m
+
+  [36m115[0m  [36m       (f data)[0m
+  [36m116[0m  [36m       (fallback-fn)))[0m
+  [36m117[0m  [36m[0m
+  [36m118[0m  [36m   ;; return data if data specifies spec, else nil[0m
+  [33m119[0m  [1m   (defn coerce [some-spec data][0m
+  [0m   [0m  [33m   ^--- coerce at line 20 is being replaced[0m
+  [36m120[0m  [36m     (when (s/valid? some-spec data) data))[0m
+  [36m121[0m  [36m[0m
+  [36m122[0m  [36m   (defn NO-IMAGE-AVAILABLE [][0m
+  [36m123[0m  [36m     [:img {:src "/img/no_image_available.jpeg"[0m
+  [36m124[0m  [36m            :style {:max-width 200[0m
+
+[36m----  Compiler Warning : Please see src/cljs/landschaften/screens/examine.cljs  ----[0m
+[36m----  Compiler Warning on   src/cljs/landschaften/screens/examine.cljs   line:133  column:6  ----[0m
+
+  [1mUse of undeclared Var landschaften.screens.examine/app[0m
+
+  [36m130[0m  [36m   (declare app)[0m
+  [36m131[0m  [36m[0m
+  [36m132[0m  [36m   (defn hello-world [][0m
+  [33m133[0m  [1m    [app])[0m
+  [0m   [0m  [33m     ^--- Use of undeclared Var landschaften.screens.examine/app[0m
+  [36m134[0m  [36m[0m
+  [36m135[0m  [36m   (defn page-title [][0m
+  [36m136[0m  [36m     [rc/label[0m
+  [36m137[0m  [36m         :label "EXAMINE PAINTING"[0m
+  [36m138[0m  [36m         :class "h1"])[0m
+
+[36m----  Compiler Warning : Please see src/cljs/landschaften/screens/examine.cljs  ----[0m
+[36m----  Compiler Warning on   src/cljs/landschaften/screens/examine.cljs   line:150  column:4  ----[0m
+
+  [1minfo at line 51 is being replaced[0m
+
+  [36m146[0m  [36m   (defn kv-str [map-entry][0m
+  [36m147[0m  [36m     (let [key-name (name (key map-entry))][0m
+  [36m148[0m  [36m      (str key-name ": " (val map-entry))))[0m
+  [36m149[0m  [36m[0m
+  [33m150[0m  [1m   (defn info [painting][0m
+  [0m   [0m  [33m   ^--- info at line 51 is being replaced[0m
+  [36m151[0m  [36m     [:div[0m
+  [36m152[0m  [36m       (map[0m
+  [36m153[0m  [36m         (fn [datum] [:div (kv-str (find painting datum))])[0m
+  [36m154[0m  [36m         '(:title :author :date :timeframe :type :school))])[0m
+
+[36m----  Compiler Warning : Please see src/cljs/landschaften/screens/examine.cljs  ----[0m
+[31mFailed to compile build :app from ["src/cljs" "src/cljc" "env/dev/cljs"] in 1.349 seconds.[0m
+[36m----  Could not Analyze  src/cljs/landschaften/screens/examine.cljs   line:100  column:4  ----[0m
+
+  [1mNamespace declarations must appear at the top-level. at line 100 src/cljs/landschaften/screens/examine.cljs[0m
+
+  [36m 98[0m  [36m   :jpg "https://www.wga.hu/art/b/botticel/7portrai/01youngm.jpg"[0m
+  [36m 99[0m  [36m[0m
+  [33m100[0m  [1m   (ns landschaften.views[0m
+  [0m   [0m  [33m   ^--- Namespace declarations must appear at the top-level. at line 100 src/cljs/landschaften/screens/examine.cljs[0m
+  [36m101[0m  [36m     (:require [reagent.core :as r][0m
+  [36m102[0m  [36m               [re-frame.core :as rf][0m
+  [36m103[0m  [36m               [re-com.core :as rc][0m
+
+[36m----  Analysis Error : Please see src/cljs/landschaften/screens/examine.cljs  ----[0m
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[36m----  Compiler Warning on   src/cljs/landschaften/screens/examine.cljs   line:164  column:4  ----[0m
+
+  [1mconcept-bubbles at line 65 is being replaced[0m
+
+  [36m160[0m  [36m         :on-click (fn [] (js/console.log "clicked " name))[0m
+  [36m161[0m  [36m         :class "btn btn-primary" ; Bootstrap[0m
+  [36m162[0m  [36m         :style {:border-radius "30px"}]) ; curvier corners[0m
+  [36m163[0m  [36m[0m
+  [33m164[0m  [1m   (defn concept-bubbles [concepts][0m
+  [0m   [0m  [33m   ^--- concept-bubbles at line 65 is being replaced[0m
+  [36m165[0m  [36m     {:pre [(s/valid? ::specs/concepts concepts)]}[0m
+  [36m166[0m  [36m     [:div (map bubble-button concepts)])[0m
+  [36m167[0m  [36m[0m
+  [36m168[0m  [36m   (def p[0m
+  [36m169[0m  [36m     {:date "c. 1469",[0m
+
+[36m----  Compiler Warning : Please see src/cljs/landschaften/screens/examine.cljs  ----[0m
+[36m----  Compiler Warning on   src/cljs/landschaften/screens/examine.cljs   line:119  column:4  ----[0m
+
+  [1mcoerce at line 20 is being replaced[0m
+
+  [36m115[0m  [36m       (f data)[0m
+  [36m116[0m  [36m       (fallback-fn)))[0m
+  [36m117[0m  [36m[0m
+  [36m118[0m  [36m   ;; return data if data specifies spec, else nil[0m
+  [33m119[0m  [1m   (defn coerce [some-spec data][0m
+  [0m   [0m  [33m   ^--- coerce at line 20 is being replaced[0m
+  [36m120[0m  [36m     (when (s/valid? some-spec data) data))[0m
+  [36m121[0m  [36m[0m
+  [36m122[0m  [36m   (defn NO-IMAGE-AVAILABLE [][0m
+  [36m123[0m  [36m     [:img {:src "/img/no_image_available.jpeg"[0m
+  [36m124[0m  [36m            :style {:max-width 200[0m
+
+[36m----  Compiler Warning : Please see src/cljs/landschaften/screens/examine.cljs  ----[0m
+[36m----  Compiler Warning on   src/cljs/landschaften/screens/examine.cljs   line:133  column:6  ----[0m
+
+  [1mUse of undeclared Var landschaften.screens.examine/app[0m
+
+  [36m130[0m  [36m   (declare app)[0m
+  [36m131[0m  [36m[0m
+  [36m132[0m  [36m   (defn hello-world [][0m
+  [33m133[0m  [1m    [app])[0m
+  [0m   [0m  [33m     ^--- Use of undeclared Var landschaften.screens.examine/app[0m
+  [36m134[0m  [36m[0m
+  [36m135[0m  [36m   (defn page-title [][0m
+  [36m136[0m  [36m     [rc/label[0m
+  [36m137[0m  [36m         :label "EXAMINE PAINTING"[0m
+  [36m138[0m  [36m         :class "h1"])[0m
+
+[36m----  Compiler Warning : Please see src/cljs/landschaften/screens/examine.cljs  ----[0m
+[36m----  Compiler Warning on   src/cljs/landschaften/screens/examine.cljs   line:150  column:4  ----[0m
+
+  [1minfo at line 51 is being replaced[0m
+
+  [36m146[0m  [36m   (defn kv-str [map-entry][0m
+  [36m147[0m  [36m     (let [key-name (name (key map-entry))][0m
+  [36m148[0m  [36m      (str key-name ": " (val map-entry))))[0m
+  [36m149[0m  [36m[0m
+  [33m150[0m  [1m   (defn info [painting][0m
+  [0m   [0m  [33m   ^--- info at line 51 is being replaced[0m
+  [36m151[0m  [36m     [:div[0m
+  [36m152[0m  [36m       (map[0m
+  [36m153[0m  [36m         (fn [datum] [:div (kv-str (find painting datum))])[0m
+  [36m154[0m  [36m         '(:title :author :date :timeframe :type :school))])[0m
+
+[36m----  Compiler Warning : Please see src/cljs/landschaften/screens/examine.cljs  ----[0m
+[31mFailed to compile build :app from ["src/cljs" "src/cljc" "env/dev/cljs"] in 1.078 seconds.[0m
+[36m----  Could not Analyze  src/cljs/landschaften/screens/examine.cljs   line:100  column:4  ----[0m
+
+  [1mNamespace declarations must appear at the top-level. at line 100 src/cljs/landschaften/screens/examine.cljs[0m
+
+  [36m 98[0m  [36m   :jpg "https://www.wga.hu/art/b/botticel/7portrai/01youngm.jpg"[0m
+  [36m 99[0m  [36m[0m
+  [33m100[0m  [1m   (ns landschaften.views[0m
+  [0m   [0m  [33m   ^--- Namespace declarations must appear at the top-level. at line 100 src/cljs/landschaften/screens/examine.cljs[0m
+  [36m101[0m  [36m     (:require [reagent.core :as r][0m
+  [36m102[0m  [36m               [re-frame.core :as rf][0m
+  [36m103[0m  [36m               [re-com.core :as rc][0m
+
+[36m----  Analysis Error : Please see src/cljs/landschaften/screens/examine.cljs  ----[0m
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[36m----  Compiler Warning on   src/cljs/landschaften/screens/examine.cljs   line:164  column:4  ----[0m
+
+  [1mconcept-bubbles at line 65 is being replaced[0m
+
+  [36m160[0m  [36m         :on-click (fn [] (js/console.log "clicked " name))[0m
+  [36m161[0m  [36m         :class "btn btn-primary" ; Bootstrap[0m
+  [36m162[0m  [36m         :style {:border-radius "30px"}]) ; curvier corners[0m
+  [36m163[0m  [36m[0m
+  [33m164[0m  [1m   (defn concept-bubbles [concepts][0m
+  [0m   [0m  [33m   ^--- concept-bubbles at line 65 is being replaced[0m
+  [36m165[0m  [36m     {:pre [(s/valid? ::specs/concepts concepts)]}[0m
+  [36m166[0m  [36m     [:div (map bubble-button concepts)])[0m
+  [36m167[0m  [36m[0m
+  [36m168[0m  [36m   (def p[0m
+  [36m169[0m  [36m     {:date "c. 1469",[0m
+
+[36m----  Compiler Warning : Please see src/cljs/landschaften/screens/examine.cljs  ----[0m
+[36m----  Compiler Warning on   src/cljs/landschaften/screens/examine.cljs   line:119  column:4  ----[0m
+
+  [1mcoerce at line 20 is being replaced[0m
+
+  [36m115[0m  [36m       (f data)[0m
+  [36m116[0m  [36m       (fallback-fn)))[0m
+  [36m117[0m  [36m[0m
+  [36m118[0m  [36m   ;; return data if data specifies spec, else nil[0m
+  [33m119[0m  [1m   (defn coerce [some-spec data][0m
+  [0m   [0m  [33m   ^--- coerce at line 20 is being replaced[0m
+  [36m120[0m  [36m     (when (s/valid? some-spec data) data))[0m
+  [36m121[0m  [36m[0m
+  [36m122[0m  [36m   (defn NO-IMAGE-AVAILABLE [][0m
+  [36m123[0m  [36m     [:img {:src "/img/no_image_available.jpeg"[0m
+  [36m124[0m  [36m            :style {:max-width 200[0m
+
+[36m----  Compiler Warning : Please see src/cljs/landschaften/screens/examine.cljs  ----[0m
+[36m----  Compiler Warning on   src/cljs/landschaften/screens/examine.cljs   line:133  column:6  ----[0m
+
+  [1mUse of undeclared Var landschaften.screens.examine/app[0m
+
+  [36m130[0m  [36m   (declare app)[0m
+  [36m131[0m  [36m[0m
+  [36m132[0m  [36m   (defn hello-world [][0m
+  [33m133[0m  [1m    [app])[0m
+  [0m   [0m  [33m     ^--- Use of undeclared Var landschaften.screens.examine/app[0m
+  [36m134[0m  [36m[0m
+  [36m135[0m  [36m   (defn page-title [][0m
+  [36m136[0m  [36m     [rc/label[0m
+  [36m137[0m  [36m         :label "EXAMINE PAINTING"[0m
+  [36m138[0m  [36m         :class "h1"])[0m
+
+[36m----  Compiler Warning : Please see src/cljs/landschaften/screens/examine.cljs  ----[0m
+[36m----  Compiler Warning on   src/cljs/landschaften/screens/examine.cljs   line:150  column:4  ----[0m
+
+  [1minfo at line 51 is being replaced[0m
+
+  [36m146[0m  [36m   (defn kv-str [map-entry][0m
+  [36m147[0m  [36m     (let [key-name (name (key map-entry))][0m
+  [36m148[0m  [36m      (str key-name ": " (val map-entry))))[0m
+  [36m149[0m  [36m[0m
+  [33m150[0m  [1m   (defn info [painting][0m
+  [0m   [0m  [33m   ^--- info at line 51 is being replaced[0m
+  [36m151[0m  [36m     [:div[0m
+  [36m152[0m  [36m       (map[0m
+  [36m153[0m  [36m         (fn [datum] [:div (kv-str (find painting datum))])[0m
+  [36m154[0m  [36m         '(:title :author :date :timeframe :type :school))])[0m
+
+[36m----  Compiler Warning : Please see src/cljs/landschaften/screens/examine.cljs  ----[0m
+[31mFailed to compile build :app from ["src/cljs" "src/cljc" "env/dev/cljs"] in 1.073 seconds.[0m
+[36m----  Could not Analyze  src/cljs/landschaften/screens/examine.cljs   line:100  column:4  ----[0m
+
+  [1mNamespace declarations must appear at the top-level. at line 100 src/cljs/landschaften/screens/examine.cljs[0m
+
+  [36m 98[0m  [36m   :jpg "https://www.wga.hu/art/b/botticel/7portrai/01youngm.jpg"[0m
+  [36m 99[0m  [36m[0m
+  [33m100[0m  [1m   (ns landschaften.views[0m
+  [0m   [0m  [33m   ^--- Namespace declarations must appear at the top-level. at line 100 src/cljs/landschaften/screens/examine.cljs[0m
+  [36m101[0m  [36m     (:require [reagent.core :as r][0m
+  [36m102[0m  [36m               [re-frame.core :as rf][0m
+  [36m103[0m  [36m               [re-com.core :as rc][0m
+
+[36m----  Analysis Error : Please see src/cljs/landschaften/screens/examine.cljs  ----[0m
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[36m----  Compiler Warning on   src/cljs/landschaften/views.cljs   line:38  column:1  ----[0m
+
+  [1mhello-world at line 34 is being replaced[0m
+
+  [36m34[0m  [36m(defn hello-world [][0m
+  [36m35[0m  [36m [app])[0m
+  [36m36[0m  [36m[0m
+  [36m37[0m  [36m; (examine-painting)[0m
+  [33m38[0m  [1m(defn hello-world [][0m
+  [0m  [0m  [33m^--- hello-world at line 34 is being replaced[0m
+  [36m39[0m  [36m [examine/examine-painting])[0m
+  [36m40[0m  [36m[0m
+  [36m41[0m  [36m[0m
+  [36m42[0m  [36m(defn page-title [][0m
+  [36m43[0m  [36m  [rc/label[0m
+
+[36m----  Compiler Warning : Please see src/cljs/landschaften/views.cljs  ----[0m
+[36m----  Compiler Warning on   src/cljs/landschaften/views.cljs   line:39  column:3  ----[0m
+
+  [1mUse of undeclared Var landschaften.screens.examine/examine-painting[0m
+
+  [36m35[0m  [36m [app])[0m
+  [36m36[0m  [36m[0m
+  [36m37[0m  [36m; (examine-painting)[0m
+  [36m38[0m  [36m(defn hello-world [][0m
+  [33m39[0m  [1m [examine/examine-painting])[0m
+  [0m  [0m  [33m  ^--- Use of undeclared Var landschaften.screens.examine/examine-painting[0m
+  [36m40[0m  [36m[0m
+  [36m41[0m  [36m[0m
+  [36m42[0m  [36m(defn page-title [][0m
+  [36m43[0m  [36m  [rc/label[0m
+  [36m44[0m  [36m      :label "EXAMINE PAINTING"[0m
+
+[36m----  Compiler Warning : Please see src/cljs/landschaften/views.cljs  ----[0m
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.571 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/cljs_deps.js
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/screens/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[36m----  Compiler Warning on   src/cljs/landschaften/views.cljs   line:39  column:3  ----[0m
+
+  [1mUse of undeclared Var landschaften.screens.examine/examine-painting[0m
+
+  [36m35[0m  [36m;  [app])[0m
+  [36m36[0m  [36m[0m
+  [36m37[0m  [36m; (examine-painting)[0m
+  [36m38[0m  [36m(defn hello-world [][0m
+  [33m39[0m  [1m [examine/examine-painting])[0m
+  [0m  [0m  [33m  ^--- Use of undeclared Var landschaften.screens.examine/examine-painting[0m
+  [36m40[0m  [36m[0m
+  [36m41[0m  [36m[0m
+  [36m42[0m  [36m(defn page-title [][0m
+  [36m43[0m  [36m  [rc/label[0m
+  [36m44[0m  [36m      :label "EXAMINE PAINTING"[0m
+
+[36m----  Compiler Warning : Please see src/cljs/landschaften/views.cljs  ----[0m
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.354 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[36m----  Compiler Warning on   src/cljs/landschaften/views.cljs   line:39  column:3  ----[0m
+
+  [1mUse of undeclared Var landschaften.screens.examine/examine-painting[0m
+
+  [36m35[0m  [36m;  [app])[0m
+  [36m36[0m  [36m[0m
+  [36m37[0m  [36m; (examine-painting)[0m
+  [36m38[0m  [36m(defn hello-world [][0m
+  [33m39[0m  [1m [examine/examine-painting])[0m
+  [0m  [0m  [33m  ^--- Use of undeclared Var landschaften.screens.examine/examine-painting[0m
+  [36m40[0m  [36m[0m
+  [36m41[0m  [36m[0m
+  [36m42[0m  [36m(defn page-title [][0m
+  [36m43[0m  [36m  [rc/label[0m
+  [36m44[0m  [36m      :label "EXAMINE PAINTING"[0m
+
+[36m----  Compiler Warning : Please see src/cljs/landschaften/views.cljs  ----[0m
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.528 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.417 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/screens/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.319 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/screens/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.454 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.312 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.185 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.198 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views.js
