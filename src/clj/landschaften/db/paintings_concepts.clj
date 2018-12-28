@@ -1,6 +1,7 @@
 (ns landschaften.db.paintings-concepts
   (:require [landschaften.db.core :refer [*db*]]
-           [clojure.java.jdbc :as jdbc]))
+            [clojure.spec.alpha :as s]
+            [clojure.java.jdbc :as jdbc]))
 
 ;; denormalize a `paintings` row's concepts
 

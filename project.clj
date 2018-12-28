@@ -30,7 +30,7 @@
                  [ring-webjars "0.2.0"]
                  [ring/ring-core "1.6.3"]
                  [ring/ring-defaults "0.3.2"]
-                 [secretary "1.2.3"]
+                 [secretary "1.2.3"] ;; not used anywhere ?
                  [selmer "1.11.7"]
 
                  ;; added:
@@ -41,8 +41,7 @@
                  [org.clojure/data.csv "0.1.3"]
                  [proto-repl "0.3.1"]
                  [expound "0.7.1"]
-                 [proto-repl-charts "0.3.2"]
-                 [com.layerware/hugsql "0.4.9"]]
+                 [re-com "2.4.0"]]
 
   :min-lein-version "2.0.0"
   :source-paths ["src/clj" "src/cljs" "src/cljc"]

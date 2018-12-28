@@ -16,7 +16,8 @@
 ;; ----------------------------
 
 (defn snippet:column-in [table-alias column n]
-  (let [param-placeholders (if (= 1 n) "?" (join ", " (repeat n "?")))]
+  (let [param-placeholders
+         (if (= 1 n) "?" (clojure.string/join ", " (repeat n "?")))]
     (str " " table-alias "." column " in (" param-placeholders ") ")))
 
 (defn ->painting-snippet [{:keys [column values]}]

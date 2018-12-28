@@ -1,15 +1,13 @@
 (ns landschaften.core
   (:require [reagent.core :as r]
             [re-frame.core :as rf]
-
             [landschaften.views :as views]
-
             [goog.events :as events]
             [goog.history.EventType :as HistoryEventType]
             [markdown.core :refer [md->html]]
             [ajax.core :refer [GET POST]]
             [landschaften.ajax :refer [load-interceptors!]]
-            [landschaften.events]
+            [landschaften.events :as core-events]
             [reitit.core :as reitit]
             [clojure.string :as string])
   (:import goog.History))
@@ -83,18 +81,21 @@
 (defn fetch-docs! []
   (GET "/docs" {:handler #(rf/dispatch [:set-docs %])}))
 
-(defn mount-components []
-  (rf/clear-subscription-cache!)
-  (r/render [#'page] (.getElementById js/document "app")))
-
+;; Default Luminus page.
 ; (defn mount-components []
 ;   (rf/clear-subscription-cache!)
-;   (r/render [views/hello-world] (.getElementById js/document "app")))
+;   (r/render [#'page] (.getElementById js/document "app")))
+
+;; Your app
+(defn mount-components []
+  (rf/clear-subscription-cache!)
+  (r/render [views/hello-world] (.getElementById js/document "app")))
+
 
 
 (defn init! []
   (rf/dispatch-sync [:navigate (reitit/match-by-name router :home)])
-
+  (rf/dispatch-sync [::core-events/initialize-db])
   (load-interceptors!)
   (fetch-docs!)
   (hook-browser-navigation!)

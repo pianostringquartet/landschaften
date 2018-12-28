@@ -1,7 +1,14 @@
 (ns landschaften.events
-  (:require [re-frame.core :refer [dispatch reg-event-db reg-sub]]))
+  (:require [re-frame.core :refer [dispatch reg-event-db reg-sub]]
+            [landschaften.db :as db]))
 
-;;dispatchers
+
+(reg-event-db
+ ::initialize-db
+ (fn initialize-db [_ _]
+   db/default-db))
+
+;; Action handlers
 
 (reg-event-db
   :navigate
@@ -12,21 +19,3 @@
   :set-docs
   (fn [db [_ docs]]
     (assoc db :docs docs)))
-
-;;subscriptions
-
-(reg-sub
-  :route
-  (fn [db _]
-    (-> db :route)))
-
-(reg-sub
-  :page
-  :<- [:route]
-  (fn [route _]
-    (-> route :data :name)))
-
-(reg-sub
-  :docs
-  (fn [db _]
-    (:docs db)))
