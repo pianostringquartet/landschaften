@@ -1,5 +1,6 @@
 (ns landschaften.db
-  (:require [cljs.spec.alpha :as s]))
+  (:require [cljs.spec.alpha :as s]
+            [landschaften.specs :as specs]))
 
 (def dev-paintings
   #{{:date "c. 1469",
@@ -64,4 +65,7 @@
 ;; (declare x) is not respected;
 ;; cljs will be compiled with x as nil
 (def default-db
- {:paintings dev-paintings})
+ {:paintings dev-paintings
+  :types specs/PAINTING-TYPES
+  :schools specs/SCHOOLS
+  :timeframes specs/TIMEFRAMES})

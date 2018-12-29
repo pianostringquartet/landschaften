@@ -91,8 +91,7 @@
   (rf/clear-subscription-cache!)
   (r/render [views/hello-world] (.getElementById js/document "app")))
 
-
-
+;; called in html file
 (defn init! []
   (rf/dispatch-sync [:navigate (reitit/match-by-name router :home)])
   (rf/dispatch-sync [::core-events/initialize-db])
