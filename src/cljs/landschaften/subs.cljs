@@ -23,20 +23,45 @@
 
 (reg-sub
   ::paintings
-  (fn retrieve-paintings [db _]
+  (fn paintings [db _]
     (:paintings db)))
 
 (reg-sub
   ::types
-  (fn retrieve-types [db _]
+  (fn types [db _]
     (:types db)))
 
 (reg-sub
   ::schools
-  (fn retrieve-schools [db _]
+  (fn schools [db _]
     (:schools db)))
 
 (reg-sub
   ::timeframes
-  (fn retrieve-timeframes [db _]
+  (fn timeframes [db _]
     (:timeframes db)))
+
+(reg-sub
+  ::concepts
+  (fn concepts [db _]
+    (:concepts db)))
+
+(reg-sub
+  ::selected-types
+  (fn selected-types [db _]
+    (:selected-types db)))
+
+(reg-sub
+  ::selected-schools
+  (fn selected-schools [db _]
+    (:selected-schools db)))
+
+(reg-sub
+  ::selected-timeframes
+  (fn selected-timeframes [db _]
+    (:selected-timeframes db)))
+
+(reg-sub
+  ::selected-concepts
+  (fn selected-concepts [db _]
+    (:selected-concepts db)))

@@ -5,7 +5,6 @@
 ;; -------------------------
 ;; PAINT SPEC
 ;; -------------------------
-;; ^^ later: in cljc folder, to share
 
 (def PAINTING-TYPES
  #{"mythological"

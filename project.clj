@@ -109,7 +109,7 @@
                       :optimizations :none
                       :pretty-print true
                       :closure-defines {"re_frame.trace.trace_enabled_QMARK_" true}
-                      :preloads [day8.re-frame-10x.preload]}}}}
+                       :preloads [day8.re-frame-10x.preload]}}}}
                   :doo {:build "test"}
                   :source-paths ["env/dev/clj"]
                   :resource-paths ["env/dev/resources"]
