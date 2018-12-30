@@ -22,11 +22,9 @@
                     (on-change %))]))
 
 (defn labeled-selection [label choices selections on-change]
-  [rc/v-box :children [[rc/label :label label :class "h4"]
-                       [selection-list-from-set
-                         choices
-                         selections
-                         on-change]]])
+  [rc/v-box
+      :children [[rc/label :label label :class "h4"]
+                 [selection-list-from-set choices selections on-change]]])
 
 ;; should this component access the state directly?
 (defn selection-lists []
@@ -56,35 +54,21 @@
 (defn search-button []
   [rc/button
       :label "SEARCH"
-      :on-click #(js/console.log "search-button clicked")
-      :class "btn btn-primary" ; Bootstrap
-      :style {:border-radius "30px"}]) ; curvier corners
+      ; :on-click #(js/console.log "search-button clicked")
+      :on-click #(dispatch [::events/query])
+      :class "btn btn-success"]) ; Bootstrap
 
-(defn suggestions-for-search [s coll]
+(defn search-suggestions [s coll]
   (into []
     (take 16
       (for [n coll
             :when (re-find (re-pattern (str "(?i)" s)) n)]
-        ; {:name n}))))
         n))))
 
-
-(suggestions-for-search "cast" sample/sample-concepts)
-; (fn [s
-;          (into []
-;                (take 16
-;                      (for [n md-icon-names
-;                            :when (re-find (re-pattern (str "(?i)" s)) n)]
-;                        (md-icon-result n))))])
-
 (defn concept-typeahead []
-  ; [rc/label :label "fuzzy concept search"])
   (let [concepts (subscribe [::subs/concepts])]
-        ; model (r/atom "love")]
     [rc/typeahead
-      ; :model (r/atom {})
-      ; :model model
-      :data-source #(suggestions-for-search % @concepts)
+      :data-source #(search-suggestions % @concepts)
       :placeholder "Add concept to search by"
       :change-on-blur? true
       :on-change #(do
@@ -94,27 +78,27 @@
                     ;; this clears the model everytime you type,
                     ;; after initially selecting something
 
-
-      ; :suggestion-to-string #(:name %)
-      ; :render-suggestion
-      ;   (fn [{:keys [name]}]
-      ;     [:span
-      ;      [:i {:style {:width "40px"} :class (@concepts name)}]
-      ;      name])
-
-     ; :immediate-model-update? true]))
+(defn bubble-button [concept]
+  [rc/button
+      :label concept
+      :on-click #(dispatch [::events/remove-selected-concept concept])
+      :class "btn btn-info" ; Bootstrap
+      :style {:border-radius "30px"}]) ; curvier corners
 
 (defn selected-concepts []
   (let [selected-concepts (subscribe [::subs/selected-concepts])]
-    [rc/v-box
-     :children (map
-                 (fn [concept] [rc/label :label concept])
-                 @selected-concepts)]))
+    [rc/v-box :children (map bubble-button @selected-concepts)]))
+
+(defn clear-button []
+  [rc/button
+    :label "CLEAR"
+    :on-click #(dispatch [::events/selections-cleared])
+    :class "btn btn-danger"])
 
 (defn sidebar []
   [rc/v-box
     :padding "10px"
     :children [[selection-lists]
-               [search-button]
+               [rc/h-box :children [[clear-button] [search-button]]]
                [concept-typeahead]
                [selected-concepts]]])

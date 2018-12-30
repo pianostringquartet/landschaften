@@ -7,6 +7,7 @@
 ;; cljs will be compiled with x as nil
 (def default-db
  {:paintings sample/sample-paintings
+  :default-painting (first sample/sample-paintings)
   :types specs/PAINTING-TYPES
   :schools specs/SCHOOLS
   :timeframes specs/TIMEFRAMES
@@ -14,4 +15,5 @@
   :selected-types #{}
   :selected-schools #{}
   :selected-timeframes #{}
-  :selected-concepts #{}})
+  :selected-concepts #{}
+  :query-loading false})

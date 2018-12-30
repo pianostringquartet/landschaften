@@ -1,6 +1,6 @@
 (ns landschaften.views.examine
   (:require [reagent.core :as r]
-            [re-frame.core :as rf]
+            [re-frame.core :refer [subscribe]]
             [re-com.core :as rc]
             [landschaften.subs :as subs]
             [landschaften.db :as db]
@@ -22,7 +22,8 @@
                  :max-height 200}}])
 
 (defn NO-INFO-AVAILABLE []
-  [:div "Painting info not available."])
+  ; [:div "Painting info not available."])
+  [rc/label :label "Painting info not available."])
 
 (defn page-title []
   [rc/label
@@ -32,41 +33,47 @@
 (defn image [jpg]
   [:img {:src jpg
         ;; todo: check landscape vs. portrait orientation
-         :style {:max-width "auto"
+         :style {:max-width 500
                  :max-height 500}}])
 
-(defn kv-str [map-entry]
-  (let [key-name (name (key map-entry))]
-   (str key-name ": " (val map-entry))))
-
 (defn info [painting]
-  [:div
-    (map
-      (fn [datum] [:div (kv-str (find painting datum))])
-      '(:title :author :date :timeframe :type :school))])
+  (let [->ui-label (fn [k] [rc/label :label (str (name k) ": " (k painting))])
+        info-categories '(:title :author :date :timeframe :type :school)]
+   [rc/v-box :children (mapv ->ui-label info-categories)]))
+
 
 (defn bubble-button [{:keys [name value]}]
   {:pre [(string? name)]}
   [rc/button
       :label (str name " (" value ")")
       :on-click (fn [] (js/console.log "clicked " name))
-      :class "btn btn-primary" ; Bootstrap
+      :class "btn btn-info" ; Bootstrap
       :style {:border-radius "30px"}]) ; curvier corners
 
 (defn concept-bubbles [concepts]
   {:pre [(s/valid? ::specs/concepts concepts)]}
-  [:div (map bubble-button concepts)])
+  ; [:div (map bubble-button concepts)])
+  (let [bubble-rows  (partition 3 (map bubble-button concepts))
+        ->ui-row (fn [xs] [rc/h-box :gap "8px" :width "500px" :children (into [] xs)])]
+    [rc/v-box
+      :gap "8px"
+      :justify :center
+      :children (mapv ->ui-row bubble-rows)]))
 
-;; should source from e.g. db 'current painting',
-;; not take all paintings then take first one
+(defn display-painting [painting]
+  [rc/v-box
+     :children
+      [[page-title]
+       (spec-map ::specs/jpg (:jpg painting)
+         image
+         NO-IMAGE-AVAILABLE)
+       (spec-map ::specs/painting painting
+         info
+         NO-INFO-AVAILABLE)
+       (concept-bubbles (:concepts painting))]])
+
+;; should actually source from e.g. "::subs/current-painting"
 (defn examine-painting []
-  (let [paintings (rf/subscribe [::subs/paintings])]
-    [:div
-     ; [page-title]
-     (spec-map ::specs/jpg (:jpg (first @paintings))
-       image
-       NO-IMAGE-AVAILABLE)
-     (spec-map ::specs/painting (first @paintings)
-       info
-       NO-INFO-AVAILABLE)
-     (concept-bubbles (:concepts (first @paintings)))]))
+  (let [paintings (subscribe [::subs/paintings])
+        default-painting (subscribe [::subs/default-painting])]
+    (display-painting (or (first @paintings) @default-painting))))

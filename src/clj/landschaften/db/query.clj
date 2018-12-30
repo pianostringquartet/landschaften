@@ -15,6 +15,10 @@
 ;; BUILD QUERY
 ;; ----------------------------
 
+;; instead of an 'if' branch,
+;; can you do a rule?
+;; e.g. add as many ? as there are elems,
+;; then interpose "," as needed
 (defn snippet:column-in [table-alias column n]
   (let [param-placeholders
          (if (= 1 n) "?" (clojure.string/join ", " (repeat n "?")))]

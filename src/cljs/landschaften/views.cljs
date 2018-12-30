@@ -10,8 +10,6 @@
             [landschaften.views.sidebar :as sidebar]))
 
 (defn hello-world []
- [rc/h-box
-  ; :size "auto"
-  ; :justify :center
+ [rc/h-box 
   :children [[examine/examine-painting]
              [sidebar/sidebar]]])

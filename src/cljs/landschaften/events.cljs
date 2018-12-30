@@ -1,7 +1,47 @@
 (ns landschaften.events
-  (:require [re-frame.core :refer [dispatch reg-event-db reg-sub]]
-            [landschaften.db :as db]))
+  (:require [re-frame.core :refer [dispatch reg-event-db reg-sub reg-event-fx reg-fx dispatch]]
+            [landschaften.db :as db]
+            ; [ajax.core :refer [POST]]
+            [ajax.core :refer [POST GET]]))
 
+
+;; taken from cardy
+(defn default-error-handler [response]
+  (js/console.log "Encountered unexpected error: " response))
+
+(reg-fx
+  :post-request
+  (fn post-request-handler
+    [{uri :uri params :params handler :handler error-handler :error-handler
+      :or {error-handler default-error-handler}}]
+    (POST uri {:params params :handler handler :error-handler error-handler})))
+
+(defn selections->constraints [db]
+  (remove
+    #(empty? (:values %))
+    #{{:column "type" :values (into [] (:selected-types db))}
+      {:column "school" :values (into [] (:selected-schools db))}
+      {:column "timeframe" :values (into [] (:selected-timeframes db))}
+      {:column "name" :values (into [] (:selected-concepts db))}}))
+
+
+(reg-event-fx
+  ::query
+  (fn query [cofx _]
+    (let [db (:db cofx)]
+      {:db (assoc db :query-loading true)
+       :post-request
+        {:uri "/query"
+         :params {:constraints (selections->constraints db)}
+         :handler #(dispatch [::query-succeeded %])}})))
+         ;; use default error handler otherwise for now
+
+(reg-event-db
+  ::query-succeeded
+  (fn query-succeeded [db [_ paintings]]
+    (-> db
+     (assoc :query-loading false)
+     (assoc :paintings paintings))))
 
 (reg-event-db
  ::initialize-db
@@ -33,11 +73,36 @@
  (fn update-selected-concepts [db [_ selected-concept]]
    (update db :selected-concepts conj selected-concept)))
 
+(reg-event-db
+ ::remove-selected-concept
+ (fn remove-selected-concept [db [_ selected-concept]]
+   (do
+     (js/console.log "remove-selected-concept received: " selected-concept)
+     (js/console.log "remove-selected-concept: db was: " (:selected-concepts db))
+     (update db :selected-concepts disj selected-concept))))
+
+(reg-event-db
+ ::selections-cleared
+ (fn selections-cleared [db _]
+  (-> db
+     (assoc :selected-types #{})
+     (assoc :selected-schools #{})
+     (assoc :selected-timeframes #{})
+     (assoc :selected-concepts #{}))))
+
+
+
+
+
+
 ;; Action handlers
 
 ; (update {:a #{3 1 5}} :a conj 988)
+; (update {:a #{3 1 5}} :a disj 5)
 
 ; (conj #{3 1 5} 999)
+
+; (disj #{3 1 5 9} 9)
 
 (reg-event-db
   :navigate

@@ -27,6 +27,11 @@
     (:paintings db)))
 
 (reg-sub
+  ::default-painting
+  (fn default-painting [db _]
+    (:default-painting db)))
+
+(reg-sub
   ::types
   (fn types [db _]
     (:types db)))

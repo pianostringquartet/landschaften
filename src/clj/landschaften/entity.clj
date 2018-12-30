@@ -48,6 +48,10 @@
 (s/def ::constraint (s/keys :req-un [::column ::values]))
 
 
+; (s/explain
+;   (s/coll-of ::constraint)
+;   #{{:column "concepts", :values []} {:column "schools", :values []} {:column "timeframes", :values ["1451-1500" "1501-1550" "1551-1600"]} {:column "types", :values ["religious"]}})
+
 ;; ----------------------------
 ;; SQLVEC
 ;; ----------------------------
