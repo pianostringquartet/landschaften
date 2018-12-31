@@ -85,9 +85,17 @@
       :class "btn btn-info" ; Bootstrap
       :style {:border-radius "30px"}]) ; curvier corners
 
+(defn concepts-table [concepts]
+  (let [concepts-bubbles (partition-all 3 (map bubble-button concepts))
+        ->ui-row (fn [xs] [rc/h-box :gap "8px" :width "500px" :children (into [] xs)])]
+    [rc/v-box
+      :gap "8px"
+      :justify :center
+      :children (mapv ->ui-row concepts-bubbles)]))
+
 (defn selected-concepts []
   (let [selected-concepts (subscribe [::subs/selected-concepts])]
-    [rc/v-box :children (map bubble-button @selected-concepts)]))
+    [concepts-table @selected-concepts]))
 
 (defn clear-button []
   [rc/button

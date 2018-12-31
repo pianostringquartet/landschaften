@@ -41,7 +41,8 @@
   (fn query-succeeded [db [_ paintings]]
     (-> db
      (assoc :query-loading false)
-     (assoc :paintings paintings))))
+     (assoc :paintings paintings)
+     (assoc :current-painting nil))))
 
 (reg-event-db
  ::initialize-db

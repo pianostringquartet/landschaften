@@ -47,14 +47,13 @@
   {:pre [(string? name)]}
   [rc/button
       :label (str name " (" value ")")
-      :on-click (fn [] (js/console.log "clicked " name))
+      :on-click #(dispatch [::events/update-selected-concepts name])
       :class "btn btn-info" ; Bootstrap
       :style {:border-radius "30px"}]) ; curvier corners
 
 (defn concept-bubbles [concepts]
   {:pre [(s/valid? ::specs/concepts concepts)]}
-  ; [:div (map bubble-button concepts)])
-  (let [bubble-rows  (partition 3 (map bubble-button concepts))
+  (let [bubble-rows  (partition-all 3 (map bubble-button concepts))
         ->ui-row (fn [xs] [rc/h-box :gap "8px" :width "500px" :children (into [] xs)])]
     [rc/v-box
       :gap "8px"
