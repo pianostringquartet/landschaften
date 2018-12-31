@@ -33,7 +33,6 @@
 (s/def ::title string?)
 (s/def ::author string?)
 (s/def ::form #{"painting"})
-; (s/def ::timeframe string?)
 (s/def ::timeframe #(contains? TIMEFRAMES %))
 
 (s/def ::jpg

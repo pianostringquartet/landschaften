@@ -95,10 +95,12 @@
     :on-click #(dispatch [::events/selections-cleared])
     :class "btn btn-danger"])
 
+
 (defn sidebar []
   [rc/v-box
     :padding "10px"
+    :gap "10px"
     :children [[selection-lists]
-               [rc/h-box :children [[clear-button] [search-button]]]
+               [rc/h-box :gap  "30px" :children [[clear-button] [search-button]]]
                [concept-typeahead]
                [selected-concepts]]])

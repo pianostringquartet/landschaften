@@ -91,8 +91,17 @@
      (assoc :selected-concepts #{}))))
 
 
+;; when examine's done button is clicked,
+;; we no longer have a 'current painting' that we're examining
+(reg-event-db
+  ::done-button-clicked
+  (fn done-button-clicked [db _]
+    (assoc db :current-painting nil)))
 
-
+(reg-event-db
+  ::painting-tile-clicked
+  (fn painting-tile-clicked [db [_ painting]]
+    (assoc db :current-painting painting)))
 
 
 ;; Action handlers

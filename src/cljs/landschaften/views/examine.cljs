@@ -1,11 +1,12 @@
 (ns landschaften.views.examine
   (:require [reagent.core :as r]
-            [re-frame.core :refer [subscribe]]
+            [re-frame.core :refer [subscribe dispatch]]
             [re-com.core :as rc]
             [landschaften.subs :as subs]
             [landschaften.db :as db]
             [clojure.spec.alpha :as s]
-            [landschaften.specs :as specs]))
+            [landschaften.specs :as specs]
+            [landschaften.events :as events]))
 
 
 ;; spec is nice... but none of this is enforced
@@ -60,20 +61,38 @@
       :justify :center
       :children (mapv ->ui-row bubble-rows)]))
 
+(defn done-button []
+  [rc/button
+    :label "DONE"
+    :on-click #(dispatch [::events/done-button-clicked])
+    :class "btn btn-warning"])
+
 (defn display-painting [painting]
   [rc/v-box
+     :gap "10px"
      :children
       [[page-title]
        (spec-map ::specs/jpg (:jpg painting)
          image
          NO-IMAGE-AVAILABLE)
-       (spec-map ::specs/painting painting
-         info
-         NO-INFO-AVAILABLE)
+       [rc/h-box
+         :justify :between ; spread them far apart
+         :children
+          [(spec-map ::specs/painting painting
+             info
+             NO-INFO-AVAILABLE)
+           [done-button]]]
        (concept-bubbles (:concepts painting))]])
 
 ;; should actually source from e.g. "::subs/current-painting"
-(defn examine-painting []
-  (let [paintings (subscribe [::subs/paintings])
-        default-painting (subscribe [::subs/default-painting])]
-    (display-painting (or (first @paintings) @default-painting))))
+(defn examine-painting [current-painting]
+  (let [default-painting (subscribe [::subs/default-painting])]
+    ;paintings (subscribe [::subs/paintings])
+
+  ; (display-painting (or (first @paintings) @default-painting)))
+    ; (do
+      ; (js/console.log "current-painting was: " current-painting)
+      (display-painting (or current-painting @default-painting))))
+
+; (defn examine-painting [current-painting]
+;   (display-painting current-painting))

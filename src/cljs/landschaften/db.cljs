@@ -3,14 +3,13 @@
             [landschaften.specs :as specs]
             [landschaften.sample :as sample]))
 
-;; (declare x) is not respected;
-;; cljs will be compiled with x as nil
 (def default-db
  {:paintings sample/sample-paintings
   :default-painting (first sample/sample-paintings)
-  :types specs/PAINTING-TYPES
-  :schools specs/SCHOOLS
-  :timeframes specs/TIMEFRAMES
+  :current-painting nil
+  :types (disj specs/PAINTING-TYPES "Other")
+  :schools (disj specs/SCHOOLS "Other")
+  :timeframes (disj specs/TIMEFRAMES "0801-0850" "1051-1100")
   :concepts sample/sample-concepts
   :selected-types #{}
   :selected-schools #{}
