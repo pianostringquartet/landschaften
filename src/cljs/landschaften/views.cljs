@@ -14,9 +14,15 @@
  (let [current-painting (subscribe [::subs/current-painting])
        paintings (subscribe [::subs/paintings])]
   [rc/h-box
+   :gap "4px"
+   :style {:margin-left "24px" :margin-right "24px"}
+   ; :justify :between
+
    :children
      [(if @current-painting
         [examine/examine-painting @current-painting]
         ; [preview/preview @paintings])
-        [preview/preview (take 150 @paintings)])
+        ; [preview/preview (take 150 @paintings)]) ;; very slow load
+        ; [preview/preview (take 2 @paintings)]) ;;
+        [preview/preview (take 3 @paintings)]) ;;
       [sidebar/sidebar]]]))

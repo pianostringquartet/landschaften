@@ -2,8 +2,42 @@
   (:require [landschaften.db.core :refer [*db*]]
            [clojure.java.jdbc :as jdbc]
            [landschaften.clarifai :as clarifai]
-           [clojure.data.json :as json]))
+           [clojure.data.json :as json]
+           [clj-http.client :as client]
+           [clojure.spec.alpha :as s]
+           [landschaften.entity :as entity]))
 
+;; ENV VARS
+(def unsigned-upload-preset "qkyy5yls")
+(def cloud-name "dgpqnl8ul")
+
+;; better as a multi image upload?
+(defn cloudinary:upload-image [file cloud-name upload-preset]
+ (client/post
+  (str "https://api.cloudinary.com/v1_1/" cloud-name "/image/upload")
+  {:headers {:content-type "Application/JSON"}
+   :body (json/write-str {:file file ; can be https url etc.
+                          :upload_preset upload-preset})
+   :throw-exceptions false}))
+
+(defn upload [wga-jpg-url cloud-name upload-preset]
+  {:post [#(s/valid? ::jpg %)]}
+  (-> (cloudinary:upload-image wga-jpg-url cloud-name upload-preset)
+    (:body)
+    (json/read-str :key-fn keyword)
+    (:secure_url)))
+
+(defn add-cloudinary-jpg-url! [db painting cloud-name upload-preset]
+  {:pre [(s/valid? ::entity/painting painting)]}
+  ;; some wga_jpgs are not actually WGA-hosted
+  (if-let [jpg-url (upload (:wga_jpg painting) cloud-name upload-preset)]
+    (jdbc/update! db :paintings {:jpg jpg-url} ["id = ?" (:id painting)])))
+
+;; used to upload all images to Cloudinary
+; (let [rows (jdbc/query *db* ["select * from `paintings` where jpg is null"])]
+;   (map
+;     #(add-cloudinary-jpg-url! *db* % cloud-name unsigned-upload-preset)
+;     rows))
 
 ;;; NEEDS REFACTORING:
 

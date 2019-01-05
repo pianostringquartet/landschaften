@@ -103,7 +103,6 @@
     :on-click #(dispatch [::events/selections-cleared])
     :class "btn btn-danger"])
 
-
 (defn sidebar []
   [rc/v-box
     :padding "10px"

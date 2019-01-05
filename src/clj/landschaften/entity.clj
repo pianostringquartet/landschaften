@@ -93,18 +93,30 @@
 (s/def ::form #{"painting"})
 (s/def ::timeframe string?)
 
-(s/def ::jpg
+(s/def ::wga-jpg ; Web Gallery of Art jpg url
  (s/with-gen
   (s/and #(clojure.string/includes? % "https://www.wga.hu/art/")
          #(clojure.string/includes? % ".jpg"))
   (s/gen SAMPLE-JPEGS)))
+
+;; this is allowed to be null / an empty str in the db
+;; so a valid painting
+(s/def ::jpg ; Cloudinary 'secure [jpg] url'
+  (s/nilable
+    (s/and
+      #(clojure.string/includes? % "https://res.cloudinary.com/")
+      #(clojure.string/includes? % "/image/upload/"))))
+
+
 
 (s/def ::name string?)
 (s/def ::value #(<= 0.0 % 1.0))
 (s/def ::concept (s/keys :req-un [::name ::value]))
 (s/def ::concepts (s/coll-of ::concept))
 
-(s/def ::painting (s/keys :req-un [::date ::school ::type ::title ::form  ::author ::timeframe ::jpg ::concepts]))
+; (s/def ::painting (s/keys :req-un [::date ::school ::type ::title ::form  ::author ::timeframe ::jpg ::concepts]))
+(s/def ::painting (s/keys :req-un [::date ::school ::type ::title ::form  ::author ::timeframe ::wga-jpg ::jpg ::concepts]))
+
 
 
 ;; ----------------------------

@@ -32,7 +32,8 @@
       :class "h1"])
 
 (defn image [jpg]
-  [:img {:src jpg
+  ; [:img {:src jpg}
+  [:img {:src  "https://res.cloudinary.com/dgpqnl8ul/image/upload/v1546353103/mubxgjzbk3d9mzxtdofs.jpg"
         ;; todo: check landscape vs. portrait orientation
          :style {:max-width 500
                  :max-height 500}}])
