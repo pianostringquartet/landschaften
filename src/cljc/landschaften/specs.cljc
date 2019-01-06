@@ -35,11 +35,18 @@
 (s/def ::form #{"painting"})
 (s/def ::timeframe #(contains? TIMEFRAMES %))
 
-(s/def ::jpg
+(s/def ::wga-jpg
  ; (s/with-gen ; doesn't work with cljs?
   (s/and #(clojure.string/includes? % "https://www.wga.hu/art/")
          #(clojure.string/includes? % ".jpg")))
   ; (s/gen SAMPLE-JPEGS))
+
+
+(s/def ::jpg ; Cloudinary 'secure [jpg] url'
+  (s/nilable
+    (s/and
+      #(clojure.string/includes? % "https://res.cloudinary.com/")
+      #(clojure.string/includes? % "/image/upload/"))))
 
 (s/def ::name string?)
 (s/def ::value #(<= 0.0 % 1.0))
