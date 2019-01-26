@@ -5,7 +5,8 @@
             [clojure.spec.alpha :as s]
             [landschaften.events :as events]
             [landschaften.specs :as specs]
-            [landschaften.views.utils :as utils]))
+            [landschaften.views.utils :as utils]
+            [landschaften.views.graph :as graph]))
 
 ;; a tile
 ;; one per painting,
@@ -141,4 +142,5 @@
    ; :gap "4px"
    ; :size "auto"
    :children [[paintings-found (count paintings)]
+              [graph/hello-world]
               [tiles paintings]]])
