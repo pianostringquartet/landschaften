@@ -131,6 +131,7 @@
              :label (clojure.string/join " " [n x "limit"])
              :level :level1]]))
 
+; (defn preview [paintings]
 (defn preview [paintings]
   ; [rc/v-box
   ;  :align :center
@@ -142,5 +143,5 @@
    ; :gap "4px"
    ; :size "auto"
    :children [[paintings-found (count paintings)]
-              [graph/hello-world]
-              [tiles paintings]]])
+              [graph/frequencies-chart paintings]
+              [tiles (take 10 paintings)]]])

@@ -75,3 +75,15 @@
   ::selected-concepts
   (fn selected-concepts [db _]
     (:selected-concepts db)))
+
+;; want a second-layer sub
+;; takes paintings in app-db,
+;; looks at their 20 high-certainty concepts,
+;; and returns those concepts names and how often they appear
+
+;; line/column-chart wants vector of vectors like:
+; [[x-col-name y-col-name]
+;  [x-col-val-1 y-col-val-1]
+;  [x-col-val-2 y-col-val-2]]
+
+;; set of maps like #{{:concept-name "some-str" :frequency-of-concept "some-str"}}

@@ -5,33 +5,21 @@
             [clojure.spec.alpha :as s]
             [landschaften.events :as events]
             [landschaften.specs :as specs]
-            [landschaften.views.utils :as utils]))
+            [landschaften.views.utils :as utils]
+            [landschaften.subs :as subs]))
 
 ;; this component will actually be part of 'preview' screen/panel, later.
-
-; (ns quickfrontend.google-chart
-;   (:require [re-frame.core :as re-frame]
-;             [quickfrontend.subs :as subs]
-;             [reagent.core :as reagent]))
 
 ; (ns google-chart-example.core
 ;     (:require [reagent.core :as reagent :refer [atom]]))
 
 (enable-console-print!)
 
-(def day
-  (r/atom 3))
-
-;; this makes
-(def some-data
-  (r/atom [["Day", "Clicks"],
-                 [1 10000]
-                 [2 35000]
-                 [3 44000]]))
-
-(defonce ready?
+;; needed for async load of
+(defonce google-chart-ready?
   (r/atom false))
 
+;; asychronously initialize the Google Chart
 (defonce initialize
   (do
     (println "google-chart: initialize called")
@@ -39,45 +27,75 @@
     (js/google.charts.setOnLoadCallback
       (fn google-visualization-loaded []
         (do
-            (println "google-visualization-loaded called")
-            (reset! ready? true))))))
+          (println "google-visualization-loaded called")
+          (reset! google-chart-ready? true))))))
 
-(defn data-table [data]
-  (cond
-    (map? data) (js/google.visualization.DataTable. (clj->js data))
-    (string? data) (js/google.visualization.Query. data)
-    (seqable? data) (js/google.visualization.arrayToDataTable (clj->js data))))
+;; not sure what map? and string? parts used for...
+; (defn data->google-data-table [data]
+;   (cond
+;     ; (map? data) (js/google.visualization.DataTable. (clj->js data))
+;     ; (string? data) (js/google.visualization.Query. data)
+;     (seqable? data) (js/google.visualization.arrayToDataTable (clj->js data))))
 
-(defn draw-chart [chart-type data options]
-  [:div
-   (if @ready?
+
+
+(defn draw-google-chart [chart-type data options]
+  [rc/box
+   :child
+    (if @google-chart-ready?
+   ; (when @google-chart-ready?
      [:div
-      {:ref
-       (fn [this]
-         (when this
-           (.draw (new (aget js/google.visualization chart-type) this)
-                  (data-table data)
-                  (clj->js options))))}]
-     [:div "Loading..."])])
+     ; [rc/box
+      ; :child
+       {:ref ;; what is this :ref, and how to make it work well with re-com?
+        (fn [this]
+          (when this
+            (.draw (new (aget js/google.visualization chart-type) this)
+                   ; (data->google-data-table data)
+                   ;; assumes `data` is vector of vectors
+                   (js/google.visualization.arrayToDataTable (clj->js data))
+                   (clj->js options))))}]
+     [rc/label :label "Loading..."])])
 
-(defn hello-world []
-  [:div
-   [:h1 "Google Chart Example"]
 
-   [:button
-    {:on-click
-     (fn [e]
-       (swap! day inc)
-       (swap! some-data conj [@day (/ (rand-int 300000) @day)]))}
-    "click me!"]
+;; this data should come from app-db
+; (def day
+;   (r/atom 3))
 
-   [draw-chart
-    "LineChart"
-    @some-data
-    {:title (str "Clicks as of day " @day)}]])
+(def some-data
+  (r/atom [["Day", "Clicks"],
+           [1 10000]
+           [2 35000]
+           [3 44000]]))
 
-; (r/render-component
-;   [hello-world]
-;   (js/document.getElementById "app"))
+(s/def ::google-chart-type
+  #(contains? #{"LineChart" "PieChart" "ColumnChart" "AreaChart"} %))
 
-(defn on-js-reload [])
+(defn chart [some-data]
+  [draw-google-chart
+   "ColumnChart"
+   some-data
+   ; {:title (str "Clicks as of day " @day)}])
+   {:title (str "Concept Frequency")}])
+
+(defn concepts-above [painting n]
+   (filter
+    #(> (:value %) n)
+    (:concepts painting)))
+
+(defn frequencies-of-concepts-with-certainty-above [paintings n]
+  (frequencies
+   (map
+    :name
+    (mapcat
+     #(concepts-above % n)
+     paintings))))
+
+(defn frequencies->google-chart-data [concept-frequencies]
+  (mapv #(into [] %) concept-frequencies))
+
+(defn frequencies-chart [paintings]
+  (let [chart-axes ["Concept" "Frequency"]
+        chart-data (frequencies-of-concepts-with-certainty-above paintings 0.85)]
+  ; [chart @some-data])
+    [chart (into [chart-axes] (frequencies->google-chart-data chart-data))]))
