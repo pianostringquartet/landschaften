@@ -41,6 +41,11 @@
 
 (defn draw-google-chart [chart-type data options]
   [rc/box
+   :align-self :stretch
+   ; :align-self :auto
+   ; :min-height "50%"
+   ; :size "auto"
+   ; :height "90%"
    :child
     (if @google-chart-ready?
    ; (when @google-chart-ready?
@@ -73,10 +78,22 @@
 
 (defn chart [some-data]
   [draw-google-chart
-   "ColumnChart"
+   ; "ColumnChart"
+   "BarChart"
    some-data
    ; {:title (str "Clicks as of day " @day)}])
-   {:title (str "Concept Frequency")}])
+   {:title (str "Concept Frequency")
+    :legend {:position "none"}
+    ; :chartArea {:height "90%"}
+    ; :height "100%"
+    ; :bar {:groupWidth "50%"}
+    ; :vAxis {:title "Concept" :showTextEvery 1}}])
+    ; :hAxis {:showTextEvery 1}}])
+    ; :isStacked "relative"}])
+
+    :vAxis {:title "Concept"}}])
+            ; :gridlines {:count (count some-data)}
+            ; :viewWindow {:max}}}])
 
 (defn concepts-above [painting n]
    (filter
@@ -96,6 +113,12 @@
 
 (defn frequencies-chart [paintings]
   (let [chart-axes ["Concept" "Frequency"]
-        chart-data (frequencies-of-concepts-with-certainty-above paintings 0.85)]
+        chart-data (take 20
+                     (reverse
+                        (sort-by
+                         second
+                         (frequencies-of-concepts-with-certainty-above   paintings 0.94))))]
   ; [chart @some-data])
-    [chart (into [chart-axes] (frequencies->google-chart-data chart-data))]))
+    (do
+     (js/console.log "chart-data is:" chart-data)
+     [chart (into [chart-axes] (frequencies->google-chart-data chart-data))])))
