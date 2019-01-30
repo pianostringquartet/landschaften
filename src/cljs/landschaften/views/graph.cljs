@@ -10,87 +10,60 @@
 
 ;; this component will actually be part of 'preview' screen/panel, later.
 
-; (ns google-chart-example.core
-;     (:require [reagent.core :as reagent :refer [atom]]))
-
 (enable-console-print!)
 
 ;; needed for async load of
+;; ... take a different, better approach?
 (defonce google-chart-ready?
   (r/atom false))
 
 ;; asychronously initialize the Google Chart
+;; need initialize-chart and initialize-table versions
 (defonce initialize
   (do
     (println "google-chart: initialize called")
-    (js/google.charts.load (clj->js {:packages ["corechart"]}))
+    ; (js/google.charts.load (clj->js {:packages ["corechart"]}))
+    (js/google.charts.load (clj->js {:packages ["table"]}))
     (js/google.charts.setOnLoadCallback
       (fn google-visualization-loaded []
         (do
           (println "google-visualization-loaded called")
           (reset! google-chart-ready? true))))))
 
-;; not sure what map? and string? parts used for...
-; (defn data->google-data-table [data]
-;   (cond
-;     ; (map? data) (js/google.visualization.DataTable. (clj->js data))
-;     ; (string? data) (js/google.visualization.Query. data)
-;     (seqable? data) (js/google.visualization.arrayToDataTable (clj->js data))))
-
-
 
 (defn draw-google-chart [chart-type data options]
   [rc/box
    :align-self :stretch
-   ; :align-self :auto
-   ; :min-height "50%"
-   ; :size "auto"
-   ; :height "90%"
    :child
     (if @google-chart-ready?
-   ; (when @google-chart-ready?
      [:div
-     ; [rc/box
-      ; :child
-       {:ref ;; what is this :ref, and how to make it work well with re-com?
+; :ref is how Reagent handles the imperative backing instances, which aren't (de)mounted via React's lifecycle methods
+; see: https://presumably.de/reagent-mysteries-part-3-manipulating-the-dom.html
+       {:style {:height "500px"}
+        :ref
         (fn [this]
           (when this
             (.draw (new (aget js/google.visualization chart-type) this)
-                   ; (data->google-data-table data)
                    ;; assumes `data` is vector of vectors
                    (js/google.visualization.arrayToDataTable (clj->js data))
                    (clj->js options))))}]
      [rc/label :label "Loading..."])])
 
-
-;; this data should come from app-db
-; (def day
-;   (r/atom 3))
-
-(def some-data
-  (r/atom [["Day", "Clicks"],
-           [1 10000]
-           [2 35000]
-           [3 44000]]))
-
 (s/def ::google-chart-type
-  #(contains? #{"LineChart" "PieChart" "ColumnChart" "AreaChart"} %))
+  #(contains? #{"LineChart" "PieChart" "ColumnChart" "AreaChart", "BarChart"} %))
 
-(defn chart [some-data]
+(defn chart [some-data chart-type]
   [draw-google-chart
-   ; "ColumnChart"
-   "BarChart"
+   ; "BarChart"
+   chart-type
    some-data
-   ; {:title (str "Clicks as of day " @day)}])
    {:title (str "Concept Frequency")
     :legend {:position "none"}
     ; :chartArea {:height "90%"}
     ; :height "100%"
     ; :bar {:groupWidth "50%"}
     ; :vAxis {:title "Concept" :showTextEvery 1}}])
-    ; :hAxis {:showTextEvery 1}}])
     ; :isStacked "relative"}])
-
     :vAxis {:title "Concept"}}])
             ; :gridlines {:count (count some-data)}
             ; :viewWindow {:max}}}])
@@ -117,8 +90,9 @@
                      (reverse
                         (sort-by
                          second
-                         (frequencies-of-concepts-with-certainty-above   paintings 0.94))))]
-  ; [chart @some-data])
+                         (frequencies-of-concepts-with-certainty-above   paintings 0.94))))
+        prepared-chart-data (into [chart-axes] (frequencies->google-chart-data chart-data))]
     (do
      (js/console.log "chart-data is:" chart-data)
-     [chart (into [chart-axes] (frequencies->google-chart-data chart-data))])))
+     ; [chart prepared-chart-data "BarChart"]))) ;; must use initialize-chart
+     [chart prepared-chart-data "Table"]))) ;; must use initialize-table
