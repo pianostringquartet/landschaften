@@ -60,7 +60,8 @@
 
 (defn search-suggestions [s coll]
   (into []
-    (take 16
+    ; (take 16
+    (take 40
       (for [n coll
             :when (re-find (re-pattern (str "(?i)" s)) n)]
         n))))

@@ -24,7 +24,6 @@
                  :max-height 200}}])
 
 (defn NO-INFO-AVAILABLE []
-  ; [:div "Painting info not available."])
   [rc/label :label "Painting info not available."])
 
 (defn page-title []
@@ -109,7 +108,6 @@
 (defn examine-painting [current-painting]
   (let [default-painting (subscribe [::subs/default-painting])
         show-max? (subscribe [::subs/show-max?])]
-  ; (display-painting (or (first @paintings) @default-painting)))
     (do
       (js/console.log "current-painting was: " current-painting)
       (display-painting

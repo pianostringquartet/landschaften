@@ -39,12 +39,6 @@
     #(src-set-part cu (:width %))
     widths->vw))
 
-
-; (responsive-image
-;    (:jpg painting)
-;    widths->vw
-;    #(dispatch [::events/painting-tile-clicked painting]))
-
 (defn responsive-image [image-url widths->vw on-click]
   [:img
     {:on-click on-click

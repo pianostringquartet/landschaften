@@ -4,7 +4,6 @@
             ; [ajax.core :refer [POST]]
             [ajax.core :refer [POST GET]]))
 
-
 ;; taken from cardy
 (defn default-error-handler [response]
   (js/console.log "Encountered unexpected error: " response))
@@ -24,7 +23,6 @@
       {:column "timeframe" :values (into [] (:selected-timeframes db))}
       {:column "name" :values (into [] (:selected-concepts db))}}))
 
-
 (reg-event-fx
   ::query
   (fn query [cofx _]
@@ -36,12 +34,17 @@
          :handler #(dispatch [::query-succeeded %])}})))
          ;; use default error handler otherwise for now
 
+;; assumes paintings is list of paintings satisfying ::painting spec
+(defn get-paintings-concepts [paintings]
+  (into #{} (map :name (mapcat :concepts paintings))))
+
 (reg-event-db
   ::query-succeeded
   (fn query-succeeded [db [_ paintings]]
     (-> db
      (assoc :query-loading false)
      (assoc :paintings paintings)
+     (assoc :concepts (get-paintings-concepts paintings))
      (assoc :current-painting nil))))
 
 (reg-event-db
