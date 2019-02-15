@@ -27,11 +27,6 @@
   ; [:div "Painting info not available."])
   [rc/label :label "Painting info not available."])
 
-; (defn page-title []
-;   [rc/label
-;       :label "EXAMINE PAINTING"
-;       :class "h1"])
-
 (defn page-title []
  [rc/box
    :align-self :center
@@ -39,29 +34,10 @@
             :label "EXAMINE PAINTING"
             :level :level1]])
 
-; (defn image [jpg]
-;   [:img {:src jpg
-;   ; [:img {:src  "https://res.cloudinary.com/dgpqnl8ul/image/upload/v1546353103/mubxgjzbk3d9mzxtdofs.jpg"
-;         ;; todo: check landscape vs. portrait orientation
-;          :style {:max-width 500
-;                  :max-height 500}}])
-
-
-; (defn responsive-image [image-url widths->vw on-click]
-;   [:img
-;     {:on-click on-click
-;      :sizes (clojure.string/join ", " (map sizes-part widths->vw))
-;      :src-set (clojure.string/join ", "
-;                 (map
-;                   #(src-set-part image-url (:width %))
-;                   widths->vw))
-;      :src image-url}])
-
 (defn info [painting]
   (let [->ui-label (fn [k] [rc/label :label (str (name k) ": " (k painting))])
         info-categories '(:title :author :date :timeframe :type :school)]
    [rc/v-box :children (mapv ->ui-label info-categories)]))
-
 
 (defn bubble-button [{:keys [name value]}]
   {:pre [(string? name)]}
@@ -74,7 +50,6 @@
 (defn concept-bubbles [concepts]
   {:pre [(s/valid? ::specs/concepts concepts)]}
   (let [bubble-rows  (partition-all 3 (map bubble-button concepts))
-        ; ->ui-row (fn [xs] [rc/h-box :gap "8px" :width "500px" :children (into [] xs)])]
         ->ui-row (fn [xs] [rc/h-box :gap "8px" :children (into [] xs)])]
     [rc/v-box
       :gap "8px"
@@ -87,27 +62,36 @@
     :on-click #(dispatch [::events/done-button-clicked])
     :class "btn btn-warning"])
 
+(defn image [painting show?]
+  [rc/v-box
+   :align-self :center
+   :children
+    [(utils/responsive-image
+        (:jpg painting) utils/widths->vw
+       ;; better: 'examine-image-clicked'
+        #(dispatch [::events/show-max-image]))
+     (when show?
+       (do
+         (js/console.log "modal showing")
+         [rc/modal-panel
+          :backdrop-on-click
+            #(dispatch [::events/hide-max-image])
+          ;; TODO:
+          ;; loads slow; can't do max-height as 50% of screen?; may also need to be responsive?
+          ;; workaround: pick a size that works for both small and large screens
+           :child [:img
+                    {:on-click #(dispatch [::events/hide-max-image])
+                     :style {:max-height "600px"}
+                     :src (:jpg painting)}]]))]])
 
-(defn image [painting]
-  [rc/box
-    :align-self :center
-    :child (utils/responsive-image
-             (:jpg painting) utils/widths->vw identity)])
-
-(defn display-painting [painting]
+(defn display-painting [painting show-max?]
   [rc/v-box
      :gap "10px"
      :children
       [[page-title]
-       ; (spec-map ::specs/jpg (:jpg painting)
-       ;   image
-       ;   NO-IMAGE-AVAILABLE)
        (if (s/valid? ::specs/jpg (:jpg painting))
-         ; (utils/responsive-image (:jpg painting) utils/widths->vw identity))
-         (image painting)
+         (image painting show-max?)
          NO-IMAGE-AVAILABLE)
-
-;; the picture above is forced to be as wide as the concept table
        [rc/h-box
          :justify :between ; spread them far apart
          :children
@@ -123,13 +107,11 @@
 
 ;; should actually source from e.g. "::subs/current-painting"
 (defn examine-painting [current-painting]
-  (let [default-painting (subscribe [::subs/default-painting])]
-    ;paintings (subscribe [::subs/paintings])
-
+  (let [default-painting (subscribe [::subs/default-painting])
+        show-max? (subscribe [::subs/show-max?])]
   ; (display-painting (or (first @paintings) @default-painting)))
-    ; (do
-      ; (js/console.log "current-painting was: " current-painting)
-      (display-painting (or current-painting @default-painting))))
-
-; (defn examine-painting [current-painting]
-;   (display-painting current-painting))
+    (do
+      (js/console.log "current-painting was: " current-painting)
+      (display-painting
+        (or current-painting @default-painting)
+        @show-max?))))

@@ -104,6 +104,17 @@
   (fn painting-tile-clicked [db [_ painting]]
     (assoc db :current-painting painting)))
 
+(reg-event-db
+  ::show-max-image
+  (fn show-max-image [db _]
+    (assoc db :show-max? true)))
+
+(reg-event-db
+  ::hide-max-image
+  (fn hide-max-image [db _]
+    (assoc db :show-max? false)))
+
+
 
 ;; Action handlers
 

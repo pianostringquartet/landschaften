@@ -22,4 +22,5 @@
   :selected-schools #{}
   :selected-timeframes #{}
   :selected-concepts #{}
-  :query-loading false})
+  :query-loading false
+  :show-max? false})

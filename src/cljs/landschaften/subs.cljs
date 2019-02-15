@@ -76,6 +76,12 @@
   (fn selected-concepts [db _]
     (:selected-concepts db)))
 
+
+(reg-sub
+ ::show-max?
+ (fn show-max? [db _]
+   (:show-max? db)))
+
 ;; want a second-layer sub
 ;; takes paintings in app-db,
 ;; looks at their 20 high-certainty concepts,
