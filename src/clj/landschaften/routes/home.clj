@@ -22,4 +22,9 @@
                       (response/ok
                          (api/paintings-satisfying
                            db/*db*
-                           (:constraints params))))}]])
+                           (:constraints params))))}]
+  ; need ability to search by an artist name as well
+   ["/artists" {:get (fn [_]
+                       (response/ok (map :author (api/artists-names db/*db*))))}]
+   ["/concepts" {:get (fn [_]
+                        (response/ok (map :name (api/concepts db/*db*))))}]])

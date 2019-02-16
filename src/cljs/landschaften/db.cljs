@@ -18,9 +18,11 @@
   :schools (apply disj specs/SCHOOLS excluded-schools)
   :timeframes (apply disj specs/TIMEFRAMES excluded-timeframes)
   :concepts sample/sample-concepts
+  :artists #{(:author (first sample/sample-paintings))}
   :selected-types #{}
   :selected-schools #{}
   :selected-timeframes #{}
   :selected-concepts #{}
+  :selected-artists #{}
   :query-loading false
   :show-max? false})

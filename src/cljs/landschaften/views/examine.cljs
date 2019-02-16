@@ -87,7 +87,7 @@
   [rc/v-box
      :gap "10px"
      :children
-      [[page-title]
+      [ ; [page-title]
        (if (s/valid? ::specs/jpg (:jpg painting))
          (image painting show-max?)
          NO-IMAGE-AVAILABLE)

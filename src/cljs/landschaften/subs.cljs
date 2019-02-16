@@ -57,6 +57,11 @@
     (:concepts db)))
 
 (reg-sub
+  ::artists
+  (fn artists [db _]
+    (:artists db)))
+
+(reg-sub
   ::selected-types
   (fn selected-types [db _]
     (:selected-types db)))
@@ -76,6 +81,11 @@
   (fn selected-concepts [db _]
     (:selected-concepts db)))
 
+;; i.e. selectd artists' NAMES
+(reg-sub
+  ::selected-artists
+  (fn selected-artists [db _]
+    (:selected-artists db)))
 
 (reg-sub
  ::show-max?

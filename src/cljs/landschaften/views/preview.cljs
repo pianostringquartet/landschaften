@@ -47,5 +47,6 @@
    ; :gap "4px"
    :size "auto"
    :children [[paintings-found (count paintings)]
-              [graph/frequencies-chart paintings]
+              (when (> (count paintings) 0)
+                [graph/frequencies-chart paintings])
               [tiles (take 50 paintings)]]])

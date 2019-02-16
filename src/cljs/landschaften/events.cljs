@@ -15,13 +15,36 @@
       :or {error-handler default-error-handler}}]
     (POST uri {:params params :handler handler :error-handler error-handler})))
 
+(reg-fx
+  :get-request
+  (fn get-request-handler
+    [{uri :uri handler :handler error-handler :error-handler
+      :or {error-handler default-error-handler}}]
+    (GET uri {:handler handler :error-handler error-handler})))
+
 (defn selections->constraints [db]
   (remove
     #(empty? (:values %))
     #{{:column "type" :values (into [] (:selected-types db))}
       {:column "school" :values (into [] (:selected-schools db))}
       {:column "timeframe" :values (into [] (:selected-timeframes db))}
+      {:column "author" :values (into [] (:selected-artists db))}
       {:column "name" :values (into [] (:selected-concepts db))}}))
+
+
+(reg-event-fx
+  ::artists-names
+  (fn query [cofx _]
+    (let [db (:db cofx)]
+      {:get-request {:uri "/artists"
+                     :handler #(dispatch [::artists-names-retrieved %])}})))
+
+(reg-event-fx
+  ::concepts
+  (fn query [cofx _]
+    (let [db (:db cofx)]
+      {:get-request {:uri "/concepts"
+                     :handler #(dispatch [::concepts-retrieved %])}})))
 
 (reg-event-fx
   ::query
@@ -35,8 +58,8 @@
          ;; use default error handler otherwise for now
 
 ;; assumes paintings is list of paintings satisfying ::painting spec
-(defn get-paintings-concepts [paintings]
-  (into #{} (map :name (mapcat :concepts paintings))))
+; (defn get-paintings-concepts [paintings]
+;   (into #{} (map :name (mapcat :concepts paintings))))
 
 (reg-event-db
   ::query-succeeded
@@ -44,7 +67,7 @@
     (-> db
      (assoc :query-loading false)
      (assoc :paintings paintings)
-     (assoc :concepts (get-paintings-concepts paintings))
+     ; (assoc :concepts (get-paintings-concepts paintings))
      (assoc :current-painting nil))))
 
 (reg-event-db
@@ -84,6 +107,35 @@
      (js/console.log "remove-selected-concept received: " selected-concept)
      (js/console.log "remove-selected-concept: db was: " (:selected-concepts db))
      (update db :selected-concepts disj selected-concept))))
+
+(reg-event-db
+ ::concepts-retrieved
+ (fn concepts-retrieved [db [_ artists]]
+   (do
+       (js/console.log "concepts-retrieved: artists was " (into #{} artists))
+       (assoc db :concepts (into #{} artists)))))
+
+(reg-event-db
+ ::artists-names-retrieved
+ (fn artists-names-retrieved [db [_ artists]]
+   (do
+       (js/console.log "artists-names-retrieved: artists was " (into #{} artists))
+       (assoc db :artists (into #{} artists)))))
+
+(reg-event-db
+ ::update-selected-artists
+ (fn update-selected-artists [db [_ selected-artist]]
+   (do
+     (js/console.log "update-selected-artists: selected-artist was " selected-artist)
+     (update db :selected-artists conj selected-artist))))
+
+(reg-event-db
+ ::remove-selected-artist
+ (fn remove-selected-artist [db [_ selected-artist]]
+   (do
+     (js/console.log "remove-selected-artist received: " selected-artist)
+     (js/console.log "remove-selected-artist: db was: " (:selected-artists db))
+     (update db :selected-artists disj selected-artist))))
 
 (reg-event-db
  ::selections-cleared
