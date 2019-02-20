@@ -54,3 +54,29 @@
 (s/def ::concepts (s/coll-of ::concept))
 
 (s/def ::painting (s/keys :req-un [::date ::school ::type ::title ::form  ::author ::timeframe ::jpg ::concepts]))
+
+
+
+;; -------------------------
+;; GROUP SPEC
+;; -------------------------
+
+;; redundant to say "selected..."
+
+;; can i not define all these coll-of X's INLINE?
+(s/def ::group-name string?)
+(s/def ::paintings (s/coll-of ::painting))
+(s/def ::types (s/coll-of ::type))
+(s/def ::schools (s/coll-of ::school))
+(s/def ::timeframes (s/coll-of ::timeframe))
+(s/def ::concepts (s/coll-of ::concept)) ;; not needed?
+(s/def ::artists (s/coll-of ::artist))
+(s/def ::types (s/coll-of ::type))
+
+(s/def ::group (s/keys :req-un [::group-name
+                                ::paintings
+                                ::types
+                                ::schools
+                                ::timeframes
+                                ::concepts
+                                ::artists]))

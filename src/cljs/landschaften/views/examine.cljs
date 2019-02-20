@@ -9,7 +9,6 @@
             [landschaften.views.utils :as utils]
             [landschaften.events :as events]))
 
-
 ;; spec is nice... but none of this is enforced
 ;; spec map
 ;; f should be single-arity function

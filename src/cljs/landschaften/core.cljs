@@ -95,8 +95,8 @@
 (defn init! []
   (rf/dispatch-sync [:navigate (reitit/match-by-name router :home)])
   (rf/dispatch-sync [::core-events/initialize-db])
-  (rf/dispatch-sync [::core-events/artists-names])
-  (rf/dispatch-sync [::core-events/concepts])
+  (rf/dispatch-sync [::core-events/retrieve-artists-names])
+  (rf/dispatch-sync [::core-events/retrieve-concepts])
   (load-interceptors!)
   (fetch-docs!)
   (hook-browser-navigation!)

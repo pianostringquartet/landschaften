@@ -22,8 +22,7 @@
 (defonce initialize
   (do
     (println "google-chart: initialize called")
-    ; (js/google.charts.load (clj->js {:packages ["corechart"]}))
-    (js/google.charts.load (clj->js {:packages ["table"]}))
+    (js/google.charts.load (clj->js {:packages ["corechart" "table"]}))
     (js/google.charts.setOnLoadCallback
       (fn google-visualization-loaded []
         (do
@@ -50,11 +49,10 @@
      [rc/label :label "Loading..."])])
 
 (s/def ::google-chart-type
-  #(contains? #{"LineChart" "PieChart" "ColumnChart" "AreaChart", "BarChart"} %))
+  #(contains? #{"LineChart" "PieChart" "ColumnChart" "AreaChart", "BarChart" "Table"} %))
 
 (defn chart [some-data chart-type]
   [draw-google-chart
-   ; "BarChart"
    chart-type
    some-data
    {:title (str "Concept Frequency")
@@ -62,7 +60,6 @@
     ; :chartArea {:height "90%"}
     ; :height "100%"
     ; :bar {:groupWidth "50%"}
-    ; :vAxis {:title "Concept" :showTextEvery 1}}])
     ; :isStacked "relative"}])
     :vAxis {:title "Concept"}}])
             ; :gridlines {:count (count some-data)}
@@ -84,7 +81,8 @@
 (defn frequencies->google-chart-data [concept-frequencies]
   (mapv #(into [] %) concept-frequencies))
 
-(defn frequencies-chart [paintings]
+; (defn frequencies-chart [paintings]
+(defn frequencies-chart [paintings chart-type]
   (let [chart-axes ["Concept" "Frequency"]
         chart-data (take 20
                      (reverse
@@ -94,5 +92,7 @@
         prepared-chart-data (into [chart-axes] (frequencies->google-chart-data chart-data))]
     (do
      (js/console.log "chart-data is:" chart-data)
-     ; [chart prepared-chart-data "BarChart"]))) ;; must use initialize-chart
-     [chart prepared-chart-data "Table"]))) ;; must use initialize-table
+     [rc/h-box
+      :children [[chart prepared-chart-data "BarChart"]
+                 ; [table prepared-chart-data "Table"]]])))
+                 [chart prepared-chart-data "Table"]]])))

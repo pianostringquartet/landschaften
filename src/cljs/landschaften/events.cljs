@@ -31,16 +31,16 @@
       {:column "author" :values (into [] (:selected-artists db))}
       {:column "name" :values (into [] (:selected-concepts db))}}))
 
-
+;; need failure handlers...
 (reg-event-fx
-  ::artists-names
+  ::retrieve-artists-names
   (fn query [cofx _]
     (let [db (:db cofx)]
       {:get-request {:uri "/artists"
                      :handler #(dispatch [::artists-names-retrieved %])}})))
 
 (reg-event-fx
-  ::concepts
+  ::retrieve-concepts
   (fn query [cofx _]
     (let [db (:db cofx)]
       {:get-request {:uri "/concepts"
@@ -85,20 +85,38 @@
      (assoc db :selected-types selected-types)
      (assoc db :selected-types selected-types))))
 
+
+;;
+; (defn update-group [group])
+
+;; could do assoc-in
+;; but don't want to hardcode path each time
+;; ... use fn to introduce layer of indirection
+
+;; where new-schools
+; (defn update-schools [group new-schools]
+;   (assoc group :schools new-schools))
+;
+; (defn update-group-key [group new-schools]
+;   (assoc group :schools new-schools))
+
 (reg-event-db
  ::update-selected-schools
  (fn update-selected-schools [db [_ selected-schools]]
-   (assoc db :selected-schools selected-schools)))
+   (assoc-in db [:current-group :schools] selected-schools)))
+   ; (assoc db :selected-schools selected-schools)))
 
 (reg-event-db
  ::update-selected-timeframes
  (fn update-selected-timeframes [db [_ selected-timeframes]]
-   (assoc db :selected-timeframes selected-timeframes)))
+   (assoc-in db [:current-group :timeframes] selected-timeframes)))
+   ; (assoc db :selected-timeframes selected-timeframes)))
 
 (reg-event-db
  ::update-selected-concepts
  (fn update-selected-concepts [db [_ selected-concept]]
-   (update db :selected-concepts conj selected-concept)))
+     (update-in db [:current-group :concepts] conj selected-concept)))
+   ; (update db :selected-concepts conj selected-concept)))
 
 (reg-event-db
  ::remove-selected-concept
@@ -106,28 +124,32 @@
    (do
      (js/console.log "remove-selected-concept received: " selected-concept)
      (js/console.log "remove-selected-concept: db was: " (:selected-concepts db))
-     (update db :selected-concepts disj selected-concept))))
+     ; (update db :selected-concepts disj selected-concept))))
+     (update-in db [:current-painting :concepts] disj selected-concept))))
 
 (reg-event-db
  ::concepts-retrieved
  (fn concepts-retrieved [db [_ artists]]
    (do
        (js/console.log "concepts-retrieved: artists was " (into #{} artists))
-       (assoc db :concepts (into #{} artists)))))
+       ; (assoc db :concepts (into #{} artists)))))
+       (assoc db :all-concepts (into #{} artists)))))
 
 (reg-event-db
  ::artists-names-retrieved
  (fn artists-names-retrieved [db [_ artists]]
    (do
        (js/console.log "artists-names-retrieved: artists was " (into #{} artists))
-       (assoc db :artists (into #{} artists)))))
+       ; (assoc db :artists (into #{} artists)))))
+       (assoc db :all-artists (into #{} artists)))))
 
 (reg-event-db
  ::update-selected-artists
  (fn update-selected-artists [db [_ selected-artist]]
    (do
      (js/console.log "update-selected-artists: selected-artist was " selected-artist)
-     (update db :selected-artists conj selected-artist))))
+     ; (update db :selected-artists conj selected-artist))))
+     (update-in db [:current-group :artists] conj selected-artist))))
 
 (reg-event-db
  ::remove-selected-artist
@@ -135,16 +157,93 @@
    (do
      (js/console.log "remove-selected-artist received: " selected-artist)
      (js/console.log "remove-selected-artist: db was: " (:selected-artists db))
-     (update db :selected-artists disj selected-artist))))
+     ; (update db :selected-artists disj selected-artist))))
+     (update-in db [:current-group :artist] disj selected-artist))))
 
 (reg-event-db
  ::selections-cleared
  (fn selections-cleared [db _]
   (-> db
-     (assoc :selected-types #{})
-     (assoc :selected-schools #{})
-     (assoc :selected-timeframes #{})
-     (assoc :selected-concepts #{}))))
+     (assoc-in [:current-group :types] #{})
+     (assoc-in [:current-group :schools] #{})
+     (assoc-in [:current-group :timeframes] #{})
+     (assoc-in [:current-group :concepts] #{})
+     (assoc-in [:current-group :artists] #{}))))
+
+
+;; collected current selections into
+;; - check that satisfies ::group
+;; - user should provide actual name
+; (defn extract-current-group [db group-name]
+;   {(keyword group-name)
+;    (select-keys db
+;      [:paintings
+;       :selected-types
+;       :selected-schools
+;       :selected-timeframes
+;       :selected-concepts
+;       :selected-artists])})
+
+;;
+; (defn save-current-group [db group-name]
+;   (let [current-group (extract-current-group db group-name)]
+;     (update db :other-groups conj current-group)))
+
+
+; (defn save-current-group [db group-name]
+;   (update db :saved-groups conj {(keyword group-name) (:current-group db)}))
+
+(defn save-current-group [db]
+  (let [current-group (:current-group db)]
+    (assoc-in db [:saved-groups (keyword (:group-name current-group))] current-group)))
+
+;; just take current keys
+(reg-event-db
+ ::group-saved
+ (fn group-saved [db [_ group-name]]
+   ; (save-current-group db group-name)))
+   (save-current-group db)))
+
+(defn bring-in-group [db group-name]
+  ; (merge db group))
+  (let [new-current-group ((keyword group-name) (:saved-groups db))
+        new-db
+          (assoc db :current-group new-current-group)]
+
+    (do
+      (js/console.log "bring-in-group group-name: " group-name)
+      (js/console.log "bring-in-group new-db: " new-db)
+      (js/console.log "bring-in-group new-current-group: " new-current-group)
+      new-db)))
+
+;; when we switch groups,
+;; prompt user (via dialogue) for name of group;
+;; (if group already had name, then prefill the input slot with that name)
+(reg-event-db
+ ::switch-groups
+ (fn switch-groups [db [_ destination-group-name]]
+   (do
+    (js/console.log "destination-group-name: " destination-group-name)
+    (-> db
+       (save-current-group) ;; add current group to group-history i.e. :other-groups
+       ; then take destination group and make current group
+       (bring-in-group destination-group-name)))))
+
+;; group should satisfy ::group
+;; returns db
+; (defn bring-in-group [db group]
+;   (-> db
+;      (assoc :paintings (::paintings group))
+;      (assoc :selected-types (::selected-types group))
+;      (assoc :selected-schools (::selected-schools group))
+;      (assoc :selected-timeframes (::selected-timeframes group))
+;      (assoc :selected-concepts (::selected-concepts group))
+;      (assoc :selected-artists (::selected-artists group))))
+; (defn bring-in-group [db group]
+;   (merge db group))
+
+
+
 
 
 ;; when examine's done button is clicked,

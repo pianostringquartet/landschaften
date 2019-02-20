@@ -13,3 +13,4 @@ profiles.clj
 .nrepl-port
 /log
 Clojure REPL
+.rebel_readline_history

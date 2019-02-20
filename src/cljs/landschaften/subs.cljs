@@ -22,9 +22,22 @@
     (:docs db)))
 
 (reg-sub
+  ::current-group
+  (fn [db _]
+    (let [g (:current-group db)]
+      (do
+        (js/console.log "::current-group sub: " g)
+        g))))
+
+; (reg-sub
+;   ::paintings
+;   (fn paintings [db _]
+;     (:paintings db)))
+(reg-sub
   ::paintings
-  (fn paintings [db _]
-    (:paintings db)))
+  :<- [::current-group]
+  (fn paintings [current-group _]
+    (:paintings current-group)))
 
 (reg-sub
   ::default-painting
@@ -37,55 +50,75 @@
     (:current-painting db)))
 
 (reg-sub
+  ::all-types
+  (fn all-types [db _]
+    (:all-types db)))
+
+(reg-sub
+  ::all-schools
+  (fn all-schools [db _]
+    (:all-schools db)))
+
+(reg-sub
+  ::all-timeframes
+  (fn all-timeframes [db _]
+    (:all-timeframes db)))
+
+
+;; for the concept typeahead
+(reg-sub
+  ::all-concepts
+  (fn all-concepts [db _]
+    (:all-concepts db)))
+
+;; these artists is only for the artist-typeahead search suggestions
+;; ... retrieved from backend
+(reg-sub
+  ::all-artists
+  (fn all-artists [db _]
+    (:all-artists db)))
+
+(reg-sub
   ::types
-  (fn types [db _]
-    (:types db)))
+  :<- [::current-group]
+  (fn types [current-group _]
+    (or (:types current-group)
+      #{})))
 
 (reg-sub
   ::schools
-  (fn schools [db _]
-    (:schools db)))
+  :<- [::current-group]
+  (fn schools [current-group _]
+    (or (:schools current-group)
+      #{})))
 
 (reg-sub
   ::timeframes
-  (fn timeframes [db _]
-    (:timeframes db)))
+  :<- [::current-group]
+  (fn timeframes [current-group _]
+    (or (:timeframes current-group)
+      #{})))
 
 (reg-sub
   ::concepts
-  (fn concepts [db _]
-    (:concepts db)))
-
-(reg-sub
-  ::artists
-  (fn artists [db _]
-    (:artists db)))
-
-(reg-sub
-  ::selected-types
-  (fn selected-types [db _]
-    (:selected-types db)))
-
-(reg-sub
-  ::selected-schools
-  (fn selected-schools [db _]
-    (:selected-schools db)))
-
-(reg-sub
-  ::selected-timeframes
-  (fn selected-timeframes [db _]
-    (:selected-timeframes db)))
-
-(reg-sub
-  ::selected-concepts
-  (fn selected-concepts [db _]
-    (:selected-concepts db)))
+  :<- [::current-group]
+  (fn concepts [current-group _]
+    (or (:concepts current-group)
+      #{})))
 
 ;; i.e. selectd artists' NAMES
 (reg-sub
-  ::selected-artists
-  (fn selected-artists [db _]
-    (:selected-artists db)))
+  ::artists
+  :<- [::current-group]
+  (fn artists [current-group _]
+    (or (:artists current-group)
+      #{})))
+
+(reg-sub
+  ::saved-groups
+  (fn saved-groups [db _]
+    (or (:saved-groups db)
+      #{})))
 
 (reg-sub
  ::show-max?
