@@ -1,6 +1,73 @@
-Clearing all and then refreshing code...
-2018-12-24 13:32:21,346 [nREPL-worker-237] INFO  landschaften.env - 
--=[landschaften has shut down successfully]=- 
-2018-12-24 13:32:21,359 [nREPL-worker-237] INFO  landschaften.env - 
--=[landschaften started successfully using the development profile]=- 
+REPL Instructions
+
+Code can be entered at the bottom and executed by pressing shift+enter.
+
+Try it now by typing (+ 1 1) in the bottom section and pressing shift+enter.
+
+Working in another Clojure file and sending forms to the REPL is the most efficient way to work. Use the following key bindings to send code to the REPL. See the settings for more keybindings.
+
+ctrl-alt-, then b
+Execute block. Finds the block of Clojure code your cursor is in and executes that.
+
+ctrl-alt-, s
+Executes the selection. Sends the selected text to the REPL.
+
+You can disable this help text in the settings.
+Starting REPL with lein in /Users/concerto/cs/landschaften
+WARNING: boolean? already refers to: #'clojure.core/boolean? in namespace: clojure.tools.analyzer.utils, being replaced by: #'clojure.tools.analyzer.utils/boolean?
+WARNING: boolean? already refers to: #'clojure.core/boolean? in namespace: clojure.tools.analyzer, being replaced by: #'clojure.tools.analyzer.utils/boolean?
+WARNING: bounded-count already refers to: #'clojure.core/bounded-count in namespace: clojure.core.async, being replaced by: #'clojure.core.async/bounded-count
+2019-03-04 12:16:46,024 [main] DEBUG org.jboss.logging - Logging Provider: org.jboss.logging.Slf4jLoggerProvider 
+nREPL server started on port 53525 on host 127.0.0.1 - nrepl://127.0.0.1:53525
+Refreshing code...
+:reloading (mranderson048.garden.v1v3v3.garden.types mranderson048.garden.v1v3v3.garden.util markdown.common expound.util expound.paths expound.ansi expound.printer expound.problems cuerdas.regexp cuerdas.core landschaften.dev-middleware landschaften.config landschaften.db.core expound.alpha landschaften.clarifai landschaften.entity landschaften.db.query landschaften.db.paintings landschaften.api landschaften.env landschaften.layout landschaften.middleware landschaften.routes.home landschaften.handler landschaften.core re-frame.db re-frame.loggers re-frame.registrar re-frame.trace re-frame.interceptor re-frame.cofx re-frame.utils re-frame.subs re-frame.std-interceptors re-frame.events re-frame.router re-frame.fx re-frame.core mranderson048.garden.v1v3v3.garden.compression mranderson048.garden.v1v3v3.garden.units mranderson048.garden.v1v3v3.garden.selectors mranderson048.garden.v1v3v3.garden.color mranderson048.garden.v1v3v3.garden.compiler zprint.zfns zprint.zutil debux.common.macro-specs zprint.spec reitit.impl
+ reitit.segment mranderson048.re-frame.v0v10v2.re-frame.loggers mranderson048.re-frame.v0v10v2.re-frame.trace markdown.links markdown.lists markdown.tables markdown.transformers struct.core landschaften.validation zprint.ansi zprint.focus mranderson048.re-frame.v0v10v2.re-frame.utils mranderson048.re-frame.v0v10v2.re-frame.registrar mranderson048.re-frame.v0v10v2.re-frame.interceptor mranderson048.re-frame.v0v10v2.re-frame.db mranderson048.re-frame.v0v10v2.re-frame.events cljs.tagged-literals cljs.env cljs.analyzer cljs.analyzer.api debux.common.util day8.re-frame.tracing mranderson048.garden.v1v3v3.garden.stylesheet ajax.protocols ajax.util landschaften.figwheel landschaften.db.paintings-concepts mranderson048.re-frame.v0v10v2.re-frame.router mranderson048.re-frame.v0v10v2.re-frame.fx mranderson048.re-frame.v0v10v2.re-frame.subs ajax.url ajax.interceptors ajax.formats ajax.simple zprint.sutil meta-merge.core reitit.core mranderson048.re-frame.v0v10v2.re-frame.cofx ajax.ring ajax.json ajax.transit ajax.easy mranderson048.re-frame.v0v10v2.re-frame.std-interceptors
+ zprint.config zprint.zprint landschaften.specs zprint.finish zprint.core cljs.stacktrace mranderson048.garden.v1v3v3.garden.core mranderson048.re-frame.v0v10v2.re-frame.core landschaften.test.handler user landschaften.db.wga-csv ajax.core landschaften.test.db.fixtures day8.re-frame-10x.metamorphic)
+:error-while-loading debux.common.util
+Syntax error compiling at (debux/common/util.cljc:1:1).
+Refresh complete
+(+ 1 1)
+user=>
+2
+(def tab-ids->panels
+  {:explore explore-panel
+   :compare compare-panel})
+             [31mjava.lang.RuntimeException[0m: [0mUnable to resolve symbol: explore-panel in this context[0m
+[31mclojure.lang.Compiler$CompilerException[0m: [0mSyntax error compiling at (/Users/concerto/cs/landschaften/src/cljs/landschaften/views.cljs:33:1).[0m
+(def explore-panel [:div "explore me"])
+user=>
+#'user/explore-panel
+(def compare-panel [:div "compare me"])
+user=>
+#'user/compare-panel
+(def tab-ids->panels
+  {:explore explore-panel
+   :compare compare-panel})
+user=>
+#'user/tab-ids->panels
+(def m {:x 1 :y 2})
+user=>
+#'user/m
+(keys m)
+user=>
+(:x :y)
+(map (fn [k] {:id k :label (str k) :panel k}) (keys m))
+user=>
+({:panel :x, :label ":x", :id :x} {:panel :y, :label ":y", :id :y})
+(map str m)
+user=>
+("[:x 1]" "[:y 2]")
+"d"
+user=>
+"d"
+"
+             [31mjava.lang.RuntimeException[0m: [0mEOF while reading string[0m
+[31mclojure.lang.LispReader$ReaderException[0m: [0mjava.lang.RuntimeException: EOF while reading string[0m
+             [31mclojure.lang.ExceptionInfo[0m: [0m[0m
+(map (fn [k v] {:id k :label (str k) :panel v}) m)
+[31mclojure.lang.ArityException[0m: [0mWrong number of args (1) passed to: user/eval60345/fn--60346[0m
+ [31mclojure.lang.ExceptionInfo[0m: [0m[0m
+(map (fn [[k v]] {:id k :label (str k) :panel v}) m)
+user=>
+({:panel 1, :label ":x", :id :x} {:panel 2, :label ":y", :id :y})
 --------------------

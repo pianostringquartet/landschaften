@@ -228,6 +228,12 @@
   (fn hide-max-image [db _]
     (assoc db :show-max? false)))
 
+(reg-event-db
+  ::mode-changed
+  (fn mode-changed [db [_ new-tab]]
+    (assoc db :current-tab new-tab)))
+
+
 
 
 ;; Action handlers

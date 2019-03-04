@@ -142,3 +142,8 @@
 ;  [x-col-val-2 y-col-val-2]]
 
 ;; set of maps like #{{:concept-name "some-str" :frequency-of-concept "some-str"}}
+
+(reg-sub
+  ::current-tab
+  (fn current-tab [db _]
+    (:current-tab db)))

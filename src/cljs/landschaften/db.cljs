@@ -26,11 +26,10 @@
   :all-timeframes (apply disj specs/TIMEFRAMES excluded-timeframes)
   :all-concepts sample/sample-concepts
   :all-artists #{(:author (first sample/sample-paintings))}
-  ; :types #{}
-  ; :schools #{}
-  ; :timeframes #{}
-  ; :concepts #{}
-  ; :artists #{}
+
+
+  :current-tab :explore
+
 ;; collection of other ::groups, indexed by group-name
 ;; start with fake sample group
   :saved-groups {(:group-name sample/sample-group-2) sample/sample-group-2}})

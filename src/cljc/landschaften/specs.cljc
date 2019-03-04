@@ -19,7 +19,7 @@
    "portrait"})
 
 (def SCHOOLS
- #{"German" "Italian" "Danish" "Flemish" "Dutch" "Netherlandish" "Swiss" "Other" "Russian" "English" "Austrian" "Scottish" "Bohemian" "French" "Spanish" "Belgian" "Hungarian" "American" "Polish" "Norwegian" "Swedish" "Irish" "Finnish" "Portuguese" "Greek" "Catalan"})
+  #{"German" "Italian" "Danish" "Flemish" "Dutch" "Netherlandish" "Swiss" "Other" "Russian" "English" "Austrian" "Scottish" "Bohemian" "French" "Spanish" "Belgian" "Hungarian" "American" "Polish" "Norwegian" "Swedish" "Irish" "Finnish" "Portuguese" "Greek" "Catalan"})
 
 (def TIMEFRAMES
  #{"0801-0850" "1051-1100" "1101-1150" "1151-1200" "1201-1250" "1251-1300" "1301-1350" "1351-1400" "1401-1450" "1451-1500" "1501-1550" "1551-1600" "1601-1650" "1651-1700" "1701-1750" "1751-1800" "1801-1850" "1851-1900"})
@@ -42,11 +42,15 @@
   ; (s/gen SAMPLE-JPEGS))
 
 
-(s/def ::jpg ; Cloudinary 'secure [jpg] url'
-  (s/nilable
-    (s/and
-      #(clojure.string/includes? % "https://res.cloudinary.com/")
-      #(clojure.string/includes? % "/image/upload/"))))
+
+; (s/def ::jpg ; Cloudinary 'secure [jpg] url'
+;   (s/nilable
+;     (s/and
+;       #(clojure.string/includes? % "https://res.cloudinary.com/")
+;       #(clojure.string/includes? % "/image/upload/"))))
+
+;; too complicated now
+(s/def ::jpg string?)
 
 ; (s/def ::jpg ; Cloudinary 'secure [jpg] url'
 ;   (s/nilable
