@@ -2,6 +2,7 @@
   (:require [re-frame.core :refer [dispatch reg-event-db reg-sub reg-event-fx reg-fx dispatch]]
             [landschaften.db :as db]
             ; [ajax.core :refer [POST]]
+            [day8.re-frame.tracing :refer-macros [fn-traced]]
             [ajax.core :refer [POST GET]]))
 
 ;; taken from cardy
@@ -66,8 +67,7 @@
   (fn query-succeeded [db [_ paintings]]
     (-> db
      (assoc :query-loading false)
-     (assoc :paintings paintings)
-     ; (assoc :concepts (get-paintings-concepts paintings))
+     (assoc-in [:current-group :paintings] paintings)
      (assoc :current-painting nil))))
 
 (reg-event-db
@@ -77,88 +77,48 @@
 
 (reg-event-db
  ::update-selected-types
- (fn update-selected-types [db [_ selected-types]]
-   (do
-     (js/console.log "update-selected-types received: " selected-types)
-     (js/console.log "update-selected-types received, type: " (type selected-types))
-     (js/console.log "update-selected-types: db was: " (:selected-types db))
-     (assoc db :selected-types selected-types)
-     (assoc db :selected-types selected-types))))
-
-
-;;
-; (defn update-group [group])
-
-;; could do assoc-in
-;; but don't want to hardcode path each time
-;; ... use fn to introduce layer of indirection
-
-;; where new-schools
-; (defn update-schools [group new-schools]
-;   (assoc group :schools new-schools))
-;
-; (defn update-group-key [group new-schools]
-;   (assoc group :schools new-schools))
+ (fn-traced update-selected-types [db [_ selected-types]]
+     (assoc-in db [:current-group :types] selected-types)))
 
 (reg-event-db
  ::update-selected-schools
  (fn update-selected-schools [db [_ selected-schools]]
    (assoc-in db [:current-group :schools] selected-schools)))
-   ; (assoc db :selected-schools selected-schools)))
 
 (reg-event-db
  ::update-selected-timeframes
  (fn update-selected-timeframes [db [_ selected-timeframes]]
    (assoc-in db [:current-group :timeframes] selected-timeframes)))
-   ; (assoc db :selected-timeframes selected-timeframes)))
 
 (reg-event-db
  ::update-selected-concepts
  (fn update-selected-concepts [db [_ selected-concept]]
      (update-in db [:current-group :concepts] conj selected-concept)))
-   ; (update db :selected-concepts conj selected-concept)))
 
 (reg-event-db
  ::remove-selected-concept
  (fn remove-selected-concept [db [_ selected-concept]]
-   (do
-     (js/console.log "remove-selected-concept received: " selected-concept)
-     (js/console.log "remove-selected-concept: db was: " (:selected-concepts db))
-     ; (update db :selected-concepts disj selected-concept))))
-     (update-in db [:current-painting :concepts] disj selected-concept))))
+   (update-in db [:current-group :concepts] disj selected-concept)))
 
 (reg-event-db
  ::concepts-retrieved
  (fn concepts-retrieved [db [_ artists]]
-   (do
-       (js/console.log "concepts-retrieved: artists was " (into #{} artists))
-       ; (assoc db :concepts (into #{} artists)))))
-       (assoc db :all-concepts (into #{} artists)))))
+   (assoc db :all-concepts (into #{} artists))))
 
 (reg-event-db
  ::artists-names-retrieved
  (fn artists-names-retrieved [db [_ artists]]
-   (do
-       (js/console.log "artists-names-retrieved: artists was " (into #{} artists))
-       ; (assoc db :artists (into #{} artists)))))
-       (assoc db :all-artists (into #{} artists)))))
+    (assoc db :all-artists (into #{} artists))))
 
 (reg-event-db
  ::update-selected-artists
  (fn update-selected-artists [db [_ selected-artist]]
-   (do
-     (js/console.log "update-selected-artists: selected-artist was " selected-artist)
-     ; (update db :selected-artists conj selected-artist))))
-     (update-in db [:current-group :artists] conj selected-artist))))
+     (update-in db [:current-group :artists] conj selected-artist)))
 
 (reg-event-db
  ::remove-selected-artist
  (fn remove-selected-artist [db [_ selected-artist]]
-   (do
-     (js/console.log "remove-selected-artist received: " selected-artist)
-     (js/console.log "remove-selected-artist: db was: " (:selected-artists db))
-     ; (update db :selected-artists disj selected-artist))))
-     (update-in db [:current-group :artist] disj selected-artist))))
+     (update-in db [:current-group :artist] disj selected-artist)))
 
 (reg-event-db
  ::selections-cleared

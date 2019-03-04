@@ -4,6 +4,7 @@
             [re-com.core :as rc]
             [clojure.spec.alpha :as s]
             [landschaften.events :as events]
+            [landschaften.subs :as subs]
             [landschaften.specs :as specs]
             [landschaften.views.utils :as utils]
             [landschaften.views.graph :as graph]))
@@ -38,15 +39,22 @@
    [rc/box
     :size "auto"
     :child [rc/title
-             :label (clojure.string/join " " [n x "limit"])
-             :level :level1]]))
+             :label (clojure.string/join " " [n x "FOUND"])
+             :level :level2]]))
+
+(defn group-name []
+  (let [current-group-name (subscribe [::subs/group-name])]
+    (fn []
+     [rc/title :label (str "Examining " "'"@current-group-name"'")
+               :level :level1])))
 
 (defn preview [paintings]
   [rc/v-box
    :align :center
    ; :gap "4px"
    :size "auto"
-   :children [[paintings-found (count paintings)]
+   :children [[group-name]
+              [paintings-found (count paintings)]
               (when (> (count paintings) 0)
                 [graph/frequencies-chart paintings])
               [tiles (take 50 paintings)]]])

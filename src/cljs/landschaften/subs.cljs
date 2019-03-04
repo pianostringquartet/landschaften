@@ -115,6 +115,12 @@
       #{})))
 
 (reg-sub
+  ::group-name
+  :<- [::current-group]
+  (fn group-name [current-group _]
+    (:group-name current-group)))
+
+(reg-sub
   ::saved-groups
   (fn saved-groups [db _]
     (or (:saved-groups db)

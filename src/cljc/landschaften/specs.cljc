@@ -48,6 +48,15 @@
       #(clojure.string/includes? % "https://res.cloudinary.com/")
       #(clojure.string/includes? % "/image/upload/"))))
 
+; (s/def ::jpg ; Cloudinary 'secure [jpg] url'
+;   (s/nilable
+;     (or
+;       (s/and
+;         #(clojure.string/includes? % "https://res.cloudinary.com/")
+;         #(clojure.string/includes? % "/image/upload/"))
+;       (s/and #(clojure.string/includes? % "https://www.wga.hu/art/")
+;             #(clojure.string/includes? % ".jpg")))))
+
 (s/def ::name string?)
 (s/def ::value #(<= 0.0 % 1.0))
 (s/def ::concept (s/keys :req-un [::name ::value]))
@@ -60,8 +69,6 @@
 ;; -------------------------
 ;; GROUP SPEC
 ;; -------------------------
-
-;; redundant to say "selected..."
 
 ;; can i not define all these coll-of X's INLINE?
 (s/def ::group-name string?)
@@ -80,3 +87,11 @@
                                 ::timeframes
                                 ::concepts
                                 ::artists]))
+
+;; -------------------------
+;; DB SPEC
+;; -------------------------
+
+
+(s/def ::app-db
+  (s/keys :req-un [::paintings ::current-group]))

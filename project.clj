@@ -41,7 +41,8 @@
                  [org.clojure/data.csv "0.1.3"]
                  [proto-repl "0.3.1"]
                  [expound "0.7.1"]
-                 [re-com "2.4.0"]]
+                 [re-com "2.4.0"]
+                 [day8.re-frame/tracing-stubs "0.5.1"]]
 
   :min-lein-version "2.0.0"
   :source-paths ["src/clj" "src/cljs" "src/cljc"]
@@ -90,7 +91,8 @@
                                  [pjstadig/humane-test-output "0.8.3"]
                                  [prone "1.6.0"]
                                  [ring/ring-devel "1.6.3"]
-                                 [ring/ring-mock "0.3.2"]]
+                                 [ring/ring-mock "0.3.2"]
+                                 [day8.re-frame/tracing "0.5.1"]]
                   :plugins      [[com.jakemccrary/lein-test-refresh "0.19.0"]
                                  ; [lein-doo "0.1.10"]
                                  [lein-figwheel "0.5.16"]
@@ -108,7 +110,9 @@
                       :source-map true
                       :optimizations :none
                       :pretty-print true
-                      :closure-defines {"re_frame.trace.trace_enabled_QMARK_" true}
+                      :closure-defines
+                            {"re_frame.trace.trace_enabled_QMARK_" true
+                             "day8.re_frame.tracing.trace_enabled_QMARK_"  true}
                        :preloads [day8.re-frame-10x.preload]}}}}
                   :doo {:build "test"}
                   :source-paths ["env/dev/clj"]

@@ -10072,3 +10072,887 @@ Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "sr
 notifying browser that file changed:  target/cljsbuild/public/js/out/goog/deps.js
 notifying browser that file changed:  target/cljsbuild/public/js/out/cljs_deps.js
 notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/preview.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 13.947 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/goog/deps.js
+notifying browser that file changed:  target/cljsbuild/public/js/out/cljs_deps.js
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/events.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 11.127 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/goog/deps.js
+notifying browser that file changed:  target/cljsbuild/public/js/out/cljs_deps.js
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/events.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 4.49 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/events.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 4.471 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/events.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 3.227 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/events.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.743 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/events.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.89 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/events.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 4.619 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/events.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 3.426 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/specs.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.917 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/specs.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 11.053 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/goog/deps.js
+notifying browser that file changed:  target/cljsbuild/public/js/out/cljs_deps.js
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/utils.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 5.865 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/utils.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 5.844 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/utils.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 5.642 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/events.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 3.202 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.837 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/events.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.631 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 3.131 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 4.01 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/events.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.364 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.15 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.062 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.033 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.033 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 1.958 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.038 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.161 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.325 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.002 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 1.965 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 1.922 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.725 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.245 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.54 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 1.955 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.36 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 1.973 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 1.983 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.383 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.268 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.093 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.129 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.274 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[36m----  Compiler Warning on   src/cljs/landschaften/views/examine.cljs   line:107  column:1  ----[0m
+
+  [1mdisplay-painting at line 85 is being replaced[0m
+
+  [36m103[0m  [36m       [rc/box :child (concept-bubbles (:concepts painting))][0m
+  [36m104[0m  [36m     ]])[0m
+  [36m105[0m  [36m[0m
+  [36m106[0m  [36m[0m
+  [33m107[0m  [1m(defn display-painting [painting show-max?][0m
+  [0m   [0m  [33m^--- display-painting at line 85 is being replaced[0m
+  [36m108[0m  [36m  [rc/v-box[0m
+  [36m109[0m  [36m     :gap "10px"[0m
+  [36m110[0m  [36m     :children [page-title][0m
+  [36m111[0m  [36m     ])[0m
+
+[36m----  Compiler Warning : Please see src/cljs/landschaften/views/examine.cljs  ----[0m
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 4.743 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.173 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.132 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.084 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.096 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.179 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.06 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.085 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.452 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.159 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.118 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.124 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.14 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.991 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.093 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.119 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.142 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[36m----  Compiler Warning on   src/cljs/landschaften/views/examine.cljs   line:132  column:8  ----[0m
+
+  [1mUse of undeclared Var landschaften.views.examine/display-painting[0m
+
+  [36m128[0m  [36m(do[0m
+  [36m129[0m  [36m  (js/console.log "current-painting was: " current-painting)[0m
+  [36m130[0m  [36m  (js/console.log "@default-painting was: " @default-painting)[0m
+  [36m131[0m  [36m  (js/console.log "@show-max?: " @show-max?)[0m
+  [33m132[0m  [1m  (display-painting[0m
+  [0m   [0m  [33m   ^--- Use of undeclared Var landschaften.views.examine/display-painting[0m
+  [36m133[0m  [36m    (or current-painting @default-painting)[0m
+  [36m134[0m  [36m    @show-max?))))[0m
+
+[36m----  Compiler Warning : Please see src/cljs/landschaften/views/examine.cljs  ----[0m
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.335 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.09 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[36m----  Compiler Warning on   src/cljs/landschaften/views/examine.cljs   line:113  column:9  ----[0m
+
+  [1mUse of undeclared Var landschaften.views.examine/info-and-done-button[0m
+
+  [36m109[0m  [36m     :gap "10px"[0m
+  [36m110[0m  [36m     :children [[0m
+  [36m111[0m  [36m       [page-title][0m
+  [36m112[0m  [36m       [image painting show-max?][0m
+  [33m113[0m  [1m       [info-and-done-button][0m
+  [0m   [0m  [33m        ^--- Use of undeclared Var landschaften.views.examine/info-and-done-button[0m
+  [36m114[0m  [36m      ][0m
+  [36m115[0m  [36m  ])[0m
+  [36m116[0m  [36m[0m
+  [36m117[0m  [36m[0m
+  [36m118[0m  [36m(defn info-and-done-button [painting][0m
+
+[36m----  Compiler Warning : Please see src/cljs/landschaften/views/examine.cljs  ----[0m
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.185 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.088 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.098 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.078 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.128 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.064 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.71 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.405 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.138 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.071 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.338 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.825 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[36m----  Compiler Warning on   src/cljs/landschaften/views/examine.cljs   line:118  column:45  ----[0m
+
+  [1mUse of undeclared Var landschaften.views.examine/paintings[0m
+
+  [36m114[0m  [36m     :gap "10px"[0m
+  [36m115[0m  [36m     :children [[page-title][0m
+  [36m116[0m  [36m                [image painting show-max?][0m
+  [36m117[0m  [36m                [info-and-done-button painting][0m
+  [33m118[0m  [1m                [concept-bubbles (:concepts paintings)]]])[0m
+  [0m   [0m  [33m                                            ^--- Use of undeclared Var landschaften.views.examine/paintings[0m
+  [36m119[0m  [36m[0m
+  [36m120[0m  [36m(defn concepts [painting][0m
+  [36m121[0m  [36m  [concept-bubbles (:concepts paintings)])[0m
+
+[36m----  Compiler Warning : Please see src/cljs/landschaften/views/examine.cljs  ----[0m
+[36m----  Compiler Warning on   src/cljs/landschaften/views/examine.cljs   line:121  column:31  ----[0m
+
+  [1mUse of undeclared Var landschaften.views.examine/paintings[0m
+
+  [36m117[0m  [36m                [info-and-done-button painting][0m
+  [36m118[0m  [36m                [concept-bubbles (:concepts paintings)]]])[0m
+  [36m119[0m  [36m[0m
+  [36m120[0m  [36m(defn concepts [painting][0m
+  [33m121[0m  [1m  [concept-bubbles (:concepts paintings)])[0m
+  [0m   [0m  [33m                              ^--- Use of undeclared Var landschaften.views.examine/paintings[0m
+  [36m122[0m  [36m[0m
+  [36m123[0m  [36m[0m
+  [36m124[0m  [36m[0m
+  [36m125[0m  [36m[0m
+  [36m126[0m  [36m;; should actually source from e.g. "::subs/current-painting"[0m
+
+[36m----  Compiler Warning : Please see src/cljs/landschaften/views/examine.cljs  ----[0m
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 3.133 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[36m----  Compiler Warning on   src/cljs/landschaften/views/examine.cljs   line:121  column:31  ----[0m
+
+  [1mUse of undeclared Var landschaften.views.examine/paintings[0m
+
+  [36m117[0m  [36m                [info-and-done-button painting][0m
+  [36m118[0m  [36m                [concept-bubbles (:concepts painting)]]])[0m
+  [36m119[0m  [36m[0m
+  [36m120[0m  [36m(defn concepts [painting][0m
+  [33m121[0m  [1m  [concept-bubbles (:concepts paintings)])[0m
+  [0m   [0m  [33m                              ^--- Use of undeclared Var landschaften.views.examine/paintings[0m
+  [36m122[0m  [36m[0m
+  [36m123[0m  [36m[0m
+  [36m124[0m  [36m[0m
+  [36m125[0m  [36m[0m
+  [36m126[0m  [36m;; should actually source from e.g. "::subs/current-painting"[0m
+
+[36m----  Compiler Warning : Please see src/cljs/landschaften/views/examine.cljs  ----[0m
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.288 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.135 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.337 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.852 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.151 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.171 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.173 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.833 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/specs.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.536 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/specs.js
+[36m----  Couldn't load Clojure file    ----[0m
+
+  [1mUnexpected error macroexpanding s/or at (/Users/concerto/cs/landschaften/src/cljc/landschaften/specs.cljc:54:5).[0m
+
+[36m----  Exception Stack Trace  ----[0m
+
+java.lang.AssertionError: Assert failed: spec/or expects k1 p1 k2 p2..., where ks are keywords
+(c/and (even? (count key-pred-forms)) (every? keyword? keys))
+ at clojure.spec.alpha$or.invokeStatic (alpha.clj:485)
+    clojure.spec.alpha$or.doInvoke (alpha.clj:471)
+    clojure.lang.RestFn.applyTo (RestFn.java:142)
+    clojure.lang.Var.applyTo (Var.java:705)
+    clojure.lang.Compiler.macroexpand1 (Compiler.java:6992)
+    clojure.lang.Compiler.analyzeSeq (Compiler.java:7092)
+    clojure.lang.Compiler.analyze (Compiler.java:6789)
+    clojure.lang.Compiler.analyze (Compiler.java:6745)
+    clojure.lang.Compiler$InvokeExpr.parse (Compiler.java:3888)
+    clojure.lang.Compiler.analyzeSeq (Compiler.java:7108)
+    clojure.lang.Compiler.analyze (Compiler.java:6789)
+    clojure.lang.Compiler.analyzeSeq (Compiler.java:7094)
+    clojure.lang.Compiler.analyze (Compiler.java:6789)
+    clojure.lang.Compiler.analyze (Compiler.java:6745)
+    clojure.lang.Compiler$InvokeExpr.parse (Compiler.java:3888)
+    clojure.lang.Compiler.analyzeSeq (Compiler.java:7108)
+    clojure.lang.Compiler.analyze (Compiler.java:6789)
+    clojure.lang.Compiler.analyze (Compiler.java:6745)
+    clojure.lang.Compiler.eval (Compiler.java:7180)
+    clojure.lang.Compiler.load (Compiler.java:7635)
+    clojure.lang.Compiler.loadFile (Compiler.java:7573)
+    clojure.lang.RT$3.invoke (RT.java:327)
+    figwheel_sidecar.build_middleware.clj_reloading$handle_clj_source_reloading.invokeStatic (clj_reloading.clj:61)
+    figwheel_sidecar.build_middleware.clj_reloading$handle_clj_source_reloading.invoke (clj_reloading.clj:46)
+    figwheel_sidecar.build_middleware.clj_reloading$hook$fn__22359.invoke (clj_reloading.clj:93)
+    figwheel_sidecar.build_middleware.javascript_reloading$hook$fn__22392.invoke (javascript_reloading.clj:48)
+    figwheel_sidecar.components.cljs_autobuild$color_output$fn__22447.invoke (cljs_autobuild.clj:80)
+    figwheel_sidecar.components.cljs_autobuild$execute_build$fn__22489.invoke (cljs_autobuild.clj:234)
+    figwheel_sidecar.utils$sync_exec$fn__1485$fn__1486.invoke (utils.clj:13)
+    figwheel_sidecar.utils$sync_exec$fn__1485.invoke (utils.clj:12)
+    clojure.core$binding_conveyor_fn$fn__5739.invoke (core.clj:2033)
+    clojure.lang.AFn.applyToHelper (AFn.java:154)
+    clojure.lang.RestFn.applyTo (RestFn.java:132)
+    clojure.lang.Agent$Action.doRun (Agent.java:114)
+    clojure.lang.Agent$Action.run (Agent.java:163)
+    java.util.concurrent.ThreadPoolExecutor.runWorker (ThreadPoolExecutor.java:1142)
+    java.util.concurrent.ThreadPoolExecutor$Worker.run (ThreadPoolExecutor.java:617)
+    java.lang.Thread.run (Thread.java:745)
+
+[36m----  Couldn't load Clojure file    ----[0m
+
+  [1mUnexpected error macroexpanding s/or at (/Users/concerto/cs/landschaften/src/cljc/landschaften/specs.cljc:54:5).[0m
+
+[36m----  Exception Stack Trace  ----[0m
+
+java.lang.AssertionError: Assert failed: spec/or expects k1 p1 k2 p2..., where ks are keywords
+(c/and (even? (count key-pred-forms)) (every? keyword? keys))
+ at clojure.spec.alpha$or.invokeStatic (alpha.clj:485)
+    clojure.spec.alpha$or.doInvoke (alpha.clj:471)
+    clojure.lang.RestFn.applyTo (RestFn.java:142)
+    clojure.lang.Var.applyTo (Var.java:705)
+    clojure.lang.Compiler.macroexpand1 (Compiler.java:6992)
+    clojure.lang.Compiler.analyzeSeq (Compiler.java:7092)
+    clojure.lang.Compiler.analyze (Compiler.java:6789)
+    clojure.lang.Compiler.analyze (Compiler.java:6745)
+    clojure.lang.Compiler$InvokeExpr.parse (Compiler.java:3888)
+    clojure.lang.Compiler.analyzeSeq (Compiler.java:7108)
+    clojure.lang.Compiler.analyze (Compiler.java:6789)
+    clojure.lang.Compiler.analyzeSeq (Compiler.java:7094)
+    clojure.lang.Compiler.analyze (Compiler.java:6789)
+    clojure.lang.Compiler.analyze (Compiler.java:6745)
+    clojure.lang.Compiler$InvokeExpr.parse (Compiler.java:3888)
+    clojure.lang.Compiler.analyzeSeq (Compiler.java:7108)
+    clojure.lang.Compiler.analyze (Compiler.java:6789)
+    clojure.lang.Compiler.analyze (Compiler.java:6745)
+    clojure.lang.Compiler.eval (Compiler.java:7180)
+    clojure.lang.Compiler.load (Compiler.java:7635)
+    clojure.lang.Compiler.loadFile (Compiler.java:7573)
+    clojure.lang.RT$3.invoke (RT.java:327)
+    figwheel_sidecar.build_middleware.clj_reloading$handle_clj_source_reloading.invokeStatic (clj_reloading.clj:61)
+    figwheel_sidecar.build_middleware.clj_reloading$handle_clj_source_reloading.invoke (clj_reloading.clj:46)
+    figwheel_sidecar.build_middleware.clj_reloading$hook$fn__22359.invoke (clj_reloading.clj:93)
+    figwheel_sidecar.build_middleware.javascript_reloading$hook$fn__22392.invoke (javascript_reloading.clj:48)
+    figwheel_sidecar.components.cljs_autobuild$color_output$fn__22447.invoke (cljs_autobuild.clj:80)
+    figwheel_sidecar.components.cljs_autobuild$execute_build$fn__22489.invoke (cljs_autobuild.clj:234)
+    figwheel_sidecar.utils$sync_exec$fn__1485$fn__1486.invoke (utils.clj:13)
+    figwheel_sidecar.utils$sync_exec$fn__1485.invoke (utils.clj:12)
+    clojure.core$binding_conveyor_fn$fn__5739.invoke (core.clj:2033)
+    clojure.lang.AFn.applyToHelper (AFn.java:154)
+    clojure.lang.RestFn.applyTo (RestFn.java:132)
+    clojure.lang.Agent$Action.doRun (Agent.java:114)
+    clojure.lang.Agent$Action.run (Agent.java:163)
+    java.util.concurrent.ThreadPoolExecutor.runWorker (ThreadPoolExecutor.java:1142)
+    java.util.concurrent.ThreadPoolExecutor$Worker.run (ThreadPoolExecutor.java:617)
+    java.lang.Thread.run (Thread.java:745)
+
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 3.283 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/specs.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.962 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/specs.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.417 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/specs.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.301 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.745 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.245 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.207 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.04 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.16 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.075 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.418 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 1.981 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 1.996 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 1.959 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.237 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.142 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.255 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 1.971 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.062 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.354 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.655 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.355 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.433 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.477 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.014 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.026 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[36m----  Compiler Warning on   src/cljs/landschaften/views/examine.cljs   line:73  column:6  ----[0m
+
+  [1mWrong number of args (4) passed to landschaften.views.utils/responsive-image[0m
+
+  [36m69[0m  [36m[rc/v-box[0m
+  [36m70[0m  [36m :align-self :center[0m
+  [36m71[0m  [36m :children[0m
+  [36m72[0m  [36m  [[0m
+  [33m73[0m  [1m   (utils/responsive-image[0m
+  [0m  [0m  [33m   ^--- Wrong number of args (4) passed to landschaften.views.utils/responsive-image[0m
+  [36m74[0m  [36m      (:jpg painting) utils/widths->vw[0m
+  [36m75[0m  [36m     ;; better: 'examine-image-clicked'[0m
+  [36m76[0m  [36m      #(dispatch [::events/show-max-image])[0m
+  [36m77[0m  [36m    (when show?[0m
+  [36m78[0m  [36m      (do[0m
+
+[36m----  Compiler Warning : Please see src/cljs/landschaften/views/examine.cljs  ----[0m
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.442 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 1.98 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.31 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[36m----  Compiler Warning on   src/cljs/landschaften/views/examine.cljs   line:68  column:8  ----[0m
+
+  [1mUse of undeclared Var landschaften.views.examine/show?[0m
+
+  [36m64[0m  [36m(defn responsive-image [jpg on-click][0m
+  [36m65[0m  [36m  (utils/responsive-image jpg utils/widths->vw on-click))[0m
+  [36m66[0m  [36m[0m
+  [36m67[0m  [36m(defn modal-image-view [jpg on-backdrop-click on-image-click][0m
+  [33m68[0m  [1m (when show?[0m
+  [0m  [0m  [33m       ^--- Use of undeclared Var landschaften.views.examine/show?[0m
+  [36m69[0m  [36m   (do[0m
+  [36m70[0m  [36m     (js/console.log "modal showing")[0m
+  [36m71[0m  [36m     [rc/modal-panel[0m
+  [36m72[0m  [36m      :backdrop-on-click on-backdrop-click[0m
+  [36m73[0m  [36m      :child [:img[0m
+
+[36m----  Compiler Warning : Please see src/cljs/landschaften/views/examine.cljs  ----[0m
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.848 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.026 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.206 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 3.38 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[31mFailed to compile build :app from ["src/cljs" "src/cljc" "env/dev/cljs"] in 1.3 seconds.[0m
+[36m----  Could not Read  src/cljs/landschaften/views/examine.cljs   line:76 ----[0m
+
+  [1m/Users/concerto/cs/landschaften/src/cljs/landschaften/views/examine.cljs [line 76, col 29] Unmatched delimiter ).[0m
+
+  [36m74[0m  [36m              {:on-click #(dispatch [::events/hide-max-image])[0m
+  [36m75[0m  [36m               :style {:max-height "600px"}[0m
+  [33m76[0m  [1m               :src jpg}]]))[0m
+  [0m  [0m  [33m               /Users/concerto/cs/landschaften/src/cljs/landschaften/views/examine.cljs [line 76, col 29] Unmatched delimiter ).[0m
+  [36m77[0m  [36m[0m
+  [36m78[0m  [36m(defn image [painting show?][0m
+  [36m79[0m  [36m  [rc/v-box[0m
+
+[36m----  Reader Error : Please see src/cljs/landschaften/views/examine.cljs  ----[0m
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.302 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.271 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.465 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.304 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.271 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.715 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.044 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.48 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.343 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.257 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.37 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.99 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.417 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.873 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.87 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.383 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 1.899 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.183 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.177 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.397 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/preview.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 1.867 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/preview.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 1.967 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/preview.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.121 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/preview.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[31mFailed to compile build :app from ["src/cljs" "src/cljc" "env/dev/cljs"] in 0.888 seconds.[0m
+[36m----  Could not Read  src/cljs/landschaften/views/preview.cljs   line:48 ----[0m
+
+  [1m/Users/concerto/cs/landschaften/src/cljs/landschaften/views/preview.cljs [line 48, col 32] Unmatched delimiter ].[0m
+
+  [36m46[0m  [36m    (fn [][0m
+  [36m47[0m  [36m     [rc/title :label (str "Examining " @current-group-name)[0m
+  [33m48[0m  [1m               :level :level1]])))[0m
+  [0m  [0m  [33m               /Users/concerto/cs/landschaften/src/cljs/landschaften/views/preview.cljs [line 48, col 32] Unmatched delimiter ].[0m
+  [36m49[0m  [36m[0m
+  [36m50[0m  [36m(defn preview [paintings][0m
+  [36m51[0m  [36m  [rc/v-box[0m
+
+[36m----  Reader Error : Please see src/cljs/landschaften/views/preview.cljs  ----[0m
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.018 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/preview.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 1.895 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/preview.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 1.994 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/preview.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[31mFailed to compile build :app from ["src/cljs" "src/cljc" "env/dev/cljs"] in 0.873 seconds.[0m
+[36m----  Could not Read  src/cljs/landschaften/views/preview.cljs   line:45 ----[0m
+
+  [1m/Users/concerto/cs/landschaften/src/cljs/landschaften/views/preview.cljs [line 45, col 57] Invalid keyword: ::subs/group-name.[0m
+
+  [36m44[0m  [36m(defn group-name [][0m
+  [33m45[0m  [1m  (let [current-group-name (subscribe [::subs/group-name])][0m
+  [0m  [0m  [33m  /Users/concerto/cs/landschaften/src/cljs/landschaften/views/preview.cljs [line 45, col 57] Invalid keyword: ::subs/group-name.[0m
+  [36m46[0m  [36m    (fn [][0m
+  [36m47[0m  [36m     [rc/title :label (str "Examining " @current-group-name)[0m
+  [36m48[0m  [36m               :level :level1])))[0m
+
+[36m----  Reader Error : Please see src/cljs/landschaften/views/preview.cljs  ----[0m
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 1.933 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/cljs_deps.js
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/preview.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.577 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/preview.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.119 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/preview.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 1.909 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/preview.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.036 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/preview.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.084 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/preview.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.44 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/subs.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 1.869 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/preview.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 1.941 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/preview.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 1.975 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/preview.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 1.875 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/preview.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.126 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/preview.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 4.707 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/examine.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[31mFailed to compile build :app from ["src/cljs" "src/cljc" "env/dev/cljs"] in 2.764 seconds.[0m
+[36m----  Exception    ----[0m
+
+  [1mAssert failed: file:/Users/concerto/cs/landschaften/src/cljs/landschaften/views/explore.cljs does not provide a namespace
+(first provides)[0m
+
+[36m----  Exception Stack Trace  ----[0m
+
+java.lang.AssertionError: Assert failed: file:/Users/concerto/cs/landschaften/src/cljs/landschaften/views/explore.cljs does not provide a namespace
+(first provides)
+ at cljs.closure$javascript_file.invokeStatic (closure.clj:497)
+    cljs.closure$javascript_file.invoke (closure.clj:493)
+    cljs.closure$map__GT_javascript_file.invokeStatic (closure.clj:502)
+    cljs.closure$map__GT_javascript_file.invoke (closure.clj:500)
+    cljs.closure$compiled_file.invokeStatic (closure.clj:585)
+    cljs.closure$compiled_file.invoke (closure.clj:577)
+    cljs.closure$compile_file.invokeStatic (closure.clj:647)
+    cljs.closure$compile_file.invoke (closure.clj:625)
+    cljs.closure$fn__5175.invokeStatic (closure.clj:721)
+    cljs.closure/fn (closure.clj:715)
+    cljs.closure$fn__5088$G__5081__5095.invoke (closure.clj:543)
+    cljs.closure$compile_sources$iter__5301__5305$fn__5306.invoke (closure.clj:1081)
+    clojure.lang.LazySeq.sval (LazySeq.java:42)
+    clojure.lang.LazySeq.seq (LazySeq.java:51)
+    clojure.lang.Cons.next (Cons.java:39)
+    clojure.lang.RT.next (RT.java:709)
+    clojure.core$next__5371.invokeStatic (core.clj:64)
+    clojure.core$dorun.invokeStatic (core.clj:3142)
+    clojure.core$doall.invokeStatic (core.clj:3148)
+    clojure.core$doall.invoke (core.clj:3148)
+    cljs.closure$compile_sources.invokeStatic (closure.clj:1077)
+    cljs.closure$compile_sources.invoke (closure.clj:1066)
+    cljs.closure$build.invokeStatic (closure.clj:2930)
+    cljs.closure$build.invoke (closure.clj:2838)
+    cljs.build.api$build.invokeStatic (api.clj:208)
+    cljs.build.api$build.invoke (api.clj:189)
+    figwheel_sidecar.components.cljs_autobuild$cljs_build.invokeStatic (cljs_autobuild.clj:28)
+    figwheel_sidecar.components.cljs_autobuild$cljs_build.invoke (cljs_autobuild.clj:27)
+    figwheel_sidecar.build_middleware.injection$hook$fn__22121.invoke (injection.clj:94)
+    figwheel_sidecar.components.cljs_autobuild$notify_command_hook$fn__22443.invoke (cljs_autobuild.clj:69)
+    figwheel_sidecar.components.cljs_autobuild$figwheel_start_and_end_messages$fn__22433.invoke (cljs_autobuild.clj:48)
+    figwheel_sidecar.build_middleware.notifications$hook$fn__22302.invoke (notifications.clj:179)
+    figwheel_sidecar.build_middleware.clj_reloading$hook$fn__22359.invoke (clj_reloading.clj:111)
+    figwheel_sidecar.build_middleware.javascript_reloading$hook$fn__22392.invoke (javascript_reloading.clj:48)
+    figwheel_sidecar.components.cljs_autobuild$color_output$fn__22447.invoke (cljs_autobuild.clj:80)
+    figwheel_sidecar.components.cljs_autobuild$execute_build$fn__22489.invoke (cljs_autobuild.clj:234)
+    figwheel_sidecar.utils$sync_exec$fn__1485$fn__1486.invoke (utils.clj:13)
+    figwheel_sidecar.utils$sync_exec$fn__1485.invoke (utils.clj:12)
+    clojure.core$binding_conveyor_fn$fn__5739.invoke (core.clj:2033)
+    clojure.lang.AFn.applyToHelper (AFn.java:154)
+    clojure.lang.RestFn.applyTo (RestFn.java:132)
+    clojure.lang.Agent$Action.doRun (Agent.java:114)
+    clojure.lang.Agent$Action.run (Agent.java:163)
+    java.util.concurrent.ThreadPoolExecutor.runWorker (ThreadPoolExecutor.java:1142)
+    java.util.concurrent.ThreadPoolExecutor$Worker.run (ThreadPoolExecutor.java:617)
+    java.lang.Thread.run (Thread.java:745)
+
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.804 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/cljs_deps.js
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/explore.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[31mFailed to compile build :app from ["src/cljs" "src/cljc" "env/dev/cljs"] in 1.131 seconds.[0m
+[36m----  Exception    ----[0m
+
+  [1mAssert failed: file:/Users/concerto/cs/landschaften/src/cljs/landschaften/views/compare.cljs does not provide a namespace
+(first provides)[0m
+
+[36m----  Exception Stack Trace  ----[0m
+
+java.lang.AssertionError: Assert failed: file:/Users/concerto/cs/landschaften/src/cljs/landschaften/views/compare.cljs does not provide a namespace
+(first provides)
+ at cljs.closure$javascript_file.invokeStatic (closure.clj:497)
+    cljs.closure$javascript_file.invoke (closure.clj:493)
+    cljs.closure$map__GT_javascript_file.invokeStatic (closure.clj:502)
+    cljs.closure$map__GT_javascript_file.invoke (closure.clj:500)
+    cljs.closure$compiled_file.invokeStatic (closure.clj:585)
+    cljs.closure$compiled_file.invoke (closure.clj:577)
+    cljs.closure$compile_file.invokeStatic (closure.clj:647)
+    cljs.closure$compile_file.invoke (closure.clj:625)
+    cljs.closure$fn__5175.invokeStatic (closure.clj:721)
+    cljs.closure/fn (closure.clj:715)
+    cljs.closure$fn__5088$G__5081__5095.invoke (closure.clj:543)
+    cljs.closure$compile_sources$iter__5301__5305$fn__5306.invoke (closure.clj:1081)
+    clojure.lang.LazySeq.sval (LazySeq.java:42)
+    clojure.lang.LazySeq.seq (LazySeq.java:51)
+    clojure.lang.Cons.next (Cons.java:39)
+    clojure.lang.RT.next (RT.java:709)
+    clojure.core$next__5371.invokeStatic (core.clj:64)
+    clojure.core$dorun.invokeStatic (core.clj:3142)
+    clojure.core$doall.invokeStatic (core.clj:3148)
+    clojure.core$doall.invoke (core.clj:3148)
+    cljs.closure$compile_sources.invokeStatic (closure.clj:1077)
+    cljs.closure$compile_sources.invoke (closure.clj:1066)
+    cljs.closure$build.invokeStatic (closure.clj:2930)
+    cljs.closure$build.invoke (closure.clj:2838)
+    cljs.build.api$build.invokeStatic (api.clj:208)
+    cljs.build.api$build.invoke (api.clj:189)
+    figwheel_sidecar.components.cljs_autobuild$cljs_build.invokeStatic (cljs_autobuild.clj:28)
+    figwheel_sidecar.components.cljs_autobuild$cljs_build.invoke (cljs_autobuild.clj:27)
+    figwheel_sidecar.build_middleware.injection$hook$fn__22121.invoke (injection.clj:94)
+    figwheel_sidecar.components.cljs_autobuild$notify_command_hook$fn__22443.invoke (cljs_autobuild.clj:69)
+    figwheel_sidecar.components.cljs_autobuild$figwheel_start_and_end_messages$fn__22433.invoke (cljs_autobuild.clj:48)
+    figwheel_sidecar.build_middleware.notifications$hook$fn__22302.invoke (notifications.clj:179)
+    figwheel_sidecar.build_middleware.clj_reloading$hook$fn__22359.invoke (clj_reloading.clj:111)
+    figwheel_sidecar.build_middleware.javascript_reloading$hook$fn__22392.invoke (javascript_reloading.clj:48)
+    figwheel_sidecar.components.cljs_autobuild$color_output$fn__22447.invoke (cljs_autobuild.clj:80)
+    figwheel_sidecar.components.cljs_autobuild$execute_build$fn__22489.invoke (cljs_autobuild.clj:234)
+    figwheel_sidecar.utils$sync_exec$fn__1485$fn__1486.invoke (utils.clj:13)
+    figwheel_sidecar.utils$sync_exec$fn__1485.invoke (utils.clj:12)
+    clojure.core$binding_conveyor_fn$fn__5739.invoke (core.clj:2033)
+    clojure.lang.AFn.applyToHelper (AFn.java:154)
+    clojure.lang.RestFn.applyTo (RestFn.java:132)
+    clojure.lang.Agent$Action.doRun (Agent.java:114)
+    clojure.lang.Agent$Action.run (Agent.java:163)
+    java.util.concurrent.ThreadPoolExecutor.runWorker (ThreadPoolExecutor.java:1142)
+    java.util.concurrent.ThreadPoolExecutor$Worker.run (ThreadPoolExecutor.java:617)
+    java.lang.Thread.run (Thread.java:745)
+
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.14 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/cljs_deps.js
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/compare.js
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/explore.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 1.9 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/cljs_deps.js
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/compare.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 1.879 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/cljs_deps.js
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/explore.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 2.33 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/cljs_deps.js
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/compare.js
+Compiling build :app to "target/cljsbuild/public/js/app.js" from ["src/cljs" "src/cljc" "env/dev/cljs"]...
+[32mSuccessfully compiled build :app to "target/cljsbuild/public/js/app.js" in 1.904 seconds.[0m
+notifying browser that file changed:  target/cljsbuild/public/js/out/cljs_deps.js
+notifying browser that file changed:  target/cljsbuild/public/js/out/landschaften/views/explore.js
