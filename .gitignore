@@ -14,3 +14,10 @@ profiles.clj
 /log
 Clojure REPL
 .rebel_readline_history
+/.idea
+figwheel_server.log
+*.iml
+landschaften.iml
+*.iml
+landschaften.iml
+figwheel_server.log

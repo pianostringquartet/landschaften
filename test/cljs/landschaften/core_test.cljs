@@ -7,3 +7,11 @@
 (deftest test-home
   (is (= true true)))
 
+
+;; should GENERATE THESE via spec
+;; otherwise have to maintain these instances...
+;(def group-without-constraints)
+;(def group-with-constraints)
+;(deftest test->query-constraints)
+
+

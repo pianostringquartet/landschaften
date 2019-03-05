@@ -8,6 +8,12 @@
 ;; ------------------------------------------------------
 
 
+(defn keyword->displayable [kw]
+  (clojure.string/replace (name kw) "-" " "))
+
+(defn displayable->keyword [displayable]
+  (keyword (clojure.string/replace displayable " " "-")))
+
 (def log js/console.log)
 
 ;; color is a css bootstrap class e.g. "btn btn-warning", "btn btn-info", etc.
@@ -91,5 +97,6 @@
 
 
 ;; REPL PLAY
+(+ 1 1)
 
-; (+ 1 1)
+

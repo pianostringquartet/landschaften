@@ -10,46 +10,32 @@
             [landschaften.views.preview :as preview]
             [landschaften.views.sidebar :as sidebar]))
 
-;; will include sidebar, preview
 
-; (def explore-panel [:div "explore me"])
-
-(def paintings-data #{"love" "pain"})
-
-(defn no-data []
+(defn no-paintings []
   [rc/title
-     :label "No data yet. Search for paintings get started."
+     :label "Search for some paintings get started."
      :level :level3])
 
-(defn paintings-found [n]
-  (let [x (if (= n 1) "PAINTING" "PAINTINGS")]
-   [rc/title
-     :label (clojure.string/join " " [n x "FOUND"])]))
+(defn preview-paintings [paintings]
+  [preview/preview paintings])
 
-;; paintings should satisfy: s/valid? s/coll-of ::painting
-; (defn data [paintings]
-;   [paintings-found (count paintings)])
-
-; (defn explore-data [paintings]
-;  {:pre [(s/valid? (s/coll-of ::specs/painting) paintings)]}
-;  [paintings-found (count paintings)])
-
-
-
-(defn preview-data [paintings]
-  [paintings-found (count paintings)])
+(defn explore-paintings
+ "Find paintings satisfying constraints"
+ [paintings]
+ ; {:pre [(s/valid? (s/coll-of ::specs/painting) paintings)]}
+ (let [prompt-or-preview (if (empty? paintings)
+                            [no-paintings]
+                            [preview/preview paintings])]
+   [rc/h-box
+    :children [prompt-or-preview
+               ; [preview-paintings paintings
+               [sidebar/sidebar]]])) ; constraints and groups)
 
 
-(defn explore-data [paintings]
- {:pre [(s/valid? (s/coll-of ::specs/painting) paintings)]}
- [rc/h-box
-   :children [[preview-data paintings]
-              [sidebar/sidebar]]])
-
-
-(def explore-panel
+(defn explore-panel []
   (let [paintings (subscribe [::subs/paintings])]
   ; (let [paintings paintings-data]
-    (if (empty? @paintings)
-      [no-data]
-      [explore-data @paintings])))
+    (fn []
+      ; (if (empty? @paintings)
+        ; [no-paintings]
+        [explore-paintings @paintings])))

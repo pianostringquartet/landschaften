@@ -10,26 +10,36 @@
 (def excluded-schools
   #{"Bohemian" "Catalan" "Finnish" "Greek" "Irish" "Norwegian" "Other" "Polish" "Portuguese" "Swedish" "Hungarian" "Scottish" "Swiss" "Danish" "Austrian"})
 
-;; keep state flat (ie no :current-gtoup), and have only :previous-group <list ::group>?
-;; wouldn't need to change logic,
-;; if group should be saved, then do so explicitly and force user to give name to group
+;; use if no groups yet
+(def empty-group
+  {:group-name ""
+   :paintings #{}
+   :types #{}
+   :schools #{}
+   :timeframes #{}
+   :concepts #{}
+   :artists #{}})
 
 (def default-db
- {:paintings sample/sample-paintings
-  :default-painting (first sample/sample-paintings)
+ {;; HIGH LEVEL
+  :current-mode     :explore
+
+  ;; EXAMINE
   :current-painting nil
-  :current-group sample/sample-group
-  :query-loading false
-  :show-max? false
-  :all-types (disj specs/PAINTING-TYPES "Other")
-  :all-schools (apply disj specs/SCHOOLS excluded-schools)
-  :all-timeframes (apply disj specs/TIMEFRAMES excluded-timeframes)
-  :all-concepts sample/sample-concepts
-  :all-artists #{(:author (first sample/sample-paintings))}
+  :show-max?        false
 
+  ;; EXPLORE
+  :query-loading    false
+  :all-types        (disj specs/PAINTING-TYPES "Other")
+  :all-schools      (apply disj specs/SCHOOLS excluded-schools)
+  :all-timeframes   (apply disj specs/TIMEFRAMES excluded-timeframes)
+  :all-concepts     #{} ; retrieve from backend
+  :all-artists      #{} ; retrieve from backend
 
-  :current-tab :explore
+  ;; EXPLORE & COMPARE
+  :current-group    empty-group ; :current-group sample/sample-group
 
-;; collection of other ::groups, indexed by group-name
-;; start with fake sample group
-  :saved-groups {(:group-name sample/sample-group-2) sample/sample-group-2}})
+  ;; COMPARE
+  ;; map of {:group-name ::group}
+  ;:saved-groups     {(:group-name sample/sample-group-2) sample/sample-group-2}})
+  :saved-groups     {}})

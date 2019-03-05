@@ -4,13 +4,9 @@
             [re-com.core :as rc]
             [landschaften.subs :as subs]
             [landschaften.events :as events]
-            [landschaften.db :as db]
             [clojure.spec.alpha :as s]
             [landschaften.specs :as specs]
             [landschaften.ui-specs :as ui-specs]
-            [landschaften.views.examine :as examine]
-            [landschaften.views.preview :as preview]
-            [landschaften.views.sidebar :as sidebar]
             [landschaften.views.explore :as explore]
             [landschaften.views.compare :as compare]))
 
@@ -28,11 +24,12 @@
     :tabs (mapv ->tab (keys modes))
     :on-change #(dispatch [::events/mode-changed %])]))
 
+
 (defn hello-world []
- (let [current-mode-id (subscribe [::subs/current-tab])]
+ (let [current-mode-id (subscribe [::subs/current-mode])]
    [rc/v-box
      :children [[mode-tabs @current-mode-id modes]
-                (@current-mode-id modes)]]))
+                [(@current-mode-id modes)]]]))
 
 
 ;; OLD:

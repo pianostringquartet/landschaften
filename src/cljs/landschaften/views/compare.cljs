@@ -3,4 +3,5 @@
             [re-frame.core :refer [subscribe dispatch]]
             [re-com.core :as rc]))
 
-(def compare-panel [:div "compare me"])
+(defn compare-panel []
+  [:div "compare me"])

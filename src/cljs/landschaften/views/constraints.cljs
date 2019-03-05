@@ -98,12 +98,14 @@
          (js/console.log "artist typeahead: chose: " %)
          (dispatch [::events/update-selected-artists %]))]))
 
+
 (defn concept-button [concept]
   [rc/button
       :label concept
       :on-click #(dispatch [::events/remove-selected-concept concept])
       :class "btn btn-info" ; Bootstrap
       :style {:border-radius "30px"}]) ; curvier corners
+
 
 (defn artist-button [artist]
   [rc/button
@@ -112,29 +114,14 @@
       :class "btn btn-warning" ; Bootstrap
       :style {:border-radius "30px"}]) ; curvier corners
 
-(defn concepts-table [concepts]
-  [utils/button-table concepts 3 concept-button])
-
-(defn artists-table [artists]
-  [utils/button-table artists 2 artist-button])
 
 (defn selected-concepts []
   (let [selected-concepts (subscribe [::subs/concepts])]
-    [concepts-table @selected-concepts]))
+    [utils/button-table @selected-concepts 3 concept-button]))
+
 
 (defn selected-artists []
   (let [selected-artists (subscribe [::subs/artists])]
     (do
      (js/console.log "selected-artists: " @selected-artists)
-     [artists-table @selected-artists])))
-
-
-;; OLD:
-
-; (defn artists-table [artists]
-;     (let [artists-bubbles (partition-all 2 (map artist-button artists))
-;           ->ui-row (fn [xs] [rc/h-box :gap "8px" :width "500px" :children (into [] xs)])]
-;       [rc/v-box
-;         :gap "8px"
-;         :justify :center
-;         :children (mapv ->ui-row artists-bubbles)]))
+     [utils/button-table @selected-artists 2 artist-button])))

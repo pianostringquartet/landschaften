@@ -77,17 +77,16 @@
   :children [[info painting] [done-button]]])
 
 (defn display-painting [painting show-max?]
+  {:pre [(s/valid? ::specs/painting painting)]}
   [rc/v-box
-     :style {:margin-top "32px"}
-     :gap "10px"
-     :children [[image painting show-max?]
-                [info-and-done-button painting]
-                [concept-bubbles (:concepts painting)]]])
+       ; :style {:margin-top "32px"}
+       ; :gap "10px"
+       :children [[image painting show-max?]
+                  [info-and-done-button painting]
+                  [concept-bubbles (:concepts painting)]]])
 
 ;; MAIN
 (defn examine-painting [current-painting]
-  (let [default-painting (subscribe [::subs/default-painting])
-        show-max? (subscribe [::subs/show-max?])]
-    [display-painting
-      (or current-painting @default-painting)
+  (let [show-max? (subscribe [::subs/show-max?])]
+    [display-painting current-painting
       @show-max?]))
