@@ -1,5 +1,9 @@
 (ns landschaften.subs
-  (:require [re-frame.core :refer [dispatch reg-event-db reg-sub]]))
+  (:require [re-frame.core :refer [dispatch reg-event-db reg-sub]]
+            [cljs.spec.alpha :as s]
+            [landschaften.specs :as specs]
+            [landschaften.db :as db]))
+
 
 
 ;; ------------------------------------------------------
@@ -48,6 +52,7 @@
 (reg-sub
   ::current-painting
   (fn current-painting [db _]
+    {:post [(s/valid? ::specs/painting %)]}
     (:current-painting db)))
 
 
@@ -101,64 +106,67 @@
 (reg-sub
   ::saved-groups
   (fn saved-groups [db _]
-    (or (:saved-groups db)
-        #{})))
+    {:post [(s/valid? (s/coll-of map?) %)]}
+    (:saved-groups db)))
 
 
 (reg-sub
   ::current-group
   (fn [db _]
+    {:post [(s/valid? ::specs/group %)]}
     (let [g (:current-group db)]
       (do
         (js/console.log "reg-sub ::current-group: " g)
+        (js/console.log "(s/valid? ::specs/group g): " (s/explain-str ::specs/group g))
         g))))
 
 
 (reg-sub
+  ::group-name
+  (fn group-name [db _]
+    {:post [(s/valid? ::specs/group-name %)]}
+    (get-in db db/path:current-group-name)))
+
+
+(reg-sub
   ::paintings
-  :<- [::current-group]
-  (fn paintings [current-group _]
-    (:paintings current-group)))
+  (fn paintings [db _]
+    {:post [(s/valid? ::specs/paintings %)]}
+    (get-in db db/path:current-paintings)))
 
 
 (reg-sub
   ::types
-  :<- [::current-group]
-  (fn types [current-group _]
-    (:types current-group)))
+  (fn types [db _]
+    {:post [(s/valid? ::specs/type-constraints %)]}
+    (get-in db db/path:type-constraints)))
 
 
 (reg-sub
-  ::schools
-  :<- [::current-group]
-  (fn schools [current-group _]
-    (:schools current-group)))
+  ::school-constraints
+  (fn schools [db _]
+    {:post [(s/valid? ::specs/school-constraints %)]}
+    (get-in db db/path:school-constraints db)))
 
 
 (reg-sub
-  ::timeframes
-  :<- [::current-group]
-  (fn timeframes [current-group _]
-    (:timeframes current-group)))
+  ::timeframe-constraints
+  (fn timeframes [db _]
+    {:post [(s/valid? ::specs/timeframe-constraints %)]}
+    (get-in db db/path:timeframe-constraints db)))
 
 
 (reg-sub
-  ::concepts
-  :<- [::current-group]
-  (fn concepts [current-group _]
-    :concepts current-group))
+  ::concept-constraints
+  (fn concepts [db _]
+    {:post [(s/valid? ::specs/concept-constraints %)]}
+    (get-in db db/path:concept-constraints db)))
 
 
 (reg-sub
-  ::artists
-  :<- [::current-group]
-  (fn artists [current-group _]
-    (:artists current-group)))
+  ::artist-constraints
+  (fn artists [db _]
+    {:post [(s/valid? ::specs/artist-constraints %)]}
+    (get-in db db/path:artist-constraints db)))
 
-
-(reg-sub
-  ::group-name
-  :<- [::current-group]
-  (fn group-name [current-group _]
-    (:group-name current-group)))
 

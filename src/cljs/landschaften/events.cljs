@@ -48,6 +48,7 @@
 (defn default-error-handler [response]
   (js/console.log "Encountered unexpected error: " response))
 
+
 (reg-fx
   :post-request
   (fn post-request-handler
@@ -63,64 +64,68 @@
       :or {error-handler default-error-handler}}]
     (GET uri {:handler handler :error-handler error-handler})))
 
+
 ;; need failure handlers...
 (reg-event-fx
   ::retrieve-artists-names
   (fn query [cofx _]
-    (let [db (:db cofx)]
-      {:get-request {:uri "/artists"
-                     :handler #(dispatch [::artists-names-retrieved %])}})))
+    {:get-request {:uri "/artists"
+                   :handler #(dispatch [::artists-names-retrieved %])}}))
 
 
 (reg-event-fx
   ::retrieve-concepts
   (fn query [cofx _]
-    (let [db (:db cofx)]
-      {:get-request {:uri "/concepts"
-                     :handler #(dispatch [::concepts-retrieved %])}})))
+    {:get-request {:uri "/concepts"
+                   :handler #(dispatch [::concepts-retrieved %])}}))
 
 
-;; just make this nilable; i.e. group can be nil
+(reg-event-db
+  ::concepts-retrieved
+  (fn concepts-retrieved [db [_ artists]]
+    (assoc db :all-concepts (into #{} artists))))
 
-;; you want a test that "if group is non nil,
-;; then set must be non-empty"
+
+(reg-event-db
+  ::artists-names-retrieved
+  (fn artists-names-retrieved [db [_ artists]]
+    (assoc db :all-artists (into #{} artists))))
+
 
 (defn ->query-constraints
   "Put group's constraints in backend API's expected format."
-  [group]
+  [db]
   ;{:pre [(s/valid? ::specs/group group)]}
   (remove
    #(empty? (:values %))
-   #{{:column "type" :values (into [] (:types group))}
-     {:column "school" :values (into [] (:schools group))}
-     {:column "timeframe" :values (into [] (:timeframes group))}
-     {:column "author" :values (into [] (:artists group))}
-     {:column "name" :values (into [] (:concepts group))}}))
+   #{{:column "type" :values (into [] (get-in db db/path:type-constraints))}
+     {:column "school" :values (into [] (get-in db db/path:school-constraints))}
+     {:column "timeframe" :values (into [] (get-in db db/path:timeframe-constraints))}
+     {:column "author" :values (into [] (get-in db db/path:artist-constraints))}
+     {:column "name" :values (into [] (get-in db db/path:concept-constraints))}}))
+
 
 (reg-event-fx
-  ::query
+  ::query-started
   (fn query [cofx _]
-    (let [db (:db cofx)
-          constraints (if-let [group (:current-group db)]
-                        (->query-constraints group)
-                        #{})] ;; if no group, then no constraints
-      (do
-        (js/console.log "(:current-group db): " (:current-group db))
-        (js/console.log "constraints: " constraints)
-        {:db (assoc db :query-loading true)
-         :post-request
-          {:uri "/query"
-           ;:params {:constraints (->query-constraints (:current-group db))}
-           :params {:constraints constraints}
-           :handler #(dispatch [::query-succeeded %])}}))))
+    (let [db (:db cofx)]
+          ;constraints (if-let [group (:current-group db)]
+          ;              (->query-constraints group)
+          ;              #{})] ;; if no group, then no constraints
+      {:db (assoc db :query-loading true)
+       :post-request
+        {:uri "/query"
+         :params {:constraints (->query-constraints db)}
+         ;:params {:constraints constraints}
+         :handler #(dispatch [::query-succeeded %])}})))
 
 (reg-event-db
   ::query-succeeded
   (fn query-succeeded [db [_ paintings]]
-    (-> db
-      (assoc :query-loading false)
-      (assoc-in [:current-group :paintings] paintings)
-      (assoc :current-painting nil))))
+      (-> db
+        (assoc :query-loading false)
+        (assoc-in db/path:current-paintings paintings)
+        (assoc :current-painting nil))))
 
 
 ;; ------------------------------------------------------
@@ -131,70 +136,57 @@
 ;; handler's inner fns need to be separated out to produce a generic
 ;; 'works on any group' version
 
-
 (reg-event-db
  ::update-selected-types
  (fn-traced update-selected-types [db [_ selected-types]]
-     (assoc-in db [:current-group :types] selected-types)))
+   (assoc-in db db/path:type-constraints selected-types)))
 
 
 (reg-event-db
  ::update-selected-schools
  (fn update-selected-schools [db [_ selected-schools]]
-   (assoc-in db [:current-group :schools] selected-schools)))
+   (assoc-in db db/path:school-constraints selected-schools)))
 
 
 (reg-event-db
  ::update-selected-timeframes
  (fn update-selected-timeframes [db [_ selected-timeframes]]
-   (assoc-in db [:current-group :timeframes] selected-timeframes)))
+   (assoc-in db db/path:timeframe-constraints selected-timeframes)))
 
 
 (reg-event-db
  ::update-selected-concepts
  (fn update-selected-concepts [db [_ selected-concept]]
-     (update-in db [:current-group :concepts] conj selected-concept)))
+   (update-in db db/path:concept-constraints conj selected-concept)))
 
 
 (reg-event-db
  ::remove-selected-concept
  (fn remove-selected-concept [db [_ selected-concept]]
-   (update-in db [:current-group :concepts] disj selected-concept)))
-
-
-(reg-event-db
- ::concepts-retrieved
- (fn concepts-retrieved [db [_ artists]]
-   (assoc db :all-concepts (into #{} artists))))
-
-
-(reg-event-db
- ::artists-names-retrieved
- (fn artists-names-retrieved [db [_ artists]]
-    (assoc db :all-artists (into #{} artists))))
+   (update-in db db/path:concept-constraints disj selected-concept)))
 
 
 (reg-event-db
  ::update-selected-artists
  (fn update-selected-artists [db [_ selected-artist]]
-     (update-in db [:current-group :artists] conj selected-artist)))
+   (update-in db db/path:artist-constraints conj selected-artist)))
 
 
 (reg-event-db
  ::remove-selected-artist
  (fn remove-selected-artist [db [_ selected-artist]]
-     (update-in db [:current-group :artists] disj selected-artist)))
+   (update-in db db/path:artist-constraints disj selected-artist)))
 
 
 (reg-event-db
  ::selections-cleared
  (fn selections-cleared [db _]
   (-> db
-     (assoc-in [:current-group :types] #{})
-     (assoc-in [:current-group :schools] #{})
-     (assoc-in [:current-group :timeframes] #{})
-     (assoc-in [:current-group :concepts] #{})
-     (assoc-in [:current-group :artists] #{}))))
+     (assoc-in db/path:type-constraints #{})
+     (assoc-in db/path:school-constraints #{})
+     (assoc-in db/path:timeframe-constraints #{})
+     (assoc-in db/path:concept-constraints #{})
+     (assoc-in db/path:artist-constraints #{}))))
 
 
 ;; ------------------------------------------------------
@@ -213,8 +205,7 @@
 
 (defn bring-in-group [db group-name]
   (let [new-current-group ((keyword group-name) (:saved-groups db))
-        new-db
-          (assoc db :current-group new-current-group)]
+        new-db (assoc db :current-group new-current-group)]
     (do
       (js/console.log "bring-in-group group-name: " group-name)
       (js/console.log "bring-in-group new-db: " new-db)

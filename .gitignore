@@ -18,6 +18,3 @@ Clojure REPL
 figwheel_server.log
 *.iml
 landschaften.iml
-*.iml
-landschaften.iml
-figwheel_server.log

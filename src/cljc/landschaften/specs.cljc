@@ -49,7 +49,8 @@
 ;       #(clojure.string/includes? % "/image/upload/"))))
 
 ;; too complicated now
-(s/def ::jpg string?)
+;; ... needs to be nillable because some
+(s/def ::jpg (s/nilable string?))
 
 ; (s/def ::jpg ; Cloudinary 'secure [jpg] url'
 ;   (s/nilable
@@ -65,7 +66,15 @@
 (s/def ::concept (s/keys :req-un [::name ::value]))
 (s/def ::concepts (s/coll-of ::concept))
 
-(s/def ::painting (s/keys :req-un [::date ::school ::type ::title ::form  ::author ::timeframe ::jpg ::concepts]))
+(s/def ::painting (s/keys :req-un [::date
+                                   ::school
+                                   ::type
+                                   ::title
+                                   ::form
+                                   ::author
+                                   ::timeframe
+                                   ::jpg
+                                   ::concepts]))
 
 
 
@@ -73,23 +82,30 @@
 ;; GROUP SPEC
 ;; -------------------------
 
-;; can i not define all these coll-of X's INLINE?
+;; note: for entities to be meaningfully composable they must be unique / their own thing
+;; i.e. concepts is not namespaced for ::Group vs ::Painting (as would be in a class...)
+;; so having just ::concepts once didn't work, because you wanted different meanings
+;; in ::group and ::painting
+;; so better to specify exactly what a ::group's ::concept is: a concept CONSTRAINT
+
+;; refactoring was so easy with intellij!! :-D
+
 (s/def ::group-name string?)
 (s/def ::paintings (s/coll-of ::painting))
-(s/def ::types (s/coll-of ::type))
-(s/def ::schools (s/coll-of ::school))
-(s/def ::timeframes (s/coll-of ::timeframe))
-(s/def ::concepts (s/coll-of ::concept)) ;; not needed?
-(s/def ::artists (s/coll-of string?))
-(s/def ::types (s/coll-of ::type))
+(s/def ::type-constraints (s/coll-of ::type))
+(s/def ::school-constraints (s/coll-of ::school))
+(s/def ::timeframe-constraints (s/coll-of ::timeframe))
+(s/def ::concept-constraints (s/coll-of string?)) ;; not needed?
+(s/def ::artist-constraints (s/coll-of string?))
+(s/def ::type-constraints (s/coll-of ::type))
 
 (s/def ::group (s/keys :req-un [::group-name
                                 ::paintings
-                                ::types
-                                ::schools
-                                ::timeframes
-                                ::concepts
-                                ::artists]))
+                                ::type-constraints
+                                ::school-constraints
+                                ::timeframe-constraints
+                                ::concept-constraints
+                                ::artist-constraints]))
 
 ;; -------------------------
 ;; DB SPEC

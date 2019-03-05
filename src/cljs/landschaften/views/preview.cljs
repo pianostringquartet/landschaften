@@ -16,26 +16,20 @@
     utils/widths->vw
     #(dispatch [::events/painting-tile-clicked painting])])
 
-#_(defn tiles [paintings]
-    (let [painting-tiles (partition-all 3 (map tile paintings))
-          ->ui-row (fn [xs] [rc/h-box :gap "8px" :justify :between :children (into [] xs)])]
-      [rc/v-box
-        :children (mapv ->ui-row painting-tiles)]))
 
-;; need to pass in full paintings?
 (defn tiles [paintings]
   [utils/button-table paintings 3 tile])
 
 
 (defn paintings-found [n]
   (let [x (if (= n 1) "PAINTING" "PAINTINGS")]
-   [rc/title
-     :label (clojure.string/join " " [n x "FOUND"])]))
+    [rc/title :label (clojure.string/join " " [n x "FOUND"])]))
+
 
 (defn group-name []
-  (let [current-group-name (subscribe [::subs/group-name])]
-    (fn []
-     [rc/title :label (str "Examining " "'"@current-group-name"'")])))
+  (let [name (subscribe [::subs/group-name])]
+    (when-not (empty? @name)
+     [rc/title :label (str "Examining " "'"@name"'")])))
 
 
 (defn preview [paintings]

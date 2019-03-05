@@ -66,15 +66,15 @@
 (def sample-group
   {:group-name "a sample group"
    :paintings sample-paintings
-   :types #{}
-   :schools #{}
-   :timeframes #{}
-   :concepts #{}
-   :artists #{}})
+   :type-constraints #{}
+   :school-constraints #{}
+   :timeframe-constraints #{}
+   :concept-constraints #{}
+   :artist-constraints #{}})
 
 (def sample-group-2
   {:group-name "spanish-religious"
    :paintings sample-paintings
-   :types #{"religious"}
-   :schools #{"Spanish"}
-   :concepts #{"religion"}})
+   :type-constraints #{"religious"}
+   :school-constraints #{"Spanish"}
+   :concept-constraints #{"religion"}})

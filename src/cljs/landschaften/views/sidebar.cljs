@@ -21,7 +21,7 @@
 (defn search-button []
   [rc/button
       :label "SEARCH"
-      :on-click #(dispatch [::events/query])
+      :on-click #(dispatch [::events/query-started])
       :class "btn btn-success"]) ; Bootstrap
 
 

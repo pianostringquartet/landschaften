@@ -47,7 +47,7 @@
 
 (defn school-constraints []
   (let [school-choices (subscribe [::subs/all-schools])
-        selected-schools (subscribe [::subs/schools])]
+        selected-schools (subscribe [::subs/school-constraints])]
     [labeled-selection
       "schools"
       (apply sorted-set @school-choices)
@@ -57,7 +57,7 @@
 
 (defn timeframe-constraints []
   (let [timeframe-choices (subscribe [::subs/all-timeframes])
-        selected-timeframes (subscribe [::subs/timeframes])]
+        selected-timeframes (subscribe [::subs/timeframe-constraints])]
     [labeled-selection
       "timeframes"
       (apply sorted-set @timeframe-choices)
@@ -116,12 +116,10 @@
 
 
 (defn selected-concepts []
-  (let [selected-concepts (subscribe [::subs/concepts])]
+  (let [selected-concepts (subscribe [::subs/concept-constraints])]
     [utils/button-table @selected-concepts 3 concept-button]))
 
 
 (defn selected-artists []
-  (let [selected-artists (subscribe [::subs/artists])]
-    (do
-     (js/console.log "selected-artists: " @selected-artists)
-     [utils/button-table @selected-artists 2 artist-button])))
+  (let [selected-artists (subscribe [::subs/artist-constraints])]
+    [utils/button-table @selected-artists 2 artist-button]))

@@ -11,3 +11,9 @@
   #{:explore :compare})
 
 (s/def ::mode #(contains? MODES %))
+
+
+
+
+
+

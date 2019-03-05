@@ -1,9 +1,7 @@
 (ns landschaften.db
   (:require [cljs.spec.alpha :as s]
-            [landschaften.specs :as specs]
-            [landschaften.sample :as sample]))
+            [landschaften.specs :as specs]))
 
-;; too few paintings to be interesting
 (def excluded-timeframes
   #{"0801-0850" "1051-1100" "1101-1150" "1151-1200" "1201-1250" "1251-1300" "1301-1350" "1351-1400"})
 
@@ -14,11 +12,11 @@
 (def empty-group
   {:group-name ""
    :paintings #{}
-   :types #{}
-   :schools #{}
-   :timeframes #{}
-   :concepts #{}
-   :artists #{}})
+   :type-constraints #{}
+   :school-constraints #{}
+   :timeframe-constraints #{}
+   :concept-constraints #{}
+   :artist-constraints #{}})
 
 (def default-db
  {;; HIGH LEVEL
@@ -43,3 +41,18 @@
   ;; map of {:group-name ::group}
   ;:saved-groups     {(:group-name sample/sample-group-2) sample/sample-group-2}})
   :saved-groups     {}})
+
+
+
+;; PATHS: abstractions over db-locations
+(def path:current-group [:current-group])
+
+(def path:current-paintings (conj path:current-group :paintings))
+(def path:current-group-name (conj path:current-group :group-name))
+
+;; Paths to current group's constraints
+(def path:type-constraints (conj path:current-group :type-constraints))
+(def path:school-constraints (conj path:current-group :school-constraints))
+(def path:timeframe-constraints (conj path:current-group :timeframe-constraints))
+(def path:concept-constraints (conj path:current-group :concept-constraints))
+(def path:artist-constraints (conj path:current-group :artist-constraints))
