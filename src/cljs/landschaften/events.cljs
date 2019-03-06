@@ -8,6 +8,8 @@
             [landschaften.ui-specs :as ui-specs]))
 
 
+(def log js/console.log)
+
 ;; ------------------------------------------------------
 ;; High level events
 ;; ------------------------------------------------------
@@ -105,9 +107,15 @@
      {:column "name" :values (into [] (get-in db db/path:concept-constraints))}}))
 
 
+;; will sometimes be used when saving a group
+
+
+;; "saving a group" =
+;; 1. updating current-group's paintings
+;; 2. adding updated current-group to saved-groups
 (reg-event-fx
   ::query-started
-  (fn query [cofx _]
+  (fn query [cofx [_ group-name]]
     (let [db (:db cofx)]
           ;constraints (if-let [group (:current-group db)]
           ;              (->query-constraints group)
@@ -117,15 +125,28 @@
         {:uri "/query"
          :params {:constraints (->query-constraints db)}
          ;:params {:constraints constraints}
-         :handler #(dispatch [::query-succeeded %])}})))
+         :handler #(dispatch [::query-succeeded % group-name])}})))
+
+
+(declare toggle-save-group-popover-showing)
+(declare save-current-group)
 
 (reg-event-db
   ::query-succeeded
-  (fn query-succeeded [db [_ paintings]]
-      (-> db
-        (assoc :query-loading false)
-        (assoc-in db/path:current-paintings paintings)
-        (assoc :current-painting nil))))
+  ;(fn query-succeeded [db [_ paintings]]
+  (fn query-succeeded [db [_ paintings group-name]]
+    (let [db-with-query-results (-> db
+                                    (assoc :query-loading false)
+                                    (assoc-in db/path:current-paintings paintings)
+                                    (assoc :current-painting nil))]
+      (if group-name
+        (-> db-with-query-results
+          (toggle-save-group-popover-showing false) ;; hide the popover
+          (save-current-group group-name))
+        db-with-query-results))))
+
+
+
 
 
 ;; ------------------------------------------------------
@@ -193,36 +214,93 @@
 ;; Updating groups
 ;; ------------------------------------------------------
 
-(defn save-current-group [db]
-  (let [current-group (:current-group db)]
-    (assoc-in db [:saved-groups (keyword (:group-name current-group))] current-group)))
+
+
+(defn toggle-save-group-popover-showing [db showing?]
+  (assoc db :show-group-name-prompt? showing?))
 
 
 (reg-event-db
- ::group-saved
- (fn group-saved [db [_ group-name]]
-   (save-current-group db)))
+  ::hide-save-group-popover
+  (fn hide-save-group-popover [db _]
+    (toggle-save-group-popover-showing db false)))
+
+(reg-event-db
+  ::show-save-group-popover
+  (fn show-save-group-popover [db _]
+    (toggle-save-group-popover-showing db true)))
+
+
+;; override :current-group's name with the provided group-name
+;; when we 'save the current group',
+;; we use the user-provided name;
+(defn save-current-group [db group-name]
+  {:pre [(string? group-name)]} ;; group-name's should always be strings
+
+  (let [current-group (:current-group db)
+        updated-group (assoc current-group :group-name group-name)
+        ;x (assoc-in db [:saved-groups group-name] updated-group)]
+        x (-> db
+            (assoc-in [:saved-groups group-name] updated-group)
+            (assoc :current-group updated-group))]
+    (do
+      (log "save-current-group: returning x: " x)
+      x)))
+
+;; how to test this whole flow?
+;; this entire thing is basically test free -- ugh.
+
+;;
+
+;; someone wants to save group g
+
+;; either g already exists and so g is being edited
+;; or g is new and so can be
+;; ;;
+;; any time g is added to saved groups,
+;; we must query with current constraints,
+;; so that g in gs contains updated paintings
+
+
+;; CUT BACK SCOPE: always query when group is saved
+;; (can later check, "have constraints changed since we queried?")
+;; so, this should dispatch (::query-started
+;(reg-event-db
+; ::group-saved
+; (fn-traced group-saved [db [_ group-name]]
+;   (do
+;     (log "::group-saved group-name: " group-name)
+;     (-> db
+;       (toggle-save-group-popover-showing false) ;; hide the popover
+;       (save-current-group group-name)))))
+
 
 (defn bring-in-group [db group-name]
-  (let [new-current-group ((keyword group-name) (:saved-groups db))
+  {:pre [(string? group-name)]}
+  (let [new-current-group (get (:saved-groups db) group-name)
         new-db (assoc db :current-group new-current-group)]
+
     (do
-      (js/console.log "bring-in-group group-name: " group-name)
-      (js/console.log "bring-in-group new-db: " new-db)
-      (js/console.log "bring-in-group new-current-group: " new-current-group)
-      new-db)))
+     (js/console.log "bring-in-group group-name: " group-name)
+     (js/console.log "bring-in-group new-db: " new-db)
+     (js/console.log "bring-in-group new-current-group: " new-current-group)
+     new-db)))
 
 
 ;; when we switch groups,
 ;; prompt user (via dialogue) for name of group;
 ;; (if group already had name, then prefill the input slot with that name)
+
+
+;; CUT BACK SCOPE: when switching to g2, throwaway current group
+;; (can later add modal dialogue, "Do you want to save current group?" etc.)
 (reg-event-db
  ::switch-groups
  (fn switch-groups [db [_ destination-group-name]]
    (do
     (js/console.log "destination-group-name: " destination-group-name)
     (-> db
-       (save-current-group) ;; add current group to group-history i.e. :other-groups
+       ;(save-current-group) ;; add current group to group-history i.e. :other-groups
        ; then take destination group and make current group
        (bring-in-group destination-group-name)))))
 

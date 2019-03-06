@@ -20,27 +20,28 @@
 
 (def default-db
  {;; HIGH LEVEL
-  :current-mode     :explore
+  :current-mode            :explore
 
   ;; EXAMINE
-  :current-painting nil
-  :show-max?        false
+  :current-painting        nil
+  :show-max?               false
 
   ;; EXPLORE
-  :query-loading    false
-  :all-types        (disj specs/PAINTING-TYPES "Other")
-  :all-schools      (apply disj specs/SCHOOLS excluded-schools)
-  :all-timeframes   (apply disj specs/TIMEFRAMES excluded-timeframes)
-  :all-concepts     #{} ; retrieve from backend
-  :all-artists      #{} ; retrieve from backend
+  :query-loading           false
+  :all-types               (disj specs/PAINTING-TYPES "Other")
+  :all-schools             (apply disj specs/SCHOOLS excluded-schools)
+  :all-timeframes          (apply disj specs/TIMEFRAMES excluded-timeframes)
+  :all-concepts            #{} ; retrieve from backend
+  :all-artists             #{} ; retrieve from backend
 
   ;; EXPLORE & COMPARE
-  :current-group    empty-group ; :current-group sample/sample-group
+  :current-group           empty-group ; :current-group sample/sample-group
+  :show-group-name-prompt? false
 
   ;; COMPARE
   ;; map of {:group-name ::group}
   ;:saved-groups     {(:group-name sample/sample-group-2) sample/sample-group-2}})
-  :saved-groups     {}})
+  :saved-groups            {}})
 
 
 

@@ -2,7 +2,9 @@
   (:require [re-frame.core :refer [dispatch reg-event-db reg-sub]]
             [cljs.spec.alpha :as s]
             [landschaften.specs :as specs]
-            [landschaften.db :as db]))
+            [landschaften.db :as db]
+            [landschaften.views.utils :as utils]
+            [day8.re-frame.tracing :refer-macros [fn-traced]]))
 
 
 
@@ -104,9 +106,15 @@
 
 
 (reg-sub
+  ::save-group-popover-showing?
+  (fn save-group-popover-showing? [db _]
+    (:show-group-name-prompt? db)))
+
+
+(reg-sub
   ::saved-groups
-  (fn saved-groups [db _]
-    {:post [(s/valid? (s/coll-of map?) %)]}
+  (fn-traced saved-groups [db _]
+    {:post [(s/valid? map? %)]}
     (:saved-groups db)))
 
 

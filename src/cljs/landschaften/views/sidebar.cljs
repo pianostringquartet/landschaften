@@ -21,7 +21,10 @@
 (defn search-button []
   [rc/button
       :label "SEARCH"
-      :on-click #(dispatch [::events/query-started])
+      ;:on-click #(dispatch [::events/query-started])
+       ;; when just searching, pass in nil for the group-name
+       ;; cuz don't want to force user to name group until they save it
+       :on-click #(dispatch [::events/query-started nil])
       :class "btn btn-success"]) ; Bootstrap
 
 
@@ -32,8 +35,9 @@
     :class "btn btn-danger"])
 
 
-(defn add-group-name [popover-showing?]
-  (let [val (r/atom "")]
+(defn add-group-name [existing-group-name]
+  {:pre [(string? existing-group-name)]}
+  (let [val (r/atom existing-group-name)]
     (fn add-group-name-input []
       [rc/input-text
         :model val
@@ -43,30 +47,33 @@
         :on-change
           #(when (not (empty? %))
              (do
-              (dispatch [::events/group-saved (reset! val %)])
-              (reset! popover-showing? false)))])))
+              ;(dispatch [::events/group-saved (reset! val %)])))])))
+               (dispatch [::events/query-started (reset! val %)])))])))
 
 
-(defn save-group-button []
-  (let [popover-showing? (r/atom false)]
+(defn save-group-button [existing-group-name popover-showing?]
     (fn save-group-button []
       [rc/popover-anchor-wrapper
-        :showing? popover-showing?
+        :showing? popover-showing? ; must be reagent atom or reframe subscription
         :position :below-center
         :anchor [rc/button
                   :label "SAVE GROUP"
                   :class "btn btn-secondary"
-                  :on-click #(reset! popover-showing? true)]
+                  :on-click #(dispatch [::events/show-save-group-popover])]
         :popover [rc/popover-content-wrapper
-                    :on-cancel #(reset! popover-showing? false)
+                    :on-cancel #(dispatch [::events/hide-save-group-popover])
                     :backdrop-opacity 0.3
-                    :body [add-group-name popover-showing?]]])))
+                    :body [add-group-name existing-group-name]]]))
 
 
 (defn ui-buttons []
-  [rc/h-box :children [[clear-button]
-                       [search-button]
-                       [save-group-button]]])
+  (let [existing-group-name (subscribe [::subs/group-name])
+        save-group-popover-showing? (subscribe [::subs/save-group-popover-showing?])]
+    [rc/h-box :children [[clear-button]
+                         [search-button]
+                         [save-group-button
+                            @existing-group-name
+                            save-group-popover-showing?]]]))
 
 
 ;; ------------------------------------------------------
@@ -77,19 +84,17 @@
 (defn group-button [group-name]
   [rc/button
       :label group-name
-      :on-click #(dispatch [::events/switch-groups (utils/displayable->keyword group-name)])
+      :on-click #(dispatch [::events/switch-groups group-name])
       :class "btn btn-warning" ; Bootstrap
       :style {:border-radius "30px"}]) ; curvier
 
 
 (defn saved-groups []
   (let [saved-groups (subscribe [::subs/saved-groups])]
-    (do
-     (js/console.log "saved-groups: " @saved-groups)
-     [utils/button-table
-       (map utils/keyword->displayable (keys @saved-groups))
-       2
-       group-button])))
+     [rc/v-box
+       :children [(when-not (empty? @saved-groups)
+                   [rc/label :label "Saved Groups:"])
+                  [utils/button-table (keys @saved-groups) 2 group-button]]]))
 
 
 ;; ------------------------------------------------------

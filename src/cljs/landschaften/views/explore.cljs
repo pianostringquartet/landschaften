@@ -13,7 +13,7 @@
 
 (defn no-paintings []
   [rc/title
-     :label "Search for some paintings get started."
+     :label "Search for some paintings to get started."
      :level :level3])
 
 
@@ -42,24 +42,15 @@
 
 ;; first use of app, so no current group -> USE default group
 
-;; just
+;; you have a current group or not;
+;; the notion of current group + ui is split across the subs...
+
+;; this is TERRIBLE design. it's terribly implicit.
 
 
-;; if pass down Group,
-;; then components will access fields of Group,
-;; and so components know about structure of Group
+;; user clicks SAVE GROUP
 
-;; if don't pass down Group,
-;; UI doesn't reflect a fundamental concept e.g. that "Explore" UI
-;; is "ABOUT" a group
+;; either
 
-;; wow... wow... types are so important...
-;; i don't know how to solve the issue of "fake access into a db"
-;; ... and this problem arises ANYTIME a data structure's structure changes...
-;; i can enforce that the data has a certain structure,
-;; ... but that doesn't (programmatically) update the "outdated accessors"
+;; what needs to be
 
-;; in python, you could do a class, and the class had enforced relations.
-;; clojure has defrecord, but no control over / guidance for access
-
-;; ... ugh, you're totally mentally typed based now...
