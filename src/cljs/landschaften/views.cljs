@@ -8,7 +8,9 @@
             [landschaften.specs :as specs]
             [landschaften.ui-specs :as ui-specs]
             [landschaften.views.explore :as explore]
-            [landschaften.views.compare :as compare]))
+            [landschaften.views.compare :as compare]
+            [landschaften.views.examine :as examine]))
+
 
 (def modes
   {:explore explore/explore-panel
@@ -25,11 +27,22 @@
     :on-change #(dispatch [::events/mode-changed %])]))
 
 
+;; when there's a current-painting,
+;; don't even show the tabs?
+
+;; CUT BACK ON SCOPE: when current painting, let examine-modal take whole screen
+;; (can later make examine modal a genuine modal)
+
+
+
 (defn hello-world []
  (let [current-mode-id (subscribe [::subs/current-mode])]
+       ;current-painting (subscribe [::subs/current-painting])]
    [rc/v-box
-     :children [[mode-tabs @current-mode-id modes]
-                [(@current-mode-id modes)]]]))
+     :children ;(if @current-painting
+                 ;[[examine/examine-painting @current-painting]]
+                 [[mode-tabs @current-mode-id modes]
+                  [(@current-mode-id modes)]]]))
 
 
 ;; OLD:

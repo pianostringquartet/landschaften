@@ -50,11 +50,12 @@
 ;; Examine
 ;; ------------------------------------------------------
 
-
+;; current painting must be able to be nil
+;; i.e. sometimes we don't have a current painting
 (reg-sub
   ::current-painting
   (fn current-painting [db _]
-    {:post [(s/valid? ::specs/painting %)]}
+    {:post [(s/valid? (s/nilable ::specs/painting) %)]}
     (:current-painting db)))
 
 
@@ -178,3 +179,41 @@
     (get-in db db/path:artist-constraints db)))
 
 
+;; ------------------------------------------------------
+;; Compare
+;; ------------------------------------------------------
+
+(reg-sub
+  ::compared-group-names
+  (fn compared-group-names [db _]
+    {:post [(set? %)]}
+    (do
+      (utils/log "(:compared-group-names db): " (:compared-group-names db))
+      (:compared-group-names db))))
+
+;; look at the names in the db, then just
+(reg-sub
+  ::compared-groups
+  (fn current-painting [db _]
+    {:post [(s/valid? (s/coll-of ::specs/group) %)]}
+    (let [names (:compared-group-names db)
+          groups (:saved-groups db)]
+      (map #(get groups %) names))))
+
+
+;(reg-sub
+;  ::error-rate ;; i.e. variance
+;  (fn show-max? [db _]
+;    (:show-max? db)))
+
+(reg-sub
+  ::show-n-chart-points
+  (fn show-n-chart-points [db _]
+    {:post [(int? %)]}
+    (:show-n-chart-points db)))
+
+(reg-sub
+  ::concept-certainty-above
+  (fn concept-certainty-above [db _]
+    {:post [(float? %)]}
+    (:concept-certainty-above db)))

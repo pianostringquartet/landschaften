@@ -31,15 +31,6 @@
       :class "btn btn-info" ; Bootstrap
       :style {:border-radius "30px"}]) ; curvier corners
 
-(defn concept-bubbles [concepts]
-  {:pre [(s/valid? ::specs/concepts concepts)]}
-  (let [bubble-rows  (partition-all 3 (map bubble-button concepts))
-        ->ui-row (fn [xs] [rc/h-box :gap "8px" :children (into [] xs)])]
-    [rc/v-box
-      :gap "8px"
-      :justify :center
-      :children (mapv ->ui-row bubble-rows)]))
-
 (defn done-button []
   [rc/button
     :label "DONE"
@@ -83,7 +74,8 @@
        ; :gap "10px"
        :children [[image painting show-max?]
                   [info-and-done-button painting]
-                  [concept-bubbles (:concepts painting)]]])
+                  ;[concept-bubbles (:concepts painting)]]])
+                  [utils/button-table (:concepts painting) 3 bubble-button]]])
 
 ;; MAIN
 (defn examine-painting [current-painting]

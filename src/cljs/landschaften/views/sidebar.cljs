@@ -8,7 +8,8 @@
             [landschaften.events :as events]
             [landschaften.specs :as specs]
             [landschaften.views.constraints :as constraints]
-            [landschaften.views.utils :as utils]))
+            [landschaften.views.utils :as utils]
+            [landschaften.views.graph :as graph]))
 
 
 ;; ------------------------------------------------------
@@ -82,11 +83,11 @@
 
 
 (defn group-button [group-name]
-  [rc/button
-      :label group-name
-      :on-click #(dispatch [::events/switch-groups group-name])
-      :class "btn btn-warning" ; Bootstrap
-      :style {:border-radius "30px"}]) ; curvier
+ [rc/button
+     :label group-name
+     :on-click #(dispatch [::events/switch-groups group-name])
+     :class "btn btn-warning" ; Bootstrap
+     :style {:border-radius "30px"}]) ; curvier
 
 
 (defn saved-groups []
@@ -103,6 +104,16 @@
 ;; ------------------------------------------------------
 
 
+(defn barchart []
+  (let [paintings (subscribe [::subs/paintings])
+        chart-data (graph/->chart-data @paintings 20 0.94)]
+    (do
+      (utils/log "chart-data: " (str chart-data));
+      (when (> (count @paintings) 0)
+        [rc/h-box
+         :children [[graph/frequencies-chart "BarChart" chart-data]]]))))
+
+
 (defn sidebar []
   [rc/v-box
     :children [[constraints/constraints] ; genre, school, timeframe constraints
@@ -111,4 +122,5 @@
                [constraints/selected-concepts]
                [constraints/artist-typeahead]
                [constraints/selected-artists]
-               [saved-groups]]])
+               [saved-groups]
+               [barchart]]])

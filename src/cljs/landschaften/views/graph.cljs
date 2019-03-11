@@ -65,6 +65,7 @@
             ; :gridlines {:count (count some-data)}
             ; :viewWindow {:max}}}])
 
+;; total mess ...
 (defn concepts-above [painting n]
    (filter
     #(> (:value %) n)
@@ -81,18 +82,23 @@
 (defn frequencies->google-chart-data [concept-frequencies]
   (mapv #(into [] %) concept-frequencies))
 
-; (defn frequencies-chart [paintings]
-(defn frequencies-chart [paintings chart-type]
+
+
+
+(defn ->chart-data [paintings n-many certainty-above]
+  {:pre [(s/valid? ::specs/paintings paintings)
+         (float? certainty-above)
+         (int? n-many)]}
+  (->> (frequencies-of-concepts-with-certainty-above paintings certainty-above)
+    (sort-by second)
+    (reverse)
+    (take n-many)
+    (frequencies->google-chart-data)))
+
+
+(defn frequencies-chart [chart-type chart-data]
   (let [chart-axes ["Concept" "Frequency"]
-        chart-data (take 20
-                     (reverse
-                        (sort-by
-                         second
-                         (frequencies-of-concepts-with-certainty-above   paintings 0.94))))
-        prepared-chart-data (into [chart-axes] (frequencies->google-chart-data chart-data))]
+        axes+data (into [chart-axes] chart-data)]
     (do
      (js/console.log "chart-data is:" chart-data)
-     [rc/h-box
-      :children [[chart prepared-chart-data "BarChart"]
-                 ; [table prepared-chart-data "Table"]]])))
-                 [chart prepared-chart-data "Table"]]])))
+     [chart axes+data chart-type])))

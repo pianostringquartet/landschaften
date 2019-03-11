@@ -18,6 +18,24 @@
    :concept-constraints #{}
    :artist-constraints #{}})
 
+(def french-landscapes
+  {:group-name "French landscapes"
+   :paintings #{} ;; normally not possible
+   :type-constraints #{"landscape"}
+   :school-constraints #{"French"}
+   :timeframe-constraints #{}
+   :artist-constraints #{}
+   :concept-constraints #{}})
+
+(def spanish-religious
+  {:group-name "Spanish religious"
+   :paintings #{} ;; normally not possible
+   :type-constraints #{"religious"}
+   :school-constraints #{"Spanish"}
+   :timeframe-constraints #{}
+   :artist-constraints #{}
+   :concept-constraints #{"religion"}})
+
 (def default-db
  {;; HIGH LEVEL
   :current-mode            :explore
@@ -37,11 +55,19 @@
   ;; EXPLORE & COMPARE
   :current-group           empty-group ; :current-group sample/sample-group
   :show-group-name-prompt? false
-
+  :saved-groups {} ;{(:group-name french-landscapes) french-landscapes
+                ; (:group-name spanish-religious) spanish-religious
   ;; COMPARE
-  ;; map of {:group-name ::group}
-  ;:saved-groups     {(:group-name sample/sample-group-2) sample/sample-group-2}})
-  :saved-groups            {}})
+
+  ;; set of group-names (strings): the groups that are being compared
+  :compared-group-names #{}
+
+  ;; CHARTS
+  ;; how many data points in a bar chart or table to show
+  :show-n-chart-points 20
+  ;; only interested in concepts with certainty above ...
+  :concept-certainty-above 0.94})
+
 
 
 

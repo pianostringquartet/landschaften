@@ -8,7 +8,8 @@
             [landschaften.specs :as specs]
             [landschaften.ui-specs :as ui-specs]
             [landschaften.views.preview :as preview]
-            [landschaften.views.sidebar :as sidebar]))
+            [landschaften.views.sidebar :as sidebar]
+            [landschaften.views.examine :as examine]))
 
 
 (defn no-paintings []
@@ -24,19 +25,24 @@
 (defn explore
  "Find paintings satisfying constraints"
  [paintings]
- (let [prompt-or-preview (if (empty? paintings)
-                            [no-paintings]
-                            [preview/preview paintings])]
-   [rc/h-box
-    :children [prompt-or-preview
-               [sidebar/sidebar]]])) ; constraints and groups
+ (if (empty? paintings)
+    [no-paintings]
+    [preview/preview paintings]))
 
+(defn explore-or-examine [paintings current-painting]
+  (if current-painting
+    [examine/examine-painting current-painting]
+    [explore paintings]))
 
 ;; want to look at current-group;
 ;; explore-panel uses a current-group
 (defn explore-panel []
-  (let [paintings (subscribe [::subs/paintings])]
-    [explore @paintings]))
+  (let [paintings (subscribe [::subs/paintings])
+        current-painting (subscribe [::subs/current-painting])]
+      ;[explore @paintings]))
+      [rc/h-box
+         :children [[explore-or-examine @paintings @current-painting]
+                    [sidebar/sidebar]]]))
 
 ;; cases: arrived at explore panel because:
 

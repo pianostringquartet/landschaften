@@ -305,6 +305,37 @@
        (bring-in-group destination-group-name)))))
 
 
+
+;; ------------------------------------------------------
+;; Comparing groups
+;; ------------------------------------------------------
+
+
+(reg-event-db
+  ::add-compare-group-name
+  (fn add-compare-group [db [_ group-name]]
+    {:pre [(string? group-name)]}
+    (let [y (:compared-group-names db)
+          x (update db :compared-group-names conj group-name)]
+      (do
+        (log "add-compare-group :compared-group-names was " y)
+        (log "add-compare-group :compared-group-names is now " (:compared-group-names x))
+        x))))
+
+(reg-event-db
+  ::remove-compare-group-name
+  (fn remove-compare-group-name [db [_ group-name]]
+    (do
+      (log "remove-compare-group-name called")
+      (update db :compared-group-names disj group-name))))
+
+(reg-event-db
+  ::comparisons-cleared
+  (fn comparisons-cleared [db _]
+    (do
+      (log "comparisons-cleared called")
+      (assoc db :compared-group-names #{}))))
+
 ;; ------------------------------------------------------
 ;; Examining a single painting
 ;; ------------------------------------------------------
