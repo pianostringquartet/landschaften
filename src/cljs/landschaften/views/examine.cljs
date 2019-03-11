@@ -23,13 +23,15 @@
         info-categories '(:title :author :date :timeframe :type :school)]
    [rc/v-box :children (mapv ->ui-label info-categories)]))
 
+
 (defn bubble-button [{:keys [name value]}]
   {:pre [(string? name)]}
-  [rc/button
-      :label (str name " (" value ")")
-      :on-click #(dispatch [::events/update-selected-concepts name])
-      :class "btn btn-info" ; Bootstrap
-      :style {:border-radius "30px"}]) ; curvier corners
+  (let [formatted-number (goog.string/format "%.2f" value)]
+    [rc/button
+        :label (str name " (" formatted-number ")")
+        :on-click #(dispatch [::events/update-selected-concepts name])
+        :class "btn btn-info" ; Bootstrap
+        :style {:border-radius "30px"}])) ; curvier corners
 
 (defn done-button []
   [rc/button

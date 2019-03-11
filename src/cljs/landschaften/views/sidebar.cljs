@@ -43,7 +43,7 @@
       [rc/input-text
         :model val
         :change-on-blur? true
-        :placeholder "Enter name for group"
+        :placeholder "Enter name"
         :attr {:auto-focus "true"}
         :on-change
           #(when (not (empty? %))
@@ -58,7 +58,7 @@
         :showing? popover-showing? ; must be reagent atom or reframe subscription
         :position :below-center
         :anchor [rc/button
-                  :label "SAVE GROUP"
+                  :label "SAVE SEARCH"
                   :class "btn btn-secondary"
                   :on-click #(dispatch [::events/show-save-group-popover])]
         :popover [rc/popover-content-wrapper
@@ -94,7 +94,7 @@
   (let [saved-groups (subscribe [::subs/saved-groups])]
      [rc/v-box
        :children [(when-not (empty? @saved-groups)
-                   [rc/label :label "Saved Groups:"])
+                   [rc/label :label "Saved searches:"])
                   [utils/button-table (keys @saved-groups) 2 group-button]]]))
 
 

@@ -9,7 +9,8 @@
             [landschaften.ajax :refer [load-interceptors!]]
             [landschaften.events :as core-events]
             [reitit.core :as reitit]
-            [clojure.string :as string])
+            [clojure.string :as string]
+            [landschaften.db :as db])
   (:import goog.History))
 
 (defn nav-link [uri title page]
@@ -94,10 +95,14 @@
 ;; called in html file
 (defn init! []
   (rf/dispatch-sync [:navigate (reitit/match-by-name router :home)])
-  (rf/dispatch-sync [::core-events/initialize-db])
-  (rf/dispatch-sync [::core-events/retrieve-artists-names])
-  (rf/dispatch-sync [::core-events/retrieve-concepts])
+  ;(rf/dispatch-sync [::core-events/initialize-db])
+  ;(rf/dispatch-sync [::core-events/retrieve-artists-names])
+  ;(rf/dispatch-sync [::core-events/retrieve-concepts])
   (load-interceptors!)
   (fetch-docs!)
   (hook-browser-navigation!)
+  (rf/dispatch-sync [::core-events/initialize-db])
+  (rf/dispatch-sync [::core-events/retrieve-artists-names])
+  (rf/dispatch-sync [::core-events/retrieve-concepts])
+  (rf/dispatch-sync [::core-events/query-started (:group-name db/example-group)])
   (mount-components))

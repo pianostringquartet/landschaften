@@ -48,8 +48,7 @@
                    (clj->js options))))}]
      [rc/label :label "Loading..."])])
 
-(s/def ::google-chart-type
-  #(contains? #{"LineChart" "PieChart" "ColumnChart" "AreaChart", "BarChart" "Table"} %))
+
 
 (defn chart [some-data chart-type]
   [draw-google-chart
@@ -71,6 +70,7 @@
     #(> (:value %) n)
     (:concepts painting)))
 
+
 (defn frequencies-of-concepts-with-certainty-above [paintings n]
   (frequencies
    (map
@@ -79,10 +79,9 @@
      #(concepts-above % n)
      paintings))))
 
+
 (defn frequencies->google-chart-data [concept-frequencies]
   (mapv #(into [] %) concept-frequencies))
-
-
 
 
 (defn ->chart-data [paintings n-many certainty-above]

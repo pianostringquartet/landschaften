@@ -9,14 +9,26 @@
   #{"Bohemian" "Catalan" "Finnish" "Greek" "Irish" "Norwegian" "Other" "Polish" "Portuguese" "Swedish" "Hungarian" "Scottish" "Swiss" "Danish" "Austrian"})
 
 ;; use if no groups yet
-(def empty-group
-  {:group-name ""
+
+;; example-group
+(def example-group
+  {:group-name "Michelangelo's saints"
    :paintings #{}
    :type-constraints #{}
-   :school-constraints #{}
-   :timeframe-constraints #{}
-   :concept-constraints #{}
-   :artist-constraints #{}})
+   :school-constraints #{"Italian"}
+   :timeframe-constraints #{"1451-1500", "1501-1550", "1551-1600"}
+   :concept-constraints #{"saint"}
+   :artist-constraints #{"MICHELANGELO Buonarroti"}})
+
+
+;(def empty-group
+;  {:group-name ""
+;   :paintings #{}
+;   :type-constraints #{}
+;   :school-constraints #{}
+;   :timeframe-constraints #{}
+;   :concept-constraints #{}
+;   :artist-constraints #{}})
 
 (def french-landscapes
   {:group-name "French landscapes"
@@ -53,18 +65,18 @@
   :all-artists             #{} ; retrieve from backend
 
   ;; EXPLORE & COMPARE
-  :current-group           empty-group ; :current-group sample/sample-group
+  :current-group           example-group ; :current-group sample/sample-group
   :show-group-name-prompt? false
-  :saved-groups {} ;{(:group-name french-landscapes) french-landscapes
+  :saved-groups            {} ;{(:group-name french-landscapes) french-landscapes
                 ; (:group-name spanish-religious) spanish-religious
   ;; COMPARE
 
   ;; set of group-names (strings): the groups that are being compared
-  :compared-group-names #{}
+  :compared-group-names    #{}
 
   ;; CHARTS
   ;; how many data points in a bar chart or table to show
-  :show-n-chart-points 20
+  :show-n-chart-points     20
   ;; only interested in concepts with certainty above ...
   :concept-certainty-above 0.94})
 
