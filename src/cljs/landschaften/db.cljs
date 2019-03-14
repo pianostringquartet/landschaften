@@ -2,33 +2,32 @@
   (:require [cljs.spec.alpha :as s]
             [landschaften.specs :as specs]))
 
+
 (def excluded-timeframes
   #{"0801-0850" "1051-1100" "1101-1150" "1151-1200" "1201-1250" "1251-1300" "1301-1350" "1351-1400"})
+
 
 (def excluded-schools
   #{"Bohemian" "Catalan" "Finnish" "Greek" "Irish" "Norwegian" "Other" "Polish" "Portuguese" "Swedish" "Hungarian" "Scottish" "Swiss" "Danish" "Austrian"})
 
-;; use if no groups yet
-
-;; example-group
 (def example-group
-  {:group-name "Michelangelo's saints"
+  {:group-name "Various"
    :paintings #{}
-   :type-constraints #{}
+   :type-constraints #{"religious" "still-life" "study"}
    :school-constraints #{"Italian"}
-   :timeframe-constraints #{"1451-1500", "1501-1550", "1551-1600"}
-   :concept-constraints #{"saint"}
-   :artist-constraints #{"MICHELANGELO Buonarroti"}})
+   :timeframe-constraints #{}
+   :concept-constraints #{}
+   :artist-constraints #{}})
 
+#_(def example-group
+    {:group-name "Michelangelo's saints"
+     :paintings #{}
+     :type-constraints #{}
+     :school-constraints #{"Italian"}
+     :timeframe-constraints #{"1451-1500", "1501-1550", "1551-1600"}
+     :concept-constraints #{"saint"}
+     :artist-constraints #{"MICHELANGELO Buonarroti"}})
 
-;(def empty-group
-;  {:group-name ""
-;   :paintings #{}
-;   :type-constraints #{}
-;   :school-constraints #{}
-;   :timeframe-constraints #{}
-;   :concept-constraints #{}
-;   :artist-constraints #{}})
 
 (def french-landscapes
   {:group-name "French landscapes"
@@ -39,6 +38,7 @@
    :artist-constraints #{}
    :concept-constraints #{}})
 
+
 (def spanish-religious
   {:group-name "Spanish religious"
    :paintings #{} ;; normally not possible
@@ -48,13 +48,15 @@
    :artist-constraints #{}
    :concept-constraints #{"religion"}})
 
+
 (def default-db
- {;; HIGH LEVEL
-  :current-mode            :explore
+ {:current-mode            :explore
+  :examining? false
+
 
   ;; EXAMINE
   :current-painting        nil
-  :show-max?               false
+  :show-max?               false ;; i.e. slideshow
 
   ;; EXPLORE
   :query-loading           false
@@ -78,8 +80,15 @@
   ;; how many data points in a bar chart or table to show
   :show-n-chart-points     20
   ;; only interested in concepts with certainty above ...
-  :concept-certainty-above 0.94})
+  :concept-certainty-above 0.94
 
+  ;; ah, can i use the same namespaced keyword?
+  ;; e.g. could I use the default db as the 'source of truth'?
+  ;; e.g. access landschacften.db/slideshow-paintings
+  ;; in the subs and events?
+  ::slideshow-current-index 0
+  ::show-slideshow? false
+  ::slideshow-paintings []})
 
 
 

@@ -3,6 +3,7 @@
             [cljs.spec.alpha :as s]
             [landschaften.specs :as specs]
             [landschaften.db :as db]
+            [landschaften.helpers :as helpers]
             [landschaften.views.utils :as utils]
             [day8.re-frame.tracing :refer-macros [fn-traced]]))
 
@@ -44,26 +45,6 @@
   ::current-mode
   (fn current-mode [db _]
     (:current-mode db)))
-
-
-;; ------------------------------------------------------
-;; Examine
-;; ------------------------------------------------------
-
-;; current painting must be able to be nil
-;; i.e. sometimes we don't have a current painting
-(reg-sub
-  ::current-painting
-  (fn current-painting [db _]
-    {:post [(s/valid? (s/nilable ::specs/painting) %)]}
-    (:current-painting db)))
-
-
-(reg-sub
-  ::show-max?
-  (fn show-max? [db _]
-    (:show-max? db)))
-
 
 ;; ------------------------------------------------------
 ;; Constraint choices
@@ -138,13 +119,6 @@
 
 
 (reg-sub
-  ::paintings
-  (fn paintings [db _]
-    {:post [(s/valid? ::specs/paintings %)]}
-    (get-in db db/path:current-paintings)))
-
-
-(reg-sub
   ::types
   (fn types [db _]
     {:post [(s/valid? ::specs/type-constraints %)]}
@@ -177,6 +151,60 @@
   (fn artists [db _]
     {:post [(s/valid? ::specs/artist-constraints %)]}
     (get-in db db/path:artist-constraints db)))
+
+(reg-sub
+  ::paintings
+  (fn paintings [db _]
+    {:post [(s/valid? ::specs/paintings %)]}
+    (helpers/sort-by-author (get-in db db/path:current-paintings))))
+
+
+;; ------------------------------------------------------
+;; Examine
+;; ------------------------------------------------------
+
+
+;; current painting must be able to be nil
+;; i.e. sometimes we don't have a current painting
+(reg-sub
+  ::current-painting
+  (fn current-painting [db _]
+    {:post [(s/valid? (s/nilable ::specs/painting) %)]}
+    (:current-painting db)))
+
+
+(reg-sub
+  ::examining?
+  (fn examining? [db _]
+    (:examining? db)))
+
+(reg-sub
+  ::show-max?
+  (fn show-max? [db _]
+    (do
+      (utils/log "(:show-max? db): " (:show-max? db))
+      (:show-max? db))))
+
+
+;; ------------------------------------------------------
+;; Slideshow
+;; ------------------------------------------------------
+
+
+;; current slide should just be the current painting
+;(reg-sub
+;  ::current-slide)
+
+;; don't need "paintings vs. slideshow paintings"
+
+;; try namespace qualified keywords
+;(reg-sub
+;  :<- [:paintings]
+;  ::slideshow-paintings
+;  (fn slideshow-paintings [paintings _]
+;    {:post [(s/valid? (s/nilable ::specs/paintings) %)]}
+;    (::db/slideshow-paintings db)))
+
 
 
 ;; ------------------------------------------------------

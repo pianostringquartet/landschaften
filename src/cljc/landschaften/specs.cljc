@@ -40,8 +40,6 @@
          #(clojure.string/includes? % ".jpg")))
   ; (s/gen SAMPLE-JPEGS))
 
-
-
 ; (s/def ::jpg ; Cloudinary 'secure [jpg] url'
 ;   (s/nilable
 ;     (s/and

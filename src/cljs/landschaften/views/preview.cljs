@@ -6,16 +6,56 @@
             [landschaften.subs :as subs]
             [landschaften.views.utils :as utils]))
 
+;; WANT TO MAKE IT S.T. when image clicked,
+;; we see popover dialogue with big image
+;; and buttons 'Done' and 'Details'
+;; (clicking 'Done' -> popover closes)
+;; (clicking 'Details' -> Examine screen)
+
+;; this tile needs to be like 'image'-component in Examine screen
+
+;; instead of 'show-max-image?: Bool',
+;; have a 'max-image-url: String'
+
+;; can no longer be a popover, bc no longer tied to specific anchor?
+;; (or can 'whole page' be an anchor?)
+;; ... has to be modal instead?
+
+;; could add arrow button on modal bottom,
+;; to scroll through all images
+;; (a nice slideshow)
+
+;; how best to develop this?
+;;
+
+;; not a good idea to do local state of need to swap between paintings;
+;; you'll no longer be focused/centered on a single painting
+
+
+
+;; in db, would KEEP bool :show-max-image? and
+;; ADD url-string :current-max-image
+
+;; :show-max? is turned on when ANY image is clicked
+
+;; move through slideshow -> set :current-max-image
+
 
 (defn tile [painting]
   [utils/responsive-image
-    (:jpg painting)
-    utils/widths->vw
-    #(dispatch [::events/painting-tile-clicked painting])])
+     (:jpg painting)
+     utils/widths->vw
+     #(dispatch [::events/painting-tile-clicked painting])])
 
+(defn columns [paintings show-max?]
+  (let [current-painting (subscribe [::subs/current-painting])
+        n-columns (/ (count paintings) 4)
+        images (map tile paintings)]
+    [rc/v-box
+       :children [[utils/image-table images n-columns]
+                  (when show-max?
+                    [utils/slideshow-modal-image @current-painting])]]))
 
-(defn tiles [paintings]
-  [utils/button-table paintings 3 tile])
 
 
 (defn paintings-found [n]
@@ -28,12 +68,15 @@
     (when-not (empty? @name)
      [rc/title :label (str "Examining " "'"@name"'")])))
 
-(defn preview [paintings]
+;; it's fine to just show 50 or 100 paintings
+;; this app is primarily for exploration,
+;; not correcting wrong classifications etc.
+(defn preview [paintings show-max?]
   [rc/v-box
    :align :center
    :children [[group-name]
               [paintings-found (count paintings)]
-              [tiles (take 50 paintings)]]])
+              [columns (take 50 paintings) show-max?]]])
 
 
 ;; OLD CODE:

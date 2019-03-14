@@ -15,8 +15,10 @@
          :style {:max-width 200
                  :max-height 200}}])
 
+
 (defn NO-INFO-AVAILABLE []
   [rc/label :label "Painting info not available."])
+
 
 (defn info [painting]
   (let [->ui-label (fn [k] [rc/label :label (str (name k) ": " (k painting))])
@@ -33,11 +35,13 @@
         :class "btn btn-info" ; Bootstrap
         :style {:border-radius "30px"}])) ; curvier corners
 
+
 (defn done-button []
   [rc/button
     :label "DONE"
     :on-click #(dispatch [::events/done-button-clicked])
     :class "btn btn-warning"])
+
 
 (defn responsive-image [jpg]
   (utils/responsive-image
@@ -48,26 +52,27 @@
 ;; TODO:
 ;; loads slow; can't do max-height as 50% of screen?; may also need to be responsive?
 ;; workaround: pick a size that works for both small and large screens
-(defn modal-image-view [jpg]
-  [rc/modal-panel
-    :backdrop-on-click #(dispatch [::events/hide-max-image])
-    :child [:img
-              {:on-click #(dispatch [::events/hide-max-image])
-               :style {:max-height "600px"}
-               :src jpg}]])
+;(defn modal-image-view [jpg]
+;  [rc/modal-panel
+;    :backdrop-on-click #(dispatch [::events/hide-max-image])
+;    :child [:img
+;              {:on-click #(dispatch [::events/hide-max-image])
+;               :style {:max-height "600px"}
+;               :src jpg}]])
 
-;; re-com so verbose and clojure so parens-heavy
-;; that separating 'components from ui' seems impossible
+
 (defn image [painting show?]
   [rc/v-box
    :align-self :center
    :children [[responsive-image (:jpg painting)]
-              (when show? [modal-image-view (:jpg painting)])]])
+              (when show? [utils/modal-image-view (:jpg painting)])]])
+
 
 (defn info-and-done-button [painting]
  [rc/h-box
   :justify :between
   :children [[info painting] [done-button]]])
+
 
 (defn display-painting [painting show-max?]
   {:pre [(s/valid? ::specs/painting painting)]}
@@ -80,7 +85,10 @@
                   [utils/button-table (:concepts painting) 3 bubble-button]]])
 
 ;; MAIN
-(defn examine-painting [current-painting]
-  (let [show-max? (subscribe [::subs/show-max?])]
-    [display-painting current-painting
-      @show-max?]))
+
+;; show-max now passed in from above
+(defn examine-painting [current-painting show-max?]
+  ;(let [show-max? (subscribe [::subs/show-max?])]
+    [display-painting current-painting show-max?])
+      ;@show-max?])
+

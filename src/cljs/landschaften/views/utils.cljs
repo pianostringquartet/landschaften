@@ -1,6 +1,9 @@
 (ns landschaften.views.utils
   (:require [reagent.core :as r]
             [re-com.core :as rc]
+            [re-frame.core :refer [dispatch]]
+            [landschaften.events :as events]
+            [landschaften.specs :as specs]
             [cljs.spec.alpha :as s]))
 
 
@@ -35,6 +38,45 @@
   (let [buttons (map button-fn data)
         rows (mapv ->table-row (partition-all row-size buttons))]
     [rc/v-box :children rows]))
+
+
+;; create the element first,
+;; THEN hand it over to be UI-arranged
+
+(defn ->table-column [data]
+  ;(let [boxes (map (fn [datum] [rc/box :size "auto" :child datum]) data)]
+  ; [rc/h-box :size "auto" :children (into [] boxes)]) ;; should already be in a vector?
+   [rc/v-box :children (into [] data)]) ;; should already be in a vector?
+
+
+(defn image-table [data column-size]
+  (let [columns (mapv ->table-column (partition-all column-size data))]
+    [rc/h-box :children columns]))
+
+
+;; two separate modals;
+;; one just shows larger image
+;; other shows large image + details + next + back buttons
+(defn modal-image-view [jpg]
+  [rc/modal-panel
+   :backdrop-on-click #(dispatch [::events/hide-max-image])
+   :child [:img
+             {:on-click #(dispatch [::events/hide-max-image])
+              :style {:max-height "600px"}
+              :src jpg}]])
+
+(defn slideshow-modal-image [painting]
+  {:pre [(s/valid? ::specs/painting painting)]}
+  [rc/modal-panel
+   :backdrop-on-click #(dispatch [::events/hide-max-image])
+   :child [rc/v-box
+             :children [[:img {:on-click #(dispatch [::events/hide-max-image])
+                               :style {:max-height "600px"}
+                               :src (:jpg painting)}]
+                        [rc/button
+                           :label "Details"
+                           :on-click #(dispatch [::events/go-to-details painting])]]]])
+
 
 
 (defn search-suggestions [s coll]
@@ -78,6 +120,7 @@
 (defn sizes-part [{:keys [width vw]}]
   (str "(min-width: " width "px) " vw "vw"))
 
+;; used for responsive images
 (def widths->vw [{:width 256 :vw 20}
                  {:width 512 :vw 40}
                  {:width 768 :vw 50}

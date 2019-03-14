@@ -14,35 +14,33 @@
                  [markdown-clj "1.0.2"]
                  [metosin/muuntaja "0.5.0"]
                  [metosin/reitit "0.1.2"]
-                 [metosin/ring-http-response "0.9.0"
-                  [mount "0.1.12"]
-                  [mysql/mysql-connector-java "6.0.5"]
-                  [org.clojure/clojure "1.10.0"
-                            [org.clojure/clojurescript "1.10.339" :scope "provided"
-                                   [org.clojure/tools.cli "0.3.7"]
-                                   [org.clojure/tools.logging "0.4.1"]]
-                            [org.webjars.bower/tether "1.4.4"]
-                            [org.webjars/bootstrap "4.1.1"]
-                            [org.webjars/font-awesome "5.1.0"]
-                            [org.webjars/webjars-locator "0.34"]
-                            [re-frame "0.10.5"]
-                            [reagent "0.8.1"]
-                            [ring-webjars "0.2.0"
-                                   [ring/ring-core "1.6.3"]
-                                   [ring/ring-defaults "0.3.2"]
-                                   [secretary "1.2.3"] ;; not used anywhere ?
-                                   [selmer "1.11.7"
-
-                                    ;; added:
-                                     [org.clojure/test.check "0.10.0-alpha3"]
-                                     [org.clojure/data.json "0.2.6"
-                                         [clarifai-clj "1.0.0"]
-                                         [org.clojure/java.data "0.1.1"]
-                                         [org.clojure/data.csv "0.1.3"]
-                                         [proto-repl "0.3.1"]
-                                         [expound "0.7.1"]
-                                         [re-com "2.4.0"]
-                                         [day8.re-frame/tracing-stubs "0.5.1"]]]]]]]
+                 [metosin/ring-http-response "0.9.0"]
+                 [mount "0.1.12"]
+                 [mysql/mysql-connector-java "6.0.5"]
+                 [org.clojure/clojure "1.10.0"]
+                 [org.clojure/clojurescript "1.10.339" :scope "provided"]
+                 [org.clojure/tools.cli "0.3.7"]
+                 [org.clojure/tools.logging "0.4.1"]
+                 [org.webjars.bower/tether "1.4.4"]
+                 [org.webjars/bootstrap "4.1.1"]
+                 [org.webjars/font-awesome "5.1.0"]
+                 [org.webjars/webjars-locator "0.34"]
+                 [re-frame "0.10.5"]
+                 [reagent "0.8.1"]
+                 [ring-webjars "0.2.0"]
+                 [ring/ring-core "1.6.3"]
+                 [ring/ring-defaults "0.3.2"]
+                 [secretary "1.2.3"] ;; not used anywhere ?
+                 [selmer "1.11.7"]
+                 [org.clojure/test.check "0.10.0-alpha3"]
+                 [org.clojure/data.json "0.2.6"]
+                 [clarifai-clj "1.0.0"]
+                 [org.clojure/java.data "0.1.1"]
+                 [org.clojure/data.csv "0.1.3"]
+                 [proto-repl "0.3.1"]
+                 [expound "0.7.1"]
+                 [re-com "2.4.0"]
+                 [day8.re-frame/tracing-stubs "0.5.1"]]
 
   :min-lein-version "2.0.0"
   :source-paths ["src/clj" "src/cljs" "src/cljc"]
@@ -53,7 +51,8 @@
   :plugins [[lein-cljsbuild "1.1.7"]
             [lein-immutant "2.1.0"]]
   :clean-targets ^{:protect false}
-  [:target-path [:cljsbuild :builds :app :compiler :output-dir] [:cljsbuild :builds :app :compiler :output-to]]
+                  [:target-path [:cljsbuild :builds :app :compiler :output-dir]
+                                [:cljsbuild :builds :app :compiler :output-to]]
   :figwheel
   {:http-server-root "public"
    :nrepl-port 7002

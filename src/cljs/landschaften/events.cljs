@@ -3,9 +3,9 @@
             [landschaften.db :as db]
             [day8.re-frame.tracing :refer-macros [fn-traced]]
             [ajax.core :refer [POST GET]]
-            [clojure.spec.alpha :as s]
-            [landschaften.specs :as specs]
-            [landschaften.ui-specs :as ui-specs]))
+            [landschaften.ui-specs :as ui-specs]
+            [landschaften.helpers :as helpers]
+            [cljs.spec.alpha :as s]))
 
 
 (def log js/console.log)
@@ -138,7 +138,9 @@
     (let [db-with-query-results (-> db
                                     (assoc :query-loading false)
                                     (assoc-in db/path:current-paintings paintings)
-                                    (assoc :current-painting nil))]
+                                    (assoc :current-painting nil)
+                                    (assoc ::db/slideshow-paintings paintings))]
+
       (if group-name
         (-> db-with-query-results
           (toggle-save-group-popover-showing false) ;; hide the popover
@@ -336,6 +338,7 @@
       (log "comparisons-cleared called")
       (assoc db :compared-group-names #{}))))
 
+
 ;; ------------------------------------------------------
 ;; Examining a single painting
 ;; ------------------------------------------------------
@@ -349,10 +352,16 @@
     (assoc db :current-painting nil)))
 
 
+;; now, when painting tile clicked,
 (reg-event-db
   ::painting-tile-clicked
   (fn painting-tile-clicked [db [_ painting]]
-    (assoc db :current-painting painting)))
+    (do
+      (log "painting-tile-clicked handler called")
+      (log "painting-tile-clicked handler painting: " painting)
+      (-> db
+        (assoc :current-painting painting)
+        (assoc :show-max? true)))))
 
 
 (reg-event-db
@@ -365,3 +374,51 @@
   ::hide-max-image
   (fn hide-max-image [db _]
     (assoc db :show-max? false)))
+
+
+;; ------------------------------------------------------
+;; Slidesow
+;; ------------------------------------------------------
+
+
+;; prev vs next slide should look at current painting
+;; and move forward or backward in the list
+
+;(defn painting-index [painting]
+;  {:pre [(s/valid? ::specs/painting painting)]
+;   :post [(int)]})
+
+;; (take-while (not= x current-painting) xs)
+;; ^^^ will take paintings up until we encounter the current paintng
+
+(reg-event-db
+  ::previous-slide
+  (fn previous-slide [db]
+    (let [paintings (helpers/sort-by-author
+                      (get-in db db/path:current-paintings))
+          current-painting (:current-painting db)
+          prev-slide (last (take-while #(not= % current-painting) paintings))]
+      (do
+        (log "prev-slide: " prev-slide)
+        prev-slide))))
+
+
+;; if you pull :paintings directly from db,
+;; they won't be a sorted list
+;; ... but can't access a sub in an event handler
+;; ... could do the sort-by
+
+
+;
+;(reg-event-db
+;  ::next-slide)
+
+(reg-event-db
+  ::go-to-details
+  (fn go-to-details [db [_ painting]]
+    (-> db
+        (assoc :current-painting painting)
+        (assoc :examining? true))))
+
+;; slideshow
+;(reg-event-db)
