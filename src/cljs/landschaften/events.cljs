@@ -133,12 +133,11 @@
 
 (reg-event-db
   ::query-succeeded
-  ;(fn query-succeeded [db [_ paintings]]
   (fn query-succeeded [db [_ paintings group-name]]
     (let [db-with-query-results (-> db
                                     (assoc :query-loading false)
                                     (assoc-in db/path:current-paintings paintings)
-                                    (assoc :current-painting nil)
+                                    (assoc :examining? false)
                                     (assoc ::db/slideshow-paintings paintings))]
 
       (if group-name
