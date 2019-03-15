@@ -100,9 +100,17 @@
         (dispatch [::events/update-selected-artists %]))]))
 
 
+(defn closable-button-label [label]
+  [rc/h-box
+   :align :center
+   :gap "8px"
+   :children [[rc/label :label label]
+              [:i.zmdi.zmdi-close]]])
+
+
 (defn concept-button [concept]
   [rc/button
-      :label concept
+      :label [closable-button-label concept]
       :on-click #(dispatch [::events/remove-selected-concept concept])
       :class "btn btn-info" ; Bootstrap
       :style {:border-radius "30px"}]) ; curvier corners
@@ -110,7 +118,7 @@
 
 (defn artist-button [artist]
   [rc/button
-      :label artist
+      :label [closable-button-label artist]
       :on-click #(dispatch [::events/remove-selected-artist artist])
       :class "btn btn-warning" ; Bootstrap
       :style {:border-radius "30px"}]) ; curvier corners

@@ -49,17 +49,6 @@
     utils/widths->vw
     #(dispatch [::events/show-max-image])))
 
-;; TODO:
-;; loads slow; can't do max-height as 50% of screen?; may also need to be responsive?
-;; workaround: pick a size that works for both small and large screens
-;(defn modal-image-view [jpg]
-;  [rc/modal-panel
-;    :backdrop-on-click #(dispatch [::events/hide-max-image])
-;    :child [:img
-;              {:on-click #(dispatch [::events/hide-max-image])
-;               :style {:max-height "600px"}
-;               :src jpg}]])
-
 
 (defn image [painting show?]
   [rc/v-box
@@ -77,18 +66,12 @@
 (defn display-painting [painting show-max?]
   {:pre [(s/valid? ::specs/painting painting)]}
   [rc/v-box
-       ; :style {:margin-top "32px"}
-       ; :gap "10px"
+       :gap "8px"
        :children [[image painting show-max?]
                   [info-and-done-button painting]
-                  ;[concept-bubbles (:concepts painting)]]])
                   [utils/button-table (:concepts painting) 3 bubble-button]]])
 
 ;; MAIN
-
-;; show-max now passed in from above
 (defn examine-painting [current-painting show-max?]
-  ;(let [show-max? (subscribe [::subs/show-max?])]
     [display-painting current-painting show-max?])
-      ;@show-max?])
 

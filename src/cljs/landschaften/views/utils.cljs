@@ -55,14 +55,14 @@
 
 
 (defn ->table-row [data]
-  [rc/h-box :children (into [] data)]) ;; should already be in a vector?
+  [rc/h-box :gap "4px" :children (into [] data)]) ;; should already be in a vector?
 
 
 ;; where button-fn is e.g. artist button
 (defn button-table [data row-size button-fn]
   (let [buttons (map button-fn data)
         rows (mapv ->table-row (partition-all row-size buttons))]
-    [rc/v-box :children rows]))
+    [rc/v-box :gap "4px" :children rows]))
 
 
 ;; create the element first,
@@ -71,12 +71,12 @@
 (defn ->table-column [data]
   ;(let [boxes (map (fn [datum] [rc/box :size "auto" :child datum]) data)]
   ; [rc/h-box :size "auto" :children (into [] boxes)]) ;; should already be in a vector?
-   [rc/v-box :children (into [] data)]) ;; should already be in a vector?
+   [rc/v-box :gap "8px" :children (into [] data)]) ;; should already be in a vector?
 
 
 (defn image-table [data column-size]
   (let [columns (mapv ->table-column (partition-all column-size data))]
-    [rc/h-box :children columns]))
+    [rc/h-box :gap "8px" :children columns]))
 
 
 ;; two separate modals;
@@ -92,25 +92,35 @@
 
 
 (defn prev-slide-button [painting]
-  [rc/button
-   :label "Previous"
+  [rc/md-icon-button
+   :md-icon-name "zmdi-arrow-left"
    :on-click #(dispatch [::events/go-to-previous-slide painting])])
 
 
+;(defn next-slide-button [painting]
+;  [rc/button
+;   :label "Next"
+;   :on-click #(dispatch [::events/go-to-next-slide painting])])
+
 (defn next-slide-button [painting]
-  [rc/button
-   :label "Next"
+  [rc/md-icon-button
+   :md-icon-name "zmdi-arrow-right"
+   ;:label "Next"
    :on-click #(dispatch [::events/go-to-next-slide painting])])
 
 
 (defn details-button [painting]
   [rc/button
    :label "Details"
+   :class "btn btn-success"
    :on-click #(dispatch [::events/go-to-details painting])])
 
 
 (defn slide-buttons [painting]
   [rc/h-box
+     :justify :center
+     :align :center
+     :gap "8px"
      :children [[prev-slide-button painting]
                 [details-button painting]
                 [next-slide-button painting]]])
@@ -121,6 +131,7 @@
   [rc/modal-panel
    :backdrop-on-click #(dispatch [::events/hide-max-image])
    :child [rc/v-box
+             :gap "8px"
              :children [[:img {:on-click #(dispatch [::events/hide-max-image])
                                :style {:max-height "600px"}
                                :src (:jpg painting)}]

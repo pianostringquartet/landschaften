@@ -8,25 +8,25 @@
 
 
 (def excluded-schools
-  #{"Bohemian" "Catalan" "Finnish" "Greek" "Irish" "Norwegian" "Other" "Polish" "Portuguese" "Swedish" "Hungarian" "Scottish" "Swiss" "Danish" "Austrian"})
-
-(def example-group
-  {:group-name "Various"
-   :paintings #{}
-   :type-constraints #{"religious" "still-life" "study"}
-   :school-constraints #{"Italian"}
-   :timeframe-constraints #{}
-   :concept-constraints #{}
-   :artist-constraints #{}})
+  #{"Russian" "Bohemian" "Catalan" "Finnish" "Greek" "Irish" "Norwegian" "Other" "Polish" "Portuguese" "Swedish" "Hungarian" "Scottish" "Swiss" "Danish" "Austrian"})
 
 #_(def example-group
-    {:group-name "Michelangelo's saints"
+    {:group-name "Various"
      :paintings #{}
-     :type-constraints #{}
+     :type-constraints #{"religious" "still-life" "study"}
      :school-constraints #{"Italian"}
-     :timeframe-constraints #{"1451-1500", "1501-1550", "1551-1600"}
-     :concept-constraints #{"saint"}
-     :artist-constraints #{"MICHELANGELO Buonarroti"}})
+     :timeframe-constraints #{}
+     :concept-constraints #{}
+     :artist-constraints #{}})
+
+(def example-group
+  {:group-name "Michelangelo's saints"
+   :paintings #{}
+   :type-constraints #{}
+   :school-constraints #{"Italian"}
+   :timeframe-constraints #{"1451-1500", "1501-1550", "1551-1600"}
+   :concept-constraints #{"saint"}
+   :artist-constraints #{"MICHELANGELO Buonarroti"}})
 
 
 (def french-landscapes

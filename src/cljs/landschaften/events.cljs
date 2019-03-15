@@ -160,7 +160,7 @@
 
 (reg-event-db
  ::update-selected-types
- (fn-traced update-selected-types [db [_ selected-types]]
+ (fn update-selected-types [db [_ selected-types]]
    (assoc-in db db/path:type-constraints selected-types)))
 
 
@@ -400,7 +400,8 @@
     (let [paintings (helpers/sort-by-author
                       (get-in db db/path:current-paintings))
           current-painting (:current-painting db)
-          prev-slide (last (take-while #(not= % current-painting) paintings))]
+          prev-slide (or (last (take-while #(not= % current-painting) paintings))
+                       (last paintings))]
       (do
         (log "prev-slide: " prev-slide)
         (assoc db :current-painting prev-slide)))))
@@ -411,7 +412,8 @@
     (let [paintings (helpers/sort-by-author
                       (get-in db db/path:current-paintings))
           current-painting (:current-painting db)
-          next-slide (second (drop-while #(not= % current-painting) paintings))]
+          next-slide (or (second (drop-while #(not= % current-painting) paintings))
+                       (first paintings))]
       (do
         (log "next-slide: " next-slide)
         (assoc db :current-painting next-slide)))))

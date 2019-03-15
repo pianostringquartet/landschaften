@@ -22,9 +22,8 @@
 (defn search-button []
   [rc/button
       :label "SEARCH"
-      ;:on-click #(dispatch [::events/query-started])
-       ;; when just searching, pass in nil for the group-name
-       ;; cuz don't want to force user to name group until they save it
+       ;; when searching, don't pass in group-name;
+       ;; i.e. don't force user to save search prematurely
        :on-click #(dispatch [::events/query-started nil])
       :class "btn btn-success"]) ; Bootstrap
 
@@ -70,11 +69,11 @@
 (defn ui-buttons []
   (let [existing-group-name (subscribe [::subs/group-name])
         save-group-popover-showing? (subscribe [::subs/save-group-popover-showing?])]
-    [rc/h-box :children [[clear-button]
-                         [search-button]
-                         [save-group-button
-                            @existing-group-name
-                            save-group-popover-showing?]]]))
+    [rc/h-box :gap "8px" :children [[clear-button]
+                                    [search-button]
+                                    [save-group-button
+                                       @existing-group-name
+                                       save-group-popover-showing?]]]))
 
 
 ;; ------------------------------------------------------
@@ -82,20 +81,27 @@
 ;; ------------------------------------------------------
 
 
-(defn group-button [group-name]
- [rc/button
-     :label group-name
-     :on-click #(dispatch [::events/switch-groups group-name])
-     :class "btn btn-warning" ; Bootstrap
-     :style {:border-radius "30px"}]) ; curvier
+(defn group-button [group-name color]
+  [rc/button
+    :label group-name
+    :on-click #(dispatch [::events/switch-groups group-name])
+    :class color
+    :style {:border-radius "30px"}]) ; curvier
 
 
 (defn saved-groups []
-  (let [saved-groups (subscribe [::subs/saved-groups])]
+  (let [saved-groups (subscribe [::subs/saved-groups])
+        current-group-name (subscribe [::subs/group-name])]
      [rc/v-box
+       :gap "8px"
        :children [(when-not (empty? @saved-groups)
                    [rc/label :label "Saved searches:"])
-                  [utils/button-table (keys @saved-groups) 2 group-button]]]))
+                  [utils/button-table
+                   (keys @saved-groups)
+                   2
+                   #(group-button % (if (= % @current-group-name)
+                                      "btn btn-info"
+                                      "btn btn-warning"))]]]))
 
 
 ;; ------------------------------------------------------
@@ -104,6 +110,12 @@
 ;; ------------------------------------------------------
 
 
+;; The chart apparently interferes with Flexbox alignment.
+;; e.g. introduces a larger margin on the right
+;; ... need to revisit Google chart, especially not have it in own :div
+;; not sure how to do that...
+;; it's okay to have the push the side...
+;; also, may be hiding this anyway
 (defn barchart []
   (let [paintings (subscribe [::subs/paintings])
         chart-data (graph/->chart-data @paintings 20 0.94)]
@@ -116,6 +128,7 @@
 
 (defn sidebar []
   [rc/v-box
+    :gap "8px"
     :children [[constraints/constraints] ; genre, school, timeframe constraints
                [ui-buttons]
                [constraints/concept-typeahead]

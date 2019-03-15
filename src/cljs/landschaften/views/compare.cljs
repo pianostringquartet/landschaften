@@ -36,11 +36,12 @@
   (let [saved-groups (subscribe [::subs/saved-groups])
         compared-group-names (subscribe [::subs/compared-group-names])]
     [rc/v-box
-     :children [(when-not (empty? @saved-groups) [rc/label :label "Saved Groups:"])
-                [utils/button-table
+     :gap "8px"
+     :children [[utils/button-table
                    (keys @saved-groups)
                    2
                    #(selected-button % @compared-group-names)]]]))
+
 
 (defn table [paintings]
   (let [n-chartpoints (subscribe [::subs/show-n-chart-points])
@@ -55,16 +56,19 @@
      :children [[rc/label :label name]
                 [table paintings]]])
 
+
 (defn clear-button []
   [rc/button
    :label "CLEAR"
    :on-click #(dispatch [::events/comparisons-cleared])
    :class "btn btn-danger"])
 
+
 (defn labeled-tables [groups]
   (mapv
     (fn [group] [labeled-table (:group-name group) (:paintings group)])
     groups))
+
 
 (defn error-rate []
   [rc/label :label "Error rate to be added"])
@@ -73,12 +77,18 @@
 (defn display-data []
   (let [compared-groups (subscribe [::subs/compared-groups])]
     [rc/h-box
+       :gap "8px"
        :children (conj (labeled-tables @compared-groups) [error-rate])]))
+
 
 (defn compare-panel []
   [rc/v-box
-     :children [[rc/h-box
-                   :children [[clear-button]
-                              [saved-groups]]]
-                [display-data]]])
+   :justify :between
+   :gap "8px"
+   :style {:padding-left "16px" :padding-right "16px"}
+   :children [[rc/h-box
+                 :gap "32px"
+                 :children [[clear-button]
+                            [saved-groups]]]
+              [display-data]]])
 

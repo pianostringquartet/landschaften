@@ -32,10 +32,11 @@
 
 (defn draw-google-chart [chart-type data options]
   [rc/box
-   :align-self :stretch
+   ;:align-self :stretch
    :child
     (if @google-chart-ready?
      [:div
+     ;[:i
 ; :ref is how Reagent handles the imperative backing instances, which aren't (de)mounted via React's lifecycle methods
 ; see: https://presumably.de/reagent-mysteries-part-3-manipulating-the-dom.html
        {:style {:height "500px"}
