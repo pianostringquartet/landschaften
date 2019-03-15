@@ -65,6 +65,32 @@
               :style {:max-height "600px"}
               :src jpg}]])
 
+
+(defn prev-slide-button [painting]
+  [rc/button
+   :label "Previous"
+   :on-click #(dispatch [::events/go-to-previous-slide painting])])
+
+
+(defn next-slide-button [painting]
+  [rc/button
+   :label "Next"
+   :on-click #(dispatch [::events/go-to-next-slide painting])])
+
+
+(defn details-button [painting]
+  [rc/button
+   :label "Details"
+   :on-click #(dispatch [::events/go-to-details painting])])
+
+
+(defn slide-buttons [painting]
+  [rc/h-box
+     :children [[prev-slide-button painting]
+                [details-button painting]
+                [next-slide-button painting]]])
+
+
 (defn slideshow-modal-image [painting]
   {:pre [(s/valid? ::specs/painting painting)]}
   [rc/modal-panel
@@ -73,9 +99,8 @@
              :children [[:img {:on-click #(dispatch [::events/hide-max-image])
                                :style {:max-height "600px"}
                                :src (:jpg painting)}]
-                        [rc/button
-                           :label "Details"
-                           :on-click #(dispatch [::events/go-to-details painting])]]]])
+                        [slide-buttons painting]]]])
+
 
 
 

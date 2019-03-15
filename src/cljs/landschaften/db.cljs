@@ -86,9 +86,7 @@
   ;; e.g. could I use the default db as the 'source of truth'?
   ;; e.g. access landschacften.db/slideshow-paintings
   ;; in the subs and events?
-  ::slideshow-current-index 0
-  ::show-slideshow? false
-  ::slideshow-paintings []})
+  ::show-slideshow? false})
 
 
 

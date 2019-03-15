@@ -57,7 +57,6 @@
                     [utils/slideshow-modal-image @current-painting])]]))
 
 
-
 (defn paintings-found [n]
   (let [x (if (= n 1) "PAINTING" "PAINTINGS")]
     [rc/title :label (clojure.string/join " " [n x "FOUND"])]))

@@ -349,7 +349,11 @@
 (reg-event-db
   ::done-button-clicked
   (fn done-button-clicked [db _]
-    (assoc db :current-painting nil)))
+    (-> db
+        ;(assoc :current-painting nil))))
+      (assoc :examining? false)
+      (assoc :show-max? false))))
+        ;(assoc :))))
 
 
 ;; now, when painting tile clicked,
@@ -392,7 +396,7 @@
 ;; ^^^ will take paintings up until we encounter the current paintng
 
 (reg-event-db
-  ::previous-slide
+  ::go-to-previous-slide
   (fn previous-slide [db]
     (let [paintings (helpers/sort-by-author
                       (get-in db db/path:current-paintings))
@@ -400,25 +404,26 @@
           prev-slide (last (take-while #(not= % current-painting) paintings))]
       (do
         (log "prev-slide: " prev-slide)
-        prev-slide))))
+        (assoc db :current-painting prev-slide)))))
 
-
-;; if you pull :paintings directly from db,
-;; they won't be a sorted list
-;; ... but can't access a sub in an event handler
-;; ... could do the sort-by
-
-
-;
-;(reg-event-db
-;  ::next-slide)
+(reg-event-db
+  ::go-to-next-slide
+  (fn next-slide [db]
+    (let [paintings (helpers/sort-by-author
+                      (get-in db db/path:current-paintings))
+          current-painting (:current-painting db)
+          next-slide (second (drop-while #(not= % current-painting) paintings))]
+      (do
+        (log "next-slide: " next-slide)
+        (assoc db :current-painting next-slide)))))
 
 (reg-event-db
   ::go-to-details
   (fn go-to-details [db [_ painting]]
     (-> db
         (assoc :current-painting painting)
-        (assoc :examining? true))))
+        (assoc :examining? true)
+        (assoc :show-max? false))))
 
 ;; slideshow
 ;(reg-event-db)
