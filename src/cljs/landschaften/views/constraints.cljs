@@ -89,14 +89,15 @@
          (dispatch [::events/update-selected-concepts %]))]))
 
 
+;; massage umlauts out of artists
 (defn artist-typeahead []
   (let [artists (subscribe [::subs/all-artists])]
     [utils/typeahead
       "Add artist(s) to search by"
       @artists
-      #(do
-         (js/console.log "artist typeahead: chose: " %)
-         (dispatch [::events/update-selected-artists %]))]))
+     #(do
+        (js/console.log "artist typeahead: chose: " %)
+        (dispatch [::events/update-selected-artists %]))]))
 
 
 (defn concept-button [concept]

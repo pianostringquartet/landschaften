@@ -11,6 +11,31 @@
 ;; Utility functions and components
 ;; ------------------------------------------------------
 
+(def special-chars
+  (let [lower-case "ąàáäâãåæăćčĉęèéëêĝĥìíïîĵłľńňòóöőôõðøśșşšŝťțţŭùúüűûñÿýçżźž"]
+    (clojure.string/join [lower-case (clojure.string/upper-case lower-case)])))
+
+(def normal-chars
+  (let [lower-case "aaaaaaaaaccceeeeeghiiiijllnnoooooooossssstttuuuuuunyyczzz"]
+    (clojure.string/join [lower-case (clojure.string/upper-case lower-case)])))
+
+(def special->normal-char
+  (into {}
+    (map
+      (fn [special normal] {(str special) (str normal)})
+      special-chars
+      normal-chars)))
+
+;; works
+(defn replace-special-chars [word]
+  (clojure.string/join
+    (map
+      #(if (clojure.string/includes? special-chars (str %))
+         (get special->normal-char (str %))
+         (str %))
+      word)))
+
+
 (def log js/console.log)
 
 ;(defn keyword->displayable [kw]
@@ -102,13 +127,11 @@
                         [slide-buttons painting]]]])
 
 
-
-
 (defn search-suggestions [s coll]
   (into []
     (take 16
       (for [n coll
-            :when (re-find (re-pattern (str "(?i)" s)) n)]
+            :when (re-find (re-pattern (str "(?i)" s)) (replace-special-chars n))]
         n))))
 
 
