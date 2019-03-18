@@ -4,7 +4,8 @@
             [re-com.core :as rc]
             [landschaften.events :as events]
             [landschaften.subs :as subs]
-            [landschaften.views.utils :as utils]))
+            [landschaften.views.utils :as utils]
+            [landschaften.views.examine :as examine]))
 
 
 (defn tile [painting]
@@ -14,15 +15,23 @@
      #(dispatch [::events/painting-tile-clicked painting])])
 
 
+;(defn columns [paintings show-max?]
+;  (let [current-painting (subscribe [::subs/current-painting])
+;        n-columns (/ (count paintings) 3)
+;        images (map tile paintings)]
+;    [rc/v-box
+;       :children [[utils/image-table images n-columns]
+;                  (when show-max?
+;                    [utils/slideshow-modal-image @current-painting])]]))
+
 (defn columns [paintings show-max?]
   (let [current-painting (subscribe [::subs/current-painting])
         n-columns (/ (count paintings) 3)
         images (map tile paintings)]
     [rc/v-box
-       :children [[utils/image-table images n-columns]
-                  (when show-max?
-                    [utils/slideshow-modal-image @current-painting])]]))
-
+     :children [[utils/image-table images n-columns]
+                (when show-max?
+                  [examine/details-slideshow-modal-image @current-painting show-max?])]]))
 
 (defn paintings-found [n]
   (let [x (if (= n 1) "PAINTING" "PAINTINGS")]

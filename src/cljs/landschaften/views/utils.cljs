@@ -96,12 +96,6 @@
    :md-icon-name "zmdi-arrow-left"
    :on-click #(dispatch [::events/go-to-previous-slide painting])])
 
-
-;(defn next-slide-button [painting]
-;  [rc/button
-;   :label "Next"
-;   :on-click #(dispatch [::events/go-to-next-slide painting])])
-
 (defn next-slide-button [painting]
   [rc/md-icon-button
    :md-icon-name "zmdi-arrow-right"
@@ -186,6 +180,20 @@
                  {:width 1024 :vw 70}
                  {:width 1280 :vw 80}])
 
+
+(def mid-widths->vw [{:width 256 :vw 30}
+                     {:width 512 :vw 50}
+                     {:width 768 :vw 50}
+                     {:width 1024 :vw 70}
+                     {:width 1280 :vw 80}])
+
+
+(def larger-widths->vw [{:width 512 :vw 40}
+                        {:width 768 :vw 50}
+                        {:width 1024 :vw 70}
+                        {:width 1280 :vw 80}])
+
+
 (defn responsive-image [image-url widths->vw on-click]
   [:img
     {:on-click on-click
@@ -195,6 +203,17 @@
                   #(src-set-part image-url (:width %))
                   widths->vw))
      :src image-url}])
+
+(defn max-responsive-image [image-url widths->vw on-click]
+  [:img
+   {:on-click on-click
+    :style {:max-height "600px"}
+    :sizes (clojure.string/join ", " (map sizes-part widths->vw))
+    :src-set (clojure.string/join ", "
+                                 (map
+                                   #(src-set-part image-url (:width %))
+                                   widths->vw))
+    :src image-url}])
 
 
 
