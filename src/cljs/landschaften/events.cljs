@@ -5,10 +5,11 @@
             [ajax.core :refer [POST GET]]
             [landschaften.ui-specs :as ui-specs]
             [landschaften.helpers :as helpers]
-            [cljs.spec.alpha :as s]))
+            [cljs.spec.alpha :as s]
+            [landschaften.views.utils :as utils]))
 
 
-(def log js/console.log)
+;(def log utils/log)
 
 ;; ------------------------------------------------------
 ;; High level events
@@ -48,7 +49,7 @@
 
 ;; taken from cardy
 (defn default-error-handler [response]
-  (js/console.log "Encountered unexpected error: " response))
+  (utils/log "Encountered unexpected error: " response))
 
 
 (reg-fx
@@ -97,7 +98,6 @@
 (defn ->query-constraints
   "Put group's constraints in backend API's expected format."
   [db]
-  ;{:pre [(s/valid? ::specs/group group)]}
   (remove
    #(empty? (:values %))
    #{{:column "type" :values (into [] (get-in db db/path:type-constraints))}
@@ -107,29 +107,20 @@
      {:column "name" :values (into [] (get-in db db/path:concept-constraints))}}))
 
 
-;; will sometimes be used when saving a group
-
-
-;; "saving a group" =
-;; 1. updating current-group's paintings
-;; 2. adding updated current-group to saved-groups
 (reg-event-fx
   ::query-started
   (fn query [cofx [_ group-name]]
     (let [db (:db cofx)]
-          ;constraints (if-let [group (:current-group db)]
-          ;              (->query-constraints group)
-          ;              #{})] ;; if no group, then no constraints
       {:db (assoc db :query-loading true)
        :post-request
         {:uri "/query"
          :params {:constraints (->query-constraints db)}
-         ;:params {:constraints constraints}
          :handler #(dispatch [::query-succeeded % group-name])}})))
 
 
 (declare toggle-save-group-popover-showing)
 (declare save-current-group)
+
 
 (reg-event-db
   ::query-succeeded
@@ -137,17 +128,12 @@
     (let [db-with-query-results (-> db
                                     (assoc :query-loading false)
                                     (assoc-in db/path:current-paintings paintings)
-                                    (assoc :examining? false)
-                                    (assoc ::db/slideshow-paintings paintings))]
-
+                                    (assoc :examining? false))]
       (if group-name
         (-> db-with-query-results
           (toggle-save-group-popover-showing false) ;; hide the popover
           (save-current-group group-name))
         db-with-query-results))))
-
-
-
 
 
 ;; ------------------------------------------------------
@@ -240,12 +226,11 @@
 
   (let [current-group (:current-group db)
         updated-group (assoc current-group :group-name group-name)
-        ;x (assoc-in db [:saved-groups group-name] updated-group)]
         x (-> db
             (assoc-in [:saved-groups group-name] updated-group)
             (assoc :current-group updated-group))]
     (do
-      (log "save-current-group: returning x: " x)
+      (utils/log "save-current-group: returning x: " x)
       x)))
 
 ;; how to test this whole flow?
@@ -270,7 +255,7 @@
 ; ::group-saved
 ; (fn-traced group-saved [db [_ group-name]]
 ;   (do
-;     (log "::group-saved group-name: " group-name)
+;     (utils/log "::group-saved group-name: " group-name)
 ;     (-> db
 ;       (toggle-save-group-popover-showing false) ;; hide the popover
 ;       (save-current-group group-name)))))
@@ -282,9 +267,9 @@
         new-db (assoc db :current-group new-current-group)]
 
     (do
-     (js/console.log "bring-in-group group-name: " group-name)
-     (js/console.log "bring-in-group new-db: " new-db)
-     (js/console.log "bring-in-group new-current-group: " new-current-group)
+     (utils/log "bring-in-group group-name: " group-name)
+     (utils/log "bring-in-group new-db: " new-db)
+     (utils/log "bring-in-group new-current-group: " new-current-group)
      new-db)))
 
 
@@ -299,7 +284,7 @@
  ::switch-groups
  (fn switch-groups [db [_ destination-group-name]]
    (do
-    (js/console.log "destination-group-name: " destination-group-name)
+    (utils/log "destination-group-name: " destination-group-name)
     (-> db
        ;(save-current-group) ;; add current group to group-history i.e. :other-groups
        ; then take destination group and make current group
@@ -319,22 +304,22 @@
     (let [y (:compared-group-names db)
           x (update db :compared-group-names conj group-name)]
       (do
-        (log "add-compare-group :compared-group-names was " y)
-        (log "add-compare-group :compared-group-names is now " (:compared-group-names x))
+        (utils/log "add-compare-group :compared-group-names was " y)
+        (utils/log "add-compare-group :compared-group-names is now " (:compared-group-names x))
         x))))
 
 (reg-event-db
   ::remove-compare-group-name
   (fn remove-compare-group-name [db [_ group-name]]
     (do
-      (log "remove-compare-group-name called")
+      (utils/log "remove-compare-group-name called")
       (update db :compared-group-names disj group-name))))
 
 (reg-event-db
   ::comparisons-cleared
   (fn comparisons-cleared [db _]
     (do
-      (log "comparisons-cleared called")
+      (utils/log "comparisons-cleared called")
       (assoc db :compared-group-names #{}))))
 
 
@@ -350,9 +335,9 @@
   (fn done-button-clicked [db _]
     (-> db
         ;(assoc :current-painting nil))))
-      (assoc :examining? false)
-      (assoc :show-max? false))))
-        ;(assoc :))))
+        (assoc :examining? false)
+        (assoc :show-slideshow? false))))
+          ;(assoc :))))
 
 
 ;; now, when painting tile clicked,
@@ -360,23 +345,30 @@
   ::painting-tile-clicked
   (fn painting-tile-clicked [db [_ painting]]
     (do
-      (log "painting-tile-clicked handler called")
-      (log "painting-tile-clicked handler painting: " painting)
+      (utils/log "painting-tile-clicked handler called")
+      (utils/log "painting-tile-clicked handler painting: " painting)
       (-> db
-        (assoc :current-painting painting)
-        (assoc :show-max? true)))))
+          (assoc :current-painting painting)
+          (assoc :show-slideshow? true)))))
 
 
 (reg-event-db
-  ::show-max-image
+  ::show-slideshow
   (fn show-max-image [db _]
-    (assoc db :show-max? true)))
+    (assoc db :show-slideshow? true)))
 
 
 (reg-event-db
-  ::hide-max-image
+  ::hide-slideshow
   (fn hide-max-image [db _]
-    (assoc db :show-max? false)))
+    (assoc db :show-slideshow? false)))
+
+
+(reg-event-db
+  ::toggle-image-zoomed
+  (fn toggle-image-zoomed [db _]
+    (update db ::db/image-zoomed? not)))
+    ;(not (::db/image-zoomed? db))))
 
 
 ;; ------------------------------------------------------
@@ -403,7 +395,7 @@
           prev-slide (or (last (take-while #(not= % current-painting) paintings))
                        (last paintings))]
       (do
-        (log "prev-slide: " prev-slide)
+        (utils/log "prev-slide: " prev-slide)
         (assoc db :current-painting prev-slide)))))
 
 (reg-event-db
@@ -415,7 +407,7 @@
           next-slide (or (second (drop-while #(not= % current-painting) paintings))
                        (first paintings))]
       (do
-        (log "next-slide: " next-slide)
+        (utils/log "next-slide: " next-slide)
         (assoc db :current-painting next-slide)))))
 
 (reg-event-db
@@ -424,7 +416,7 @@
     (-> db
         (assoc :current-painting painting)
         (assoc :examining? true)
-        (assoc :show-max? false))))
+        (assoc :show-slideshow? false))))
 
 ;; slideshow
 ;(reg-event-db)

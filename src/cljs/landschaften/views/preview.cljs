@@ -15,15 +15,6 @@
      #(dispatch [::events/painting-tile-clicked painting])])
 
 
-;(defn columns [paintings show-max?]
-;  (let [current-painting (subscribe [::subs/current-painting])
-;        n-columns (/ (count paintings) 3)
-;        images (map tile paintings)]
-;    [rc/v-box
-;       :children [[utils/image-table images n-columns]
-;                  (when show-max?
-;                    [utils/slideshow-modal-image @current-painting])]]))
-
 (defn columns [paintings show-max?]
   (let [current-painting (subscribe [::subs/current-painting])
         n-columns (/ (count paintings) 3)
@@ -31,12 +22,14 @@
     [rc/v-box
      :children [[utils/image-table images n-columns]
                 (when show-max?
-                  [examine/details-slideshow-modal-image @current-painting show-max?])]]))
+                  [examine/details-slideshow-modal-image
+                     @current-painting
+                     show-max?])]]))
+
 
 (defn paintings-found [n]
   (let [x (if (= n 1) "PAINTING" "PAINTINGS")]
     [rc/title :label (clojure.string/join " " [n x "FOUND"])]))
-
 
 ;; it's fine to just show 50 or 100 paintings
 ;; this app is primarily for exploration,
@@ -48,12 +41,3 @@
    :align :center
    :children [[paintings-found (count paintings)]
               [columns (take 50 paintings) show-max?]]])
-
-
-;; only makes sense to show the barchart when in preview mode,
-;; not in examine mode
-
-;; grid
-;; details
-;; stats
-;; slideshow

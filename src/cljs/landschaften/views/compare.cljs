@@ -7,8 +7,6 @@
             [landschaften.views.graph :as graph]
             [landschaften.views.utils :as utils]))
 
-;(defn compare-panel []
-;  [:div "compare me"])
 
 (defn group-button [group-name color on-click]
   [rc/button
@@ -31,7 +29,6 @@
       [group-button group-name color on-click]))
 
 
-
 (defn saved-groups []
   (let [saved-groups (subscribe [::subs/saved-groups])
         compared-group-names (subscribe [::subs/compared-group-names])]
@@ -48,7 +45,8 @@
         concept-certainty (subscribe [::subs/concept-certainty-above])]
     [graph/frequencies-chart
      "Table"
-     (graph/->chart-data paintings @n-chartpoints @concept-certainty)]))
+     (graph/paintings->chart-data paintings @n-chartpoints @concept-certainty)
+     "Concepts' Frequencies"]))
 
 
 (defn labeled-table [name paintings]

@@ -10,15 +10,6 @@
 (def excluded-schools
   #{"Russian" "Bohemian" "Catalan" "Finnish" "Greek" "Irish" "Norwegian" "Other" "Polish" "Portuguese" "Swedish" "Hungarian" "Scottish" "Swiss" "Danish" "Austrian"})
 
-#_(def example-group
-    {:group-name "Various"
-     :paintings #{}
-     :type-constraints #{"religious" "still-life" "study"}
-     :school-constraints #{"Italian"}
-     :timeframe-constraints #{}
-     :concept-constraints #{}
-     :artist-constraints #{}})
-
 (def example-group
   {:group-name "Michelangelo's saints"
    :paintings #{}
@@ -51,12 +42,13 @@
 
 (def default-db
  {:current-mode            :explore
-  :examining? false
+  :examining?              false
 
 
   ;; EXAMINE
   :current-painting        nil
-  :show-max?               false ;; i.e. slideshow
+  :show-slideshow?         false ;; i.e. slideshow
+  ::image-zoomed?          false
 
   ;; EXPLORE
   :query-loading           false
@@ -70,7 +62,7 @@
   :current-group           example-group ; :current-group sample/sample-group
   :show-group-name-prompt? false
   :saved-groups            {} ;{(:group-name french-landscapes) french-landscapes
-                ; (:group-name spanish-religious) spanish-religious
+  ; (:group-name spanish-religious) spanish-religious
   ;; COMPARE
 
   ;; set of group-names (strings): the groups that are being compared
@@ -80,13 +72,13 @@
   ;; how many data points in a bar chart or table to show
   :show-n-chart-points     20
   ;; only interested in concepts with certainty above ...
-  :concept-certainty-above 0.94
+  :concept-certainty-above 0.94})
 
   ;; ah, can i use the same namespaced keyword?
   ;; e.g. could I use the default db as the 'source of truth'?
   ;; e.g. access landschacften.db/slideshow-paintings
   ;; in the subs and events?
-  ::show-slideshow? false})
+  ;::show-slideshow? false})
 
 
 

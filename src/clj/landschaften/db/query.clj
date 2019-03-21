@@ -45,13 +45,13 @@
         concept-constraints? (column? entity/concept-column?)]
     (cond
      concept-constraints? ; may or may not also have painting-constraints
-     "select t.* from paintings t, paintings_concepts t2 where t.id = t2.painting_id and "
+     "select distinct t.* from paintings t, paintings_concepts t2 where t.id = t2.painting_id and "
 
      (and painting-constraints?
           (not concept-constraints?)) ; i.e. painting-constraints only
-     "select t.* from paintings t where "
+     "select distinct t.* from paintings t where "
 
-     :else "select * from paintings ")))
+     :else "select distinct * from paintings ")))
 
 (s/fdef build-query
  :args (s/cat :constraints (s/coll-of ::entity/constraint))

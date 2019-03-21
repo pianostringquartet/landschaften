@@ -3,10 +3,7 @@
             [re-frame.core :refer [subscribe dispatch]]
             [re-com.core :as rc]
             [clojure.spec.alpha :as s]
-            [landschaften.events :as events]
-            [landschaften.specs :as specs]
-            [landschaften.views.utils :as utils]
-            [landschaften.subs :as subs]))
+            [landschaften.specs :as specs]))
 
 ;; this component will actually be part of 'preview' screen/panel, later.
 
@@ -30,40 +27,29 @@
           (reset! google-chart-ready? true))))))
 
 
+;; :ref is how Reagent handles the imperative backing instances, which aren't (de)mounted via React's lifecycle methods
+;; see: https://presumably.de/reagent-mysteries-part-3-manipulating-the-dom.html
+;; ... there must be a better way...
 (defn draw-google-chart [chart-type data options]
-  [rc/box
-   ;:align-self :stretch
-   :child
-    (if @google-chart-ready?
-     [:div
-     ;[:i
-; :ref is how Reagent handles the imperative backing instances, which aren't (de)mounted via React's lifecycle methods
-; see: https://presumably.de/reagent-mysteries-part-3-manipulating-the-dom.html
-       {:style {:height "500px"}
-        :ref
-        (fn [this]
-          (when this
-            (.draw (new (aget js/google.visualization chart-type) this)
-                   ;; assumes `data` is vector of vectors
-                   (js/google.visualization.arrayToDataTable (clj->js data))
-                   (clj->js options))))}]
-     [rc/label :label "Loading..."])])
+  (let [ref-fn (fn [this] (when this
+                            (.draw (new (aget js/google.visualization chart-type) this)
+                                           ;; assumes `data` is vector of vectors
+                                   (js/google.visualization.arrayToDataTable (clj->js data))
+                                   (clj->js options))))]
+    [rc/box :child
+       (if @google-chart-ready?
+        [:div {:style {:height "500px"} :ref ref-fn}]
+        [rc/label :label "Loading..."])]))
 
 
-
-(defn chart [some-data chart-type]
+(defn chart [some-data chart-type title]
   [draw-google-chart
    chart-type
    some-data
-   {:title (str "Concept Frequency")
+   {:title title
     :legend {:position "none"}
-    ; :chartArea {:height "90%"}
-    ; :height "100%"
-    ; :bar {:groupWidth "50%"}
-    ; :isStacked "relative"}])
-    :vAxis {:title "Concept"}}])
-            ; :gridlines {:count (count some-data)}
-            ; :viewWindow {:max}}}])
+    :chartArea {:height "80%"}}])
+
 
 ;; total mess ...
 (defn concepts-above [painting n]
@@ -73,32 +59,27 @@
 
 
 (defn frequencies-of-concepts-with-certainty-above [paintings n]
-  (frequencies
-   (map
-    :name
-    (mapcat
-     #(concepts-above % n)
-     paintings))))
-
+  (->> paintings
+    (mapcat #(concepts-above % n))
+    (map :name)
+    (frequencies)))
 
 (defn frequencies->google-chart-data [concept-frequencies]
   (mapv #(into [] %) concept-frequencies))
 
 
-(defn ->chart-data [paintings n-many certainty-above]
+(defn paintings->chart-data [paintings n-many certainty-above]
   {:pre [(s/valid? ::specs/paintings paintings)
          (float? certainty-above)
          (int? n-many)]}
   (->> (frequencies-of-concepts-with-certainty-above paintings certainty-above)
-    (sort-by second)
+    (sort-by second) ; meaningless
     (reverse)
     (take n-many)
     (frequencies->google-chart-data)))
 
 
-(defn frequencies-chart [chart-type chart-data]
+(defn frequencies-chart [chart-type chart-data title]
   (let [chart-axes ["Concept" "Frequency"]
         axes+data (into [chart-axes] chart-data)]
-    (do
-     (js/console.log "chart-data is:" chart-data)
-     [chart axes+data chart-type])))
+     [chart axes+data chart-type title]))

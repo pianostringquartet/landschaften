@@ -24,9 +24,7 @@
     [rc/selection-list
       :choices choices ; must be coll of maps
       :model selections
-      :on-change #(do
-                    (js/console.log "->selection-list on-change received: " %)
-                    (on-change %))]))
+      :on-change #(on-change %)]))
 
 
 (defn labeled-selection [label choices selections on-change]
@@ -84,20 +82,17 @@
     [utils/typeahead
       "Add concept(s) to search by"
       @concepts
-      #(do
-         (js/console.log "concept typeahead: chose: " %)
-         (dispatch [::events/update-selected-concepts %]))]))
+      #(dispatch [::events/update-selected-concepts %])
+      4]))
 
 
-;; massage umlauts out of artists
 (defn artist-typeahead []
   (let [artists (subscribe [::subs/all-artists])]
     [utils/typeahead
       "Add artist(s) to search by"
       @artists
-     #(do
-        (js/console.log "artist typeahead: chose: " %)
-        (dispatch [::events/update-selected-artists %]))]))
+      #(dispatch [::events/update-selected-artists %])
+      3]))
 
 
 (defn closable-button-label [label]

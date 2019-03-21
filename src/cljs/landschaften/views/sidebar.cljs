@@ -118,12 +118,11 @@
 ;; also, may be hiding this anyway
 (defn barchart []
   (let [paintings (subscribe [::subs/paintings])
-        chart-data (graph/->chart-data @paintings 20 0.94)]
+        chart-data (graph/paintings->chart-data @paintings 20 0.94)]
     (do
       (utils/log "chart-data: " (str chart-data));
       (when (> (count @paintings) 0)
-        [rc/h-box
-         :children [[graph/frequencies-chart "BarChart" chart-data]]]))))
+        [graph/frequencies-chart "BarChart" chart-data "Search's most frequent concepts"]))))
 
 
 (defn sidebar []

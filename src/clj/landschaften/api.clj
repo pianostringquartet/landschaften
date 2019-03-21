@@ -44,6 +44,9 @@
   (map general-model-concepts
    (query/run-query db (query/build-query constraints))))
 
+
+
+
 ;; fails :)
 ; (def botticelli #{{:column "author" :values "BOTTICELLI, Sandro"}})
 

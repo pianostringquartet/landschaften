@@ -1,10 +1,7 @@
 (ns landschaften.views.utils
   (:require [reagent.core :as r]
             [re-com.core :as rc]
-            [re-frame.core :refer [dispatch]]
-            [landschaften.events :as events]
-            [landschaften.specs :as specs]
-            [cljs.spec.alpha :as s]))
+            [re-frame.core :refer [dispatch]]))
 
 
 ;; ------------------------------------------------------
@@ -37,12 +34,6 @@
 
 
 (def log js/console.log)
-
-;(defn keyword->displayable [kw]
-;  (clojure.string/replace (name kw) "-" " "))
-;
-;(defn displayable->keyword [displayable]
-;  (keyword (clojure.string/replace displayable " " "-")))
 
 ;; color is a css bootstrap class e.g. "btn btn-warning", "btn btn-info", etc.
 (defn ->bubble-button [datum on-button-press color]
@@ -78,71 +69,29 @@
   (let [columns (mapv ->table-column (partition-all column-size data))]
     [rc/h-box :gap "8px" :children columns]))
 
+(defn search-suggestions [user-input options suggestion-count]
+  (let [matches? #(some?
+                    (re-find (re-pattern (str "(?i)" user-input)) (replace-special-chars %)))]
+    (->> options
+      (filter matches?)
+      (take suggestion-count)
+      (into []))))
+    ;(into []
+    ;  (take suggestion-count
+    ;    (filter matches? options)))))
 
-;; two separate modals;
-;; one just shows larger image
-;; other shows large image + details + next + back buttons
-(defn modal-image-view [jpg]
-  [rc/modal-panel
-   :backdrop-on-click #(dispatch [::events/hide-max-image])
-   :child [:img
-             {:on-click #(dispatch [::events/hide-max-image])
-              :style {:max-height "600px"}
-              :src jpg}]])
-
-
-(defn prev-slide-button [painting]
-  [rc/md-icon-button
-   :md-icon-name "zmdi-arrow-left"
-   :on-click #(dispatch [::events/go-to-previous-slide painting])])
-
-(defn next-slide-button [painting]
-  [rc/md-icon-button
-   :md-icon-name "zmdi-arrow-right"
-   ;:label "Next"
-   :on-click #(dispatch [::events/go-to-next-slide painting])])
+;(defn search-suggestions [user-input options suggestion-count]
+;  (let [matches?])
+;  (into []
+;    (take suggestion-count
+;      (filter
+;        #(some? (re-find (re-pattern (str "(?i)" user-input)) (replace-special-chars %)))
+;        options))))
 
 
-(defn details-button [painting]
-  [rc/button
-   :label "Details"
-   :class "btn btn-success"
-   :on-click #(dispatch [::events/go-to-details painting])])
-
-
-(defn slide-buttons [painting]
-  [rc/h-box
-     :justify :center
-     :align :center
-     :gap "8px"
-     :children [[prev-slide-button painting]
-                [details-button painting]
-                [next-slide-button painting]]])
-
-
-(defn slideshow-modal-image [painting]
-  {:pre [(s/valid? ::specs/painting painting)]}
-  [rc/modal-panel
-   :backdrop-on-click #(dispatch [::events/hide-max-image])
-   :child [rc/v-box
-             :gap "8px"
-             :children [[:img {:on-click #(dispatch [::events/hide-max-image])
-                               :style {:max-height "600px"}
-                               :src (:jpg painting)}]
-                        [slide-buttons painting]]]])
-
-
-(defn search-suggestions [s coll]
-  (into []
-    (take 16
-      (for [n coll
-            :when (re-find (re-pattern (str "(?i)" s)) (replace-special-chars n))]
-        n))))
-
-
-(defn typeahead [placeholder choices on-choose]
+(defn typeahead [placeholder choices on-choose suggestion-count]
   [rc/typeahead
-    :data-source #(search-suggestions % choices)
+    :data-source #(search-suggestions % choices suggestion-count)
     :placeholder placeholder
     :change-on-blur? true
     :on-change on-choose])
@@ -155,20 +104,10 @@
 ;; sample url:
 ; (def cu  "https://res.cloudinary.com/dgpqnl8ul/image/upload/gmllxpcdzouaanz0syip.jpg")
 
-; ^^^ to create a part of the string we need for :srcSet
 (defn src-set-part [cloudinary-url width]
   (-> cloudinary-url
     (clojure.string/replace #"upload/" (str "upload/f_auto,q_70,w_" width "/"))
     (str " " width "w")))
-
-;; works
-; (=
-;   (src-set-part cu "256")
-;   "https://res.cloudinary.com/dgpqnl8ul/image/upload/f_auto,q_70,w_256/gmllxpcdzouaanz0syip.jpg 256w")
-
-;; still need to generate:
-;; :sizes, min-width constraints etc.,
-;; :src
 
 (defn sizes-part [{:keys [width vw]}]
   (str "(min-width: " width "px) " vw "vw"))
@@ -186,12 +125,6 @@
                      {:width 768 :vw 50}
                      {:width 1024 :vw 70}
                      {:width 1280 :vw 80}])
-
-
-(def larger-widths->vw [{:width 512 :vw 40}
-                        {:width 768 :vw 50}
-                        {:width 1024 :vw 70}
-                        {:width 1280 :vw 80}])
 
 
 (defn responsive-image [image-url widths->vw on-click]
@@ -214,10 +147,3 @@
                                    #(src-set-part image-url (:width %))
                                    widths->vw))
     :src image-url}])
-
-
-
-;; REPL PLAY
-(+ 1 1)
-
-

@@ -36,12 +36,13 @@
   (let [paintings (subscribe [::subs/paintings])
         current-painting (subscribe [::subs/current-painting])
         examining? (subscribe [::subs/examining?])
-        show-max? (subscribe [::subs/show-max?])]
+        show-slideshow? (subscribe [::subs/show-slideshow?])]
       [rc/h-box
          :justify :between
-         :gap "8px"
+         :gap "16px"
+         :margin "16px"
          :style {:padding-left "16px" :padding-right "16px"}
          :children [(if @examining?
-                      [examine/examine-painting @current-painting @show-max?]
-                      [explore @paintings @show-max?])
+                      [examine/examine-painting @current-painting @show-slideshow?]
+                      [explore @paintings @show-slideshow?])
                     [sidebar/sidebar]]]))

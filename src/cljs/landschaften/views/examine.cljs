@@ -20,10 +20,21 @@
   [rc/label :label "Painting info not available."])
 
 
+;(defn info [painting]
+;  (let [->ui-label (fn [k] [rc/label :label (str (name k) ": " (k painting))])
+;        info-categories '(:title :author :date :timeframe :type :school)]
+;   [rc/v-box :children (mapv ->ui-label info-categories)]))
+
+
 (defn info [painting]
-  (let [->ui-label (fn [k] [rc/label :label (str (name k) ": " (k painting))])
-        info-categories '(:title :author :date :timeframe :type :school)]
-   [rc/v-box :children (mapv ->ui-label info-categories)]))
+  (let [->ui-label (fn [[k v]] [rc/label :label (str v ": " (k painting))])
+        info-categories {:title "title"
+                         :author "artist"
+                         :date "date"
+                         :timeframe "timeframe"
+                         :type "genre"
+                         :school "school"}]
+    [rc/v-box :children (mapv ->ui-label info-categories)]))
 
 
 (defn bubble-button [{:keys [name value]}]
@@ -45,6 +56,8 @@
 
 ;; NOW THAT THESE IMAGES ARE SHOWING IN A MODAL WITH OTHER INFORMATION...
 ;; need to set a max height
+
+
 (defn responsive-image [jpg]
   [utils/max-responsive-image
   ;[utils/responsive-image
@@ -52,15 +65,26 @@
     ;utils/widths->vw
      utils/mid-widths->vw
      ;utils/larger-widths->vw
-    #(dispatch [::events/show-max-image])])
+
+   ;; now that you have a modal-within-a-modal,
+
+    #(dispatch [::events/toggle-image-zoomed])])
+
+(defn modal-image-view [jpg]
+  [rc/modal-panel
+   :backdrop-on-click #(dispatch [::events/toggle-image-zoomed])
+   :child [:img
+           {:on-click #(dispatch [::events/toggle-image-zoomed])
+            :style {:max-height "600px"}
+            :src jpg}]])
 
 
 ;; the 'show' value needs to be determined by a different value in db
-(defn image [painting show?]
+(defn image [painting image-zoomed?]
   [rc/v-box
    :align-self :center
-   :children [[responsive-image (:jpg painting)]]])
-              ;(when show? [utils/modal-image-view (:jpg painting)])]])
+   :children [[responsive-image (:jpg painting)]
+              (when image-zoomed? [modal-image-view (:jpg painting)])]])
 
 ;[:img {:on-click #(dispatch [::events/hide-max-image])
 ;       :style {:max-width "300px"}
@@ -80,16 +104,6 @@
    :on-click #(dispatch [::events/go-to-next-slide painting])])
 
 
-(defn slide-buttons [painting]
-  [rc/h-box
-   :justify :center
-   :align :center
-   :gap "8px"
-   :children [[prev-slide-button painting]
-              [done-button]
-              [next-slide-button painting]]])
-
-
 (defn concept-table [painting]
   [utils/button-table
    (reverse (sort-by :value (:concepts painting)))
@@ -98,36 +112,45 @@
 
 (defn info-and-concepts [painting]
   [rc/v-box
-   :gap "16px"
-   ;:justify :between
+   :gap "8px"
+   ;:justify :center
    :children [[info painting]
+              [rc/label :label "Click on a concept to add as search term:"]
               [concept-table painting]]])
 
 
-(defn display-painting [painting show-max?]
+(defn info+chart [painting]
+  [rc/v-box
+   :gap "8px"
+   :children [[info painting]
+              [rc/label :label "Click on a concept to add as search term:"]
+              [concept-table painting]]])
+
+
+
+(defn image+label [painting image-zoomed?]
+  [rc/v-box
+     :align :center
+     :justify :center
+     :gap "8px"
+     :children [[image painting image-zoomed?]
+                [rc/label :label "Click to enlarge"]]])
+
+
+(defn display-painting [painting image-zoomed?]
   {:pre [(s/valid? ::specs/painting painting)]}
   [rc/h-box
    :gap "32px"
    :justify :between
-   :children [[image painting show-max?]
+   :children [[image+label painting image-zoomed?]
               [info-and-concepts painting]]])
 
 
-;(defn display-painting [painting show-max?]
-;  {:pre [(s/valid? ::specs/painting painting)]}
-;  [rc/v-box
-;       :gap "8px"
-;       :children [[image painting show-max?]
-;                  [info-and-done-button painting]
-;                  [utils/button-table (:concepts painting) 3 bubble-button]]])
-
 ;; MAIN
-(defn examine-painting [current-painting show-max?]
+(defn examine-painting [current-painting image-zoomed?]
   [rc/v-box
      :gap "16px"
-     :children [[display-painting current-painting show-max?]]])
-                ;[slide-buttons current-painting]]])
-
+     :children [[display-painting current-painting image-zoomed?]]])
 
 
 (defn details-button [painting]
@@ -139,21 +162,17 @@
 ;; just put the buttons on the LEFT and RIGHT SIDE OF THE MODAL
 ;; and add an "X" in the top right corner
 
-(defn details-slideshow-modal-image [painting show-max?]
+(defn details-slideshow-modal-image [painting]
   {:pre [(s/valid? ::specs/painting painting)]}
-  (do
-    (utils/log "details-slideshow-modal-image called")
+  (let [image-zoomed? (subscribe [::subs/image-zoomed?])]
     [rc/modal-panel
-     :backdrop-on-click #(dispatch [::events/hide-max-image])
+     :backdrop-on-click #(dispatch [::events/hide-slideshow])
      :child [rc/h-box
              :align :center
              :justify :between
              :gap "8px"
-             :children [;[:img {:on-click #(dispatch [::events/hide-max-image])
-                         ;      :style {:max-height "600px"}
-                          ;     :src (:jpg painting)
-                        [prev-slide-button painting]
-                        [examine-painting painting show-max?]
+             :children [[prev-slide-button painting]
+                        [examine-painting painting @image-zoomed?]
                         [next-slide-button]]]]))
 
 

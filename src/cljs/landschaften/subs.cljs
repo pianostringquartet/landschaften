@@ -95,7 +95,7 @@
 
 (reg-sub
   ::saved-groups
-  (fn-traced saved-groups [db _]
+  (fn saved-groups [db _]
     {:post [(s/valid? map? %)]}
     (:saved-groups db)))
 
@@ -178,12 +178,21 @@
   (fn examining? [db _]
     (:examining? db)))
 
+;; i.e. show details
 (reg-sub
-  ::show-max?
-  (fn show-max? [db _]
+  ::show-slideshow?
+  (fn show-slideshow? [db _]
     (do
-      (utils/log "(:show-max? db): " (:show-max? db))
-      (:show-max? db))))
+      (utils/log "(:show-slideshow? db): " (:show-slideshow? db))
+      (:show-slideshow? db))))
+
+(reg-sub
+  ::image-zoomed?
+  (fn image-zoomed? [db _]
+    (do
+      (utils/log "image-zoomed?: " (::db/image-zoomed? db))
+      (::db/image-zoomed? db))))
+
 
 
 ;; ------------------------------------------------------
