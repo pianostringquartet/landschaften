@@ -8,13 +8,16 @@
 ;; Utility functions and components
 ;; ------------------------------------------------------
 
+
 (def special-chars
   (let [lower-case "ąàáäâãåæăćčĉęèéëêĝĥìíïîĵłľńňòóöőôõðøśșşšŝťțţŭùúüűûñÿýçżźž"]
     (clojure.string/join [lower-case (clojure.string/upper-case lower-case)])))
 
+
 (def normal-chars
   (let [lower-case "aaaaaaaaaccceeeeeghiiiijllnnoooooooossssstttuuuuuunyyczzz"]
     (clojure.string/join [lower-case (clojure.string/upper-case lower-case)])))
+
 
 (def special->normal-char
   (into {}
@@ -69,6 +72,7 @@
   (let [columns (mapv ->table-column (partition-all column-size data))]
     [rc/h-box :gap "8px" :children columns]))
 
+
 (defn search-suggestions [user-input options suggestion-count]
   (let [matches? #(some?
                     (re-find (re-pattern (str "(?i)" user-input)) (replace-special-chars %)))]
@@ -76,17 +80,6 @@
       (filter matches?)
       (take suggestion-count)
       (into []))))
-    ;(into []
-    ;  (take suggestion-count
-    ;    (filter matches? options)))))
-
-;(defn search-suggestions [user-input options suggestion-count]
-;  (let [matches?])
-;  (into []
-;    (take suggestion-count
-;      (filter
-;        #(some? (re-find (re-pattern (str "(?i)" user-input)) (replace-special-chars %)))
-;        options))))
 
 
 (defn typeahead [placeholder choices on-choose suggestion-count]
@@ -98,7 +91,6 @@
     ; (reset! model ""))]))
     ;; this clears the model everytime you type,
     ;; after initially selecting something
-
 
 
 ;; sample url:
@@ -136,6 +128,7 @@
                   #(src-set-part image-url (:width %))
                   widths->vw))
      :src image-url}])
+
 
 (defn max-responsive-image [image-url widths->vw on-click]
   [:img

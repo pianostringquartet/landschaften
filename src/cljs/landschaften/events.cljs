@@ -111,7 +111,7 @@
   ::query-started
   (fn query [cofx [_ group-name]]
     (let [db (:db cofx)]
-      {:db (assoc db :query-loading true)
+      {:db (assoc db :query-loading? true)
        :post-request
         {:uri "/query"
          :params {:constraints (->query-constraints db)}
@@ -126,7 +126,7 @@
   ::query-succeeded
   (fn query-succeeded [db [_ paintings group-name]]
     (let [db-with-query-results (-> db
-                                    (assoc :query-loading false)
+                                    (assoc :query-loading? false)
                                     (assoc-in db/path:current-paintings paintings)
                                     (assoc :examining? false))]
       (if group-name

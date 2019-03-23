@@ -159,6 +159,11 @@
     (helpers/sort-by-author (get-in db db/path:current-paintings))))
 
 
+(reg-sub
+  ::query-loading?
+  (fn query-loading? [db _]
+    (:query-loading? db)))
+
 ;; ------------------------------------------------------
 ;; Examine
 ;; ------------------------------------------------------

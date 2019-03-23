@@ -10,6 +10,7 @@
 (def excluded-schools
   #{"Russian" "Bohemian" "Catalan" "Finnish" "Greek" "Irish" "Norwegian" "Other" "Polish" "Portuguese" "Swedish" "Hungarian" "Scottish" "Swiss" "Danish" "Austrian"})
 
+
 (def example-group
   {:group-name "Michelangelo's saints"
    :paintings #{}
@@ -51,7 +52,7 @@
   ::image-zoomed?          false
 
   ;; EXPLORE
-  :query-loading           false
+  :query-loading?          false
   :all-types               (disj specs/PAINTING-TYPES "Other")
   :all-schools             (apply disj specs/SCHOOLS excluded-schools)
   :all-timeframes          (apply disj specs/TIMEFRAMES excluded-timeframes)
@@ -61,8 +62,8 @@
   ;; EXPLORE & COMPARE
   :current-group           example-group ; :current-group sample/sample-group
   :show-group-name-prompt? false
-  :saved-groups            {} ;{(:group-name french-landscapes) french-landscapes
-  ; (:group-name spanish-religious) spanish-religious
+  :saved-groups            {} ;{(:group-name french-landscapes) french-landscapes}
+  ;                          (:group-name spanish-religious) spanish-religious}
   ;; COMPARE
 
   ;; set of group-names (strings): the groups that are being compared

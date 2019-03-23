@@ -10,22 +10,6 @@
             [landschaften.events :as events]))
 
 
-(defn NO-IMAGE-AVAILABLE []
-  [:img {:src "/img/no_image_available.jpeg"
-         :style {:max-width 200
-                 :max-height 200}}])
-
-
-(defn NO-INFO-AVAILABLE []
-  [rc/label :label "Painting info not available."])
-
-
-;(defn info [painting]
-;  (let [->ui-label (fn [k] [rc/label :label (str (name k) ": " (k painting))])
-;        info-categories '(:title :author :date :timeframe :type :school)]
-;   [rc/v-box :children (mapv ->ui-label info-categories)]))
-
-
 (defn info [painting]
   (let [->ui-label (fn [[k v]] [rc/label :label (str v ": " (k painting))])
         info-categories {:title "title"
@@ -52,10 +36,6 @@
     :label "DONE"
     :on-click #(dispatch [::events/done-button-clicked])
     :class "btn btn-warning"])
-
-
-;; NOW THAT THESE IMAGES ARE SHOWING IN A MODAL WITH OTHER INFORMATION...
-;; need to set a max height
 
 
 (defn responsive-image [jpg]
@@ -115,7 +95,9 @@
    :gap "8px"
    ;:justify :center
    :children [[info painting]
-              [rc/label :label "Click on a concept to add as search term:"]
+              [rc/label
+                 :style {:color "lightGrey"}
+                 :label "Click on a concept to add as search term:"]
               [concept-table painting]]])
 
 
@@ -123,7 +105,7 @@
   [rc/v-box
    :gap "8px"
    :children [[info painting]
-              [rc/label :label "Click on a concept to add as search term:"]
+              [rc/label :label "Click to add as search term:"]
               [concept-table painting]]])
 
 
@@ -134,7 +116,9 @@
      :justify :center
      :gap "8px"
      :children [[image painting image-zoomed?]
-                [rc/label :label "Click to enlarge"]]])
+                [rc/label
+                   :style {:color "lightGrey"}
+                   :label "Click to enlarge"]]])
 
 
 (defn display-painting [painting image-zoomed?]
@@ -174,5 +158,3 @@
              :children [[prev-slide-button painting]
                         [examine-painting painting @image-zoomed?]
                         [next-slide-button]]]]))
-
-
