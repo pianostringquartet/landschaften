@@ -20,16 +20,15 @@
 
 
 (defn selected-button [group-name compared-group-names]
-  {:pre [(set? compared-group-names)
-         (string? group-name)]}
-  (let [being-compared? (contains? compared-group-names group-name)
+  {:pre [(string? group-name)]}
+  (let [being-compared? (some #{group-name} compared-group-names)
         on-click (if being-compared?
                    #(dispatch [::events/remove-compare-group-name group-name])
                    #(dispatch [::events/add-compare-group-name group-name]))
         color (if being-compared?
                     "btn btn-info"
                     "btn btn-warning")]
-      [group-button group-name color on-click]))
+    [group-button group-name color on-click]))
 
 
 (defn saved-groups []
@@ -48,8 +47,10 @@
         concept-certainty (subscribe [::subs/concept-certainty-above])]
     [graph/frequencies-chart
      "Table"
-     (graph/paintings->chart-data paintings @n-chartpoints @concept-certainty)
-     "Concepts' Frequencies"]))
+     ;(graph/paintings->chart-data paintings @n-chartpoints @concept-certainty)
+     (graph/paintings->percentage-chart-data paintings @n-chartpoints @concept-certainty)
+     "Concepts' Frequencies"
+     ["Concepts" "Frequencies (%)"]]))
 
 
 (defn labeled-table [name paintings]
@@ -70,10 +71,7 @@
     (fn [group] [labeled-table (:group-name group) (:paintings group)])
     groups))
 
-(defn chart-data->map [chart-data]
-  (apply merge
-         (map (fn [[concept frequency]] {concept frequency})
-              chart-data)))
+;
 
 ;; when there are no compared-groups,
 ;; everything blows up
@@ -83,26 +81,25 @@
 ;; - fn blows up when no compared groups
 ;; - need to provide (in UI) context around the error rate
 
-(defn error-rate [compared-groups]
-  {:pre [(s/valid? (s/coll-of ::specs/group) compared-groups)]}
-  (let [groups (take 2 compared-groups)
-        d1
-          (chart-data->map
-           (graph/paintings->chart-data
-             (:paintings (first groups))
-             20
-             0.94))
-        d2
-          (chart-data->map
-            (graph/paintings->chart-data
-              (:paintings (second groups))
-              20
-              0.94))
-        error (stats/error-rate d1 d2)]
-    (do
-      (utils/log "groups: " groups)
-      (utils/log "d1: " d1)
-      [rc/label :label (str "Error rate: " error)])))
+;; michel + dutch = 0.048
+(defn error-ready-data [group]
+  (graph/paintings->error-data
+    (:paintings group)
+    20
+    0.94))
+
+
+
+;; make error rate a subscription;
+;; get this logic out of the view
+(defn error-between-groups [group-1 group-2]
+  {:pre [(s/valid? ::specs/group group-1)
+         (s/valid? ::specs/group group-2)]}
+  (let [error (stats/error-rate (error-ready-data group-1)
+                                (error-ready-data group-2))]
+    [rc/label :label
+       (str "Error rate: "
+            (goog.string/format "%.5f" (* error 100)))]))
 
 
 (defn display-data []
@@ -110,7 +107,9 @@
     [rc/h-box
        :gap "8px"
        :children (conj (labeled-tables @compared-groups)
-                       (when @compared-groups [error-rate @compared-groups]))]))
+                       (when (<= 2 (count @compared-groups))
+                         [error-between-groups (first @compared-groups)
+                                               (second @compared-groups)]))]))
 
 
 (defn compare-panel []

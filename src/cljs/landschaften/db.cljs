@@ -67,7 +67,7 @@
   ;; COMPARE
 
   ;; set of group-names (strings): the groups that are being compared
-  :compared-group-names    #{}
+  :compared-group-names    '()
 
   ;; CHARTS
   ;; how many data points in a bar chart or table to show

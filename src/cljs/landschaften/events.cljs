@@ -297,30 +297,54 @@
 ;; ------------------------------------------------------
 
 
+;; just returns (potentially updated) vector of names
+(defn add-compare-group-name [group-names group-name]
+  {:pre [(string? group-name)]
+         ;(list? group-names)] ;; group-names is a list, why is this failing?!
+   :post [(s/valid? (s/coll-of string?) %)
+          (>= 2 (count %))]}
+  (let [already-comparing? (boolean (some #{group-name} group-names))
+        already-full? (boolean (= 2 (count group-names)))]
+    (cond
+      already-comparing? group-names
+      ;; group-names MUST BE A LIST, not a vector,
+      ;; we want to prepend the group-name
+      already-full? (conj (drop-last group-names) group-name)
+      :else (conj group-names group-name))))
+
+
 (reg-event-db
   ::add-compare-group-name
   (fn add-compare-group [db [_ group-name]]
     {:pre [(string? group-name)]}
-    (let [y (:compared-group-names db)
-          x (update db :compared-group-names conj group-name)]
+    (let [group-names (:compared-group-names db)
+          x (assoc
+              db
+              :compared-group-names
+              (add-compare-group-name group-names group-name))]
       (do
-        (utils/log "add-compare-group :compared-group-names was " y)
+        (utils/log "add-compare-group :compared-group-names was " group-names)
         (utils/log "add-compare-group :compared-group-names is now " (:compared-group-names x))
         x))))
+
 
 (reg-event-db
   ::remove-compare-group-name
   (fn remove-compare-group-name [db [_ group-name]]
     (do
       (utils/log "remove-compare-group-name called")
-      (update db :compared-group-names disj group-name))))
+      ;(update db :compared-group-names disj group-name)
+      (assoc
+        db
+        :compared-group-names
+        (remove #{group-name} (:compared-group-names db))))))
 
 (reg-event-db
   ::comparisons-cleared
   (fn comparisons-cleared [db _]
     (do
       (utils/log "comparisons-cleared called")
-      (assoc db :compared-group-names #{}))))
+      (assoc db :compared-group-names '()))))
 
 
 ;; ------------------------------------------------------

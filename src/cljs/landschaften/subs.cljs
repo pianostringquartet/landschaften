@@ -228,12 +228,14 @@
 (reg-sub
   ::compared-group-names
   (fn compared-group-names [db _]
-    {:post [(set? %)]}
+    ;{:post [(list? %)]}
     (do
       (utils/log "(:compared-group-names db): " (:compared-group-names db))
       (:compared-group-names db))))
 
 ;; look at the names in the db, then just
+
+;; should only allow two at a time
 (reg-sub
   ::compared-groups
   (fn current-painting [db _]
@@ -241,6 +243,16 @@
     (let [names (:compared-group-names db)
           groups (:saved-groups db)]
       (map #(get groups %) names))))
+
+
+
+;; needs to be rounded
+;(reg-sub
+;  :<- [:compared-groups]
+;  ::error-rate
+;  (fn error-rate [groups]))
+
+
 
 
 ;(reg-sub
