@@ -64,14 +64,15 @@
     (map :name)
     (frequencies)))
 
+
 (defn frequencies->google-chart-data [concept-frequencies]
   (mapv #(into [] %) concept-frequencies))
 
 
 (defn paintings->chart-data [paintings n-many certainty-above]
   {:pre [(s/valid? ::specs/paintings paintings)
-         (float? certainty-above)
-         (int? n-many)]}
+         (int? n-many)
+         (float? certainty-above)]}
   (->> (frequencies-of-concepts-with-certainty-above paintings certainty-above)
     (sort-by second) ; meaningless
     (reverse)

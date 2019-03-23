@@ -48,125 +48,27 @@
 (def gs [["art" 19] ["painting" 19] ["people" 18] ["religion" 17] ["adult" 17] ["man" 13] ["saint" 12] ["woman" 11] ["Renaissance" 8] ["one" 8] ["god" 8] ["group" 8] ["Mary" 7] ["illustration" 7] ["book" 6] ["veil" 5] ["sculpture" 5] ["church" 5] ["aura" 4] ["print" 4]])
 ;
 ;;; convert chart-data to a single big Python dict (Clojure map)
-(defn chart-data->map [chart-data]
-  (apply merge
-    (map (fn [[concept frequency]] {concept frequency})
-         chart-data)))
-;
-;;; (converted format:)
-(def gfm {"architecture" 25,
-          "watercraft" 13,
-          "outdoors" 52,
-          "illustration" 13,
-          "group" 14,
-          "adult" 16,
-          "travel" 61,
-          "water" 55,
-          "painting" 24,
-          "no person" 100,
-          "people" 28,
-          "nature" 23,
-          "sea" 14,
-          "landscape" 56,
-          "tree" 44,
-          "old" 20,
-          "vehicle" 13,
-          "building" 25,
-          "art" 25,
-          "sky" 16})
-
-(def gsm {"book" 6,
-          "illustration" 7,
-          "group" 8,
-          "adult" 17,
-          "painting" 19,
-          "people" 18,
-          "Mary" 7,
-          "church" 5,
-          "sculpture" 5,
-          "god" 8,
-          "man" 13,
-          "veil" 5,
-          "woman" 11,
-          "one" 8,
-          "saint" 12,
-          "print" 4,
-          "Renaissance" 8,
-          "aura" 4,
-          "religion" 17,
-          "art" 19})
-
-;
-;
-;;; normalizing the data
-;(defn normalize [m]
-;  (let [total (reduce + (vals m))]
-;    (->> m
-;      (map (fn [[k v]] {k (/ (double v) (double total))}))
-;      (apply merge))))
-
-;;; normalized data
-(def gfmn {"architecture" 25/637,
-           "watercraft" 1/49,
-           "outdoors" 4/49,
-           "illustration" 1/49,
-           "group" 2/91,
-           "adult" 16/637,
-           "travel" 61/637,
-           "water" 55/637,
-           "painting" 24/637,
-           "no person" 100/637,
-           "people" 4/91,
-           "nature" 23/637,
-           "sea" 2/91,
-           "landscape" 8/91,
-           "tree" 44/637,
-           "old" 20/637,
-           "vehicle" 1/49,
-           "building" 25/637,
-           "art" 25/637,
-           "sky" 16/637})
-;
-(def gsmn {"book" 2/67,
-           "illustration" 7/201,
-           "group" 8/201,
-           "adult" 17/201,
-           "painting" 19/201,
-           "people" 6/67,
-           "Mary" 7/201,
-           "church" 5/201,
-           "sculpture" 5/201,
-           "god" 8/201,
-           "man" 13/201,
-           "veil" 5/201,
-           "woman" 11/201,
-           "one" 8/201,
-           "saint" 4/67,
-           "print" 4/201,
-           "Renaissance" 8/201,
-           "aura" 4/201,
-           "religion" 17/201,
-           "art" 19/201})
-;
-;
-;;;
-;
+;(defn chart-data->map [chart-data]
+;  (apply merge
+;    (map (fn [[concept frequency]] {concept frequency})
+;         chart-data)))
 
 (defn normalize [m]
+  {:pre [(map? m)]
+   :post [(map? %)]}
   (let [total (reduce + (vals m))]
     (->> m
-         (map (fn [[k v]] {k (/ (double v) (double total))}))
-         (apply merge))))
+      (map (fn [[k v]] {k (/ (double v) (double total))}))
+      (apply merge))))
 
-(def german {"red" 2 "blue" 3 "black" 1})
-(def french {"red" 10 "blue" 30 "white" 50})
+;(def german {"red" 2 "blue" 3 "black" 1})
+;(def french {"red" 10 "blue" 30 "white" 50})
+;;
+;(= (normalize german) ;; matches jupyter
+;   {"red" 0.3333333333333333, "blue" 0.5, "black" 0.16666666666666666})
 ;
-(normalize german) ;; matches jupyter
-(normalize french) ;; matches jupyter
-
-(def french-concepts (set (keys french)))
-(def german-concepts (-> german keys set))
-
+;(= (normalize french) ;; matches jupyter
+;   {"red" 0.1111111111111111, "blue" 0.3333333333333333, "white" 0.5555555555555556})
 
 
 (defn adjustment
@@ -185,8 +87,9 @@
 
   data-1, data-2: map"
   [data-1 data-2]
-  {:pre [(map? data-1) (map? data-2)]
-   :post}
+  {:pre [(every? int? (vals data-1))
+         (every? int? (vals data-2))]
+   :post [(<= 0 % 1)]}
   (let [features (into #{} (concat (keys data-1) (keys data-2)))
         normalized-data-1 (normalize data-1)
         normalized-data-2 (normalize data-2)
@@ -195,13 +98,15 @@
                       features)]
     (reduce + 0 adjustments)))
 
-(def german {"red" 2 "blue" 3 "black" 1})
-(def french {"red" 10 "blue" 30 "white" 50})
-(error-rate french german)
-0.4135802469135803
-
-
-;; assuming error starts as 0
-;(reduce + 0 adjustments)
-;  0.4135802469135803 ... matches jupyter :-) 
+;(def german {"red" 2 "blue" 3 "black" 1})
+;(def french {"red" 10 "blue" 30 "white" 50})
+;
+;(= (error-rate french german)
+;   0.4135802469135803)
+;0.4135802469135803
+;
+;
+;;; assuming error starts as 0
+;;(reduce + 0 adjustments)
+;;  0.4135802469135803 ... matches jupyter :-)
 

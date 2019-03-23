@@ -5,7 +5,10 @@
             [landschaften.subs :as subs]
             [landschaften.events :as events]
             [landschaften.views.graph :as graph]
-            [landschaften.views.utils :as utils]))
+            [landschaften.views.stats :as stats]
+            [landschaften.views.utils :as utils]
+            [landschaften.specs :as specs]
+            [clojure.spec.alpha :as s]))
 
 
 (defn group-button [group-name color on-click]
@@ -67,16 +70,47 @@
     (fn [group] [labeled-table (:group-name group) (:paintings group)])
     groups))
 
+(defn chart-data->map [chart-data]
+  (apply merge
+         (map (fn [[concept frequency]] {concept frequency})
+              chart-data)))
 
-(defn error-rate []
-  [rc/label :label "Error rate to be added"])
+;; when there are no compared-groups,
+;; everything blows up
+
+;; a couple issues here:
+;; - the big calc is basically a "get me the relevant data" step
+;; - fn blows up when no compared groups
+;; - need to provide (in UI) context around the error rate
+
+(defn error-rate [compared-groups]
+  {:pre [(s/valid? (s/coll-of ::specs/group) compared-groups)]}
+  (let [groups (take 2 compared-groups)
+        d1
+          (chart-data->map
+           (graph/paintings->chart-data
+             (:paintings (first groups))
+             20
+             0.94))
+        d2
+          (chart-data->map
+            (graph/paintings->chart-data
+              (:paintings (second groups))
+              20
+              0.94))
+        error (stats/error-rate d1 d2)]
+    (do
+      (utils/log "groups: " groups)
+      (utils/log "d1: " d1)
+      [rc/label :label (str "Error rate: " error)])))
 
 
 (defn display-data []
   (let [compared-groups (subscribe [::subs/compared-groups])]
     [rc/h-box
        :gap "8px"
-       :children (conj (labeled-tables @compared-groups) [error-rate])]))
+       :children (conj (labeled-tables @compared-groups)
+                       (when @compared-groups [error-rate @compared-groups]))]))
 
 
 (defn compare-panel []
