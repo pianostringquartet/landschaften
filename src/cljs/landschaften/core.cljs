@@ -10,7 +10,10 @@
             [landschaften.events :as core-events]
             [reitit.core :as reitit]
             [clojure.string :as string]
-            [landschaften.db :as db])
+            [landschaften.db :as db]
+            ;; For Clojurescript tracing
+            [ghostwheel.tracer])
+
   (:import goog.History))
 
 (defn nav-link [uri title page]

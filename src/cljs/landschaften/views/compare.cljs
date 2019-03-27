@@ -55,7 +55,8 @@
 
 (defn labeled-table [name paintings]
   [rc/v-box
-     :children [[rc/label :label name]
+     :gap "8px"
+     :children [[rc/title :label name :level :level3]
                 [table paintings]]])
 
 
@@ -71,17 +72,7 @@
     (fn [group] [labeled-table (:group-name group) (:paintings group)])
     groups))
 
-;
 
-;; when there are no compared-groups,
-;; everything blows up
-
-;; a couple issues here:
-;; - the big calc is basically a "get me the relevant data" step
-;; - fn blows up when no compared groups
-;; - need to provide (in UI) context around the error rate
-
-;; michel + dutch = 0.048
 (defn error-ready-data [group]
   (graph/paintings->error-data
     (:paintings group)
@@ -89,6 +80,28 @@
     0.94))
 
 
+;; want to do a progress bar etc. for error rate;
+;; some kind of visual that makes it intelligible to user;
+;; but error rate isn't a percent...
+;; could you try e.g. (actual error rate / maximum error rate)
+;; 'max error rate' would be different for each group
+
+(defn error-rate-label [error]
+  [rc/v-box
+     :children
+       [[rc/p
+           {:style {:color "lightGrey"}}
+           "Error measures similarity of two groups of paintings."]
+        [rc/p
+           {:style {:color "lightGrey"}}
+           "Smaller error -> greater similarity"]
+        [rc/label
+           :label (str "Error rate: "
+                    ;   doesn't have to be "times 100"
+                    ; error rate isn't actually a percent,
+                    ; but the extremely long decimals were hard to read
+                    ;(goog.string/format "%.3f" (* error 100)))]]])
+                    (goog.string/format "%.4f" error))]]])
 
 ;; make error rate a subscription;
 ;; get this logic out of the view
@@ -97,15 +110,13 @@
          (s/valid? ::specs/group group-2)]}
   (let [error (stats/error-rate (error-ready-data group-1)
                                 (error-ready-data group-2))]
-    [rc/label :label
-       (str "Error rate: "
-            (goog.string/format "%.5f" (* error 100)))]))
+    [error-rate-label error]))
 
 
 (defn display-data []
   (let [compared-groups (subscribe [::subs/compared-groups])]
     [rc/h-box
-       :gap "8px"
+       :gap "16px"
        :children (conj (labeled-tables @compared-groups)
                        (when (<= 2 (count @compared-groups))
                          [error-between-groups (first @compared-groups)
@@ -115,7 +126,8 @@
 (defn compare-panel []
   [rc/v-box
    :justify :between
-   :gap "8px"
+   :gap "32px"
+   :padding "16px"
    :style {:padding-left "16px" :padding-right "16px"}
    :children [[rc/h-box
                  :gap "32px"

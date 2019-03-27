@@ -40,7 +40,11 @@
                  [proto-repl "0.3.1"]
                  [expound "0.7.1"]
                  [re-com "2.4.0"]
-                 [day8.re-frame/tracing-stubs "0.5.1"]]
+                 [day8.re-frame/tracing-stubs "0.5.1"]
+                 [gnl/ghostwheel "0.3.8"]
+                 [gnl/ghostwheel.tracer "0.3.8"]]
+
+
 
   :min-lein-version "2.0.0"
   :source-paths ["src/clj" "src/cljs" "src/cljc"]
@@ -109,6 +113,9 @@
                       :source-map true
                       :optimizations :none
                       :pretty-print true
+                      :external-config {:ghostwheel {:check     true
+                                                     :outstrument true
+                                                     :num-tests 10}}
                       :closure-defines
                             {"re_frame.trace.trace_enabled_QMARK_" true
                              "day8.re_frame.tracing.trace_enabled_QMARK_"  true}

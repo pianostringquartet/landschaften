@@ -11,6 +11,7 @@
   #{"Russian" "Bohemian" "Catalan" "Finnish" "Greek" "Irish" "Norwegian" "Other" "Polish" "Portuguese" "Swedish" "Hungarian" "Scottish" "Swiss" "Danish" "Austrian"})
 
 
+
 (def example-group
   {:group-name "Michelangelo's saints"
    :paintings #{}
@@ -49,7 +50,7 @@
   ;; EXAMINE
   :current-painting        nil
   :show-slideshow?         false ;; i.e. slideshow
-  ::image-zoomed?          false
+  :image-zoomed?           false
 
   ;; EXPLORE
   :query-loading?          false

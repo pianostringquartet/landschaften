@@ -1,15 +1,18 @@
 (ns landschaften.events
-  (:require [re-frame.core :refer [dispatch reg-event-db reg-sub reg-event-fx reg-fx dispatch]]
+  (:require [re-frame.core :refer [dispatch reg-event-db reg-sub reg-event-fx reg-fx]]
             [landschaften.db :as db]
             [day8.re-frame.tracing :refer-macros [fn-traced]]
             [ajax.core :refer [POST GET]]
             [landschaften.ui-specs :as ui-specs]
+            [landschaften.specs :as specs]
             [landschaften.helpers :as helpers]
             [cljs.spec.alpha :as s]
-            [landschaften.views.utils :as utils]))
+            [landschaften.views.utils :as utils]
+            [re-frame.core :as rf]
+            [ghostwheel.core
+              :as g
+              :refer [check >defn >defn- >fdef => | <- ?]]))
 
-
-;(def log utils/log)
 
 ;; ------------------------------------------------------
 ;; High level events
@@ -41,6 +44,65 @@
     (assoc db :docs docs)))
 
 
+;; putting in and pulling from local storage
+;;
+
+;(def ls-auth-key "session-info")
+;
+;
+;(rf/reg-fx
+;  :create-session
+;  (fn login-localStorage [email]
+;    (.setItem js/localStorage ls-auth-key (str email))))
+;
+;(rf/reg-cofx
+;  :user-session
+;  (fn user-session [cofx _]
+;    (assoc cofx :user-session (some->> (.getItem js/localStorage ls-auth-key)))))
+;
+;
+;;; NOTE:
+;;; Since we use email-address strings in localStorage to
+;;; indicate an active session, and '@' is not valid Clojure,
+;;; we don't use (cljs.reader/read-string <localStorage content>).
+;(defn ls->cljs [a-str]
+;  (if (= "false" a-str) false a-str))
+;
+;(reg-event-fx
+;  ::retrieve-user-session
+;  [(rf/inject-cofx :user-session)]
+;  (fn retrieve-user-session [cofx [_ _]]
+;    (let [db (:db cofx)
+;          session (:user-session cofx)]
+;       {:db (assoc db :session (ls->cljs session))})))
+;
+;
+;(rf/reg-event-fx
+;  ::resume-session
+;  (fn resume-session [cofx [_ session-email]]
+;    {:db (-> (:db cofx))
+;             ;(assoc :logged-in? true :email session-email))
+;             ;(goto :home))
+;     :dispatch [::pull-decks]}))
+;
+;
+;(rf/reg-fx
+;  :end-session
+;  (fn end-session [_]
+;    (.setItem js/localStorage ls-auth-key false)))
+
+;;
+
+;(defn logout-app-db [db]
+;  (assoc db :session false :logged-in? false))
+
+;(rf/reg-event-fx
+;  ::logout
+;  (fn logout [cofx [_]]
+;    {:db (-> (:db cofx)
+;             (logout-app-db)
+;             (goto :auth))
+;     :end-session nil}))
 
 ;; ------------------------------------------------------
 ;; Communicating with server
@@ -364,16 +426,25 @@
           ;(assoc :))))
 
 
+;; how to use ghostwheel with destructuring?
+;; (per tutorial, it's allowed)
+;; ghostwheel syntax to just check the return value?
+
+;(>defn painting-tile-clicked [db [_ painting]]
+(>defn painting-tile-clicked [db data]
+  ;[(s/valid? ::specs/app-db db) => ::specs/app-db]
+  ;[nil]
+  ;[]
+  [::specs/app-db vector? => ::specs/app-db]
+  (let [painting (second data)]
+    (-> db
+      (assoc :current-painting painting)
+      (assoc :show-slideshow? true))))
+
 ;; now, when painting tile clicked,
 (reg-event-db
-  ::painting-tile-clicked
-  (fn painting-tile-clicked [db [_ painting]]
-    (do
-      (utils/log "painting-tile-clicked handler called")
-      (utils/log "painting-tile-clicked handler painting: " painting)
-      (-> db
-          (assoc :current-painting painting)
-          (assoc :show-slideshow? true)))))
+  ::painting-tile-clicked painting-tile-clicked)
+
 
 
 (reg-event-db
@@ -410,37 +481,76 @@
 ;; (take-while (not= x current-painting) xs)
 ;; ^^^ will take paintings up until we encounter the current paintng
 
-(reg-event-db
-  ::go-to-previous-slide
-  (fn previous-slide [db]
-    (let [paintings (helpers/sort-by-author
-                      (get-in db db/path:current-paintings))
-          current-painting (:current-painting db)
-          prev-slide (or (last (take-while #(not= % current-painting) paintings))
-                       (last paintings))]
-      (do
-        (utils/log "prev-slide: " prev-slide)
-        (assoc db :current-painting prev-slide)))))
+(>defn previous-slide [db]
+  [::specs/app-db => ::specs/app-db]
+  (let [paintings (helpers/sort-by-author
+                    (get-in db db/path:current-paintings))
+        current-painting (:current-painting db)
+        prev-slide (or (last (take-while #(not= % current-painting) paintings))
+                     (last paintings))]
+    (assoc db :current-painting prev-slide)))
 
-(reg-event-db
-  ::go-to-next-slide
-  (fn next-slide [db]
-    (let [paintings (helpers/sort-by-author
-                      (get-in db db/path:current-paintings))
-          current-painting (:current-painting db)
-          next-slide (or (second (drop-while #(not= % current-painting) paintings))
-                       (first paintings))]
-      (do
-        (utils/log "next-slide: " next-slide)
-        (assoc db :current-painting next-slide)))))
+(reg-event-db ::go-to-previous-slide previous-slide)
 
-(reg-event-db
-  ::go-to-details
-  (fn go-to-details [db [_ painting]]
-    (-> db
-        (assoc :current-painting painting)
-        (assoc :examining? true)
-        (assoc :show-slideshow? false))))
+
+
+;(defn good-db? [db]
+;  (s/valid? ::specs/app-db db))
+
+(>defn next-slide [db]
+  [::specs/app-db => ::specs/app-db]
+  (let [paintings (helpers/sort-by-author
+                    (get-in db db/path:current-paintings))
+        current-painting (:current-painting db)
+        next-slide (or (second (drop-while #(not= % current-painting) paintings))
+                     (first paintings))]
+    (assoc db :current-painting next-slide)))
+
+(reg-event-db ::go-to-next-slide next-slide)
+
+;#_(reg-event-db
+;    ::go-to-next-slide
+;    (fn next-slide [db]
+;      (let [paintings (helpers/sort-by-author
+;                        (get-in db db/path:current-paintings))
+;            current-painting (:current-painting db)
+;            next-slide (or (second (drop-while #(not= % current-painting) paintings))
+;                         (first paintings))]
+;        (do
+;          (utils/log "next-slide: " next-slide)
+;          (assoc db :current-painting next-slide)))))
+
+
+;; don't need interceptors per se
+;; just gw-spec an event handler,
+;; then turn on g/check in the namespace
+
+
+;(reg-event-db
+;  ::go-to-details
+;  (fn go-to-details [db [_ painting]]
+;    (-> db
+;        (assoc :current-painting painting)
+;        (assoc :examining? true)
+;        (assoc :show-slideshow? false))))
 
 ;; slideshow
 ;(reg-event-db)
+
+;; fails, and can see why in js console :-)
+;(>defn addition [a b]
+;  [pos-int? pos-int? => int? | #(> % a) #(> % b)]
+;  (- a b))
+
+
+;; passes and can see in js console :-)
+;(>defn addition [a b]
+;  [pos-int? pos-int? => int? | #(> % a) #(> % b)]
+;  (+ a b))
+
+;; make sure you have the following in cljs :compiler options
+;:external-config {:ghostwheel {:check     true
+;                               :outstrument true
+;                               :num-tests 10}}
+;(g/check)
+(check)

@@ -90,6 +90,7 @@
    3
    bubble-button])
 
+
 (defn info-and-concepts [painting]
   [rc/v-box
    :gap "8px"
@@ -137,11 +138,11 @@
      :children [[display-painting current-painting image-zoomed?]]])
 
 
-(defn details-button [painting]
-  [rc/button
-   :label "Details"
-   :class "btn btn-success"
-   :on-click #(dispatch [::events/go-to-details painting])])
+#_(defn details-button [painting]
+    [rc/button
+     :label "Details"
+     :class "btn btn-success"
+     :on-click #(dispatch [::events/go-to-details painting])])
 
 ;; just put the buttons on the LEFT and RIGHT SIDE OF THE MODAL
 ;; and add an "X" in the top right corner

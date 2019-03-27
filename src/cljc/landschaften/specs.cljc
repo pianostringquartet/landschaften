@@ -27,12 +27,28 @@
   #{"https://www.wga.hu/art/b/bruegel/pieter_e/01/04icarus.jpg", "https://www.wga.hu/art/n/napoleta/navalbat.jpg", "https://www.wga.hu/art/b/bril/paul/staghunt.jpg", "https://www.wga.hu/art/b/bison/milancat.jpg", "https://www.wga.hu/art/v/velde/willem/calm_sea.jpg"})
 
 (s/def ::date string?)
-(s/def ::school #(contains? SCHOOLS %))
-(s/def ::type #(contains? PAINTING-TYPES %))
+
+(s/def ::school
+  (s/with-gen
+    #(contains? SCHOOLS %)
+    #(s/gen SCHOOLS)))
+
+;(s/def ::type #(contains? PAINTING-TYPES %))
+
+(s/def ::type
+  (s/with-gen
+    #(contains? PAINTING-TYPES %) ; the sepc
+    #(s/gen PAINTING-TYPES))) ; the gen
+
+
 (s/def ::title string?)
 (s/def ::author string?)
 (s/def ::form #{"painting"})
-(s/def ::timeframe #(contains? TIMEFRAMES %))
+
+(s/def ::timeframe
+  (s/with-gen
+    #(contains? TIMEFRAMES %)
+    #(s/gen TIMEFRAMES)))
 
 (s/def ::wga-jpg
  ; (s/with-gen ; doesn't work with cljs?
@@ -60,8 +76,16 @@
 ;             #(clojure.string/includes? % ".jpg")))))
 
 (s/def ::name string?)
-(s/def ::value #(<= 0.0 % 1.0))
+
+;; works
+(s/def ::value
+  (s/with-gen
+    #(<= 0.0 % 1.0)
+    #(s/gen (s/and float?
+                   (fn [x] (<= 0.0 x 1.0))))))
+
 (s/def ::concept (s/keys :req-un [::name ::value]))
+
 (s/def ::concepts (s/coll-of ::concept))
 
 (s/def ::painting (s/keys :req-un [::date
@@ -80,13 +104,6 @@
 ;; GROUP SPEC
 ;; -------------------------
 
-;; note: for entities to be meaningfully composable they must be unique / their own thing
-;; i.e. concepts is not namespaced for ::Group vs ::Painting (as would be in a class...)
-;; so having just ::concepts once didn't work, because you wanted different meanings
-;; in ::group and ::painting
-;; so better to specify exactly what a ::group's ::concept is: a concept CONSTRAINT
-
-;; refactoring was so easy with intellij!! :-D
 
 (s/def ::group-name string?)
 (s/def ::paintings (s/coll-of ::painting))
@@ -110,5 +127,50 @@
 ;; -------------------------
 
 
+;; spec-gen is generating nonsense data here;
+;; e.g. -1, weird strings etc.
+;; can you not simply reuse a spec, assigned to another key name?
+;;
+(s/def ::current-painting (s/nilable ::painting))
+;(s/def ::current-painting #(s/valid? (s/nilable ::painting) %))
+
+(s/def ::examining? boolean?)
+(s/def ::show-slideshow? boolean?)
+(s/def ::image-zoomed? boolean?)
+(s/def ::query-loading? boolean?)
+
+(s/def ::all-types (s/coll-of ::type))
+(s/def ::all-schools (s/coll-of ::school))
+(s/def ::all-timeframes (s/coll-of ::timeframe))
+
+;; string, not ::concept, because ::concept is {:name :value}
+(s/def ::all-concepts (s/coll-of string?))
+(s/def ::all-artists (s/coll-of string?))
+
+(s/def ::current-group ::group)
+(s/def ::show-group-name-prompt? boolean?)
+
+;; currently not very specific
+(s/def ::saved-groups map?)
+
+(s/def ::compared-group-names (s/and (s/coll-of string?)
+                                     #(>= 2 (count %))))
+
+;(s/def ::compared-group-names (s/coll-of string?))
+
 (s/def ::app-db
-  (s/keys :req-un [::paintings ::current-group]))
+  (s/keys :req-un [::current-painting
+                   ::examining?
+                   ::show-slideshow?
+                   ::image-zoomed?
+                   ::query-loading?
+                   ::all-types
+                   ::all-schools
+                   ::all-timeframes
+                   ::all-concepts
+                   ::all-artists
+                   ::current-group
+                   ::show-group-name-prompt?
+                   ::saved-groups
+                   ::compared-group-names]))
+
