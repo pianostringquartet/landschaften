@@ -1,5 +1,5 @@
 (ns landschaften.events
-  (:require [re-frame.core :refer [dispatch reg-event-db reg-sub reg-event-fx reg-fx]]
+  (:require [re-frame.core :refer [after dispatch reg-event-db reg-sub reg-event-fx reg-fx]]
             [landschaften.db :as db]
             [day8.re-frame.tracing :refer-macros [fn-traced]]
             [ajax.core :refer [POST GET]]
@@ -9,9 +9,33 @@
             [cljs.spec.alpha :as s]
             [landschaften.views.utils :as utils]
             [re-frame.core :as rf]
+            [cljs.spec.test.alpha :as st]
             [ghostwheel.core
               :as g
               :refer [check >defn >defn- >fdef => | <- ?]]))
+
+
+;; ------------------------------------------------------
+;; Interceptors
+;; ------------------------------------------------------
+
+
+;; persist via local storage
+;(def ->local-store (after todos->local-store))
+
+;; spec check
+(defn check-and-throw
+  "Throws an exception if `db` doesn't match the Spec `a-spec`."
+  [a-spec db]
+  (when-not (s/valid? a-spec db)
+    (throw (ex-info (str "spec check failed: " (s/explain-str a-spec db)) {}))))
+
+;; now we create an interceptor using `after`
+;(def check-spec-interceptor (after (partial check-and-throw :todomvc.db/db)))
+(def spec? (after (partial check-and-throw ::specs/app-db)))
+
+(def interceptors [spec?])
+
 
 
 ;; ------------------------------------------------------
@@ -21,6 +45,7 @@
 
 (reg-event-db
  ::initialize-db
+ interceptors
  (fn initialize-db [_ _]
    db/default-db))
 
@@ -109,7 +134,7 @@
 ;; ------------------------------------------------------
 
 
-;; taken from cardy
+;; not real error handling...
 (defn default-error-handler [response]
   (utils/log "Encountered unexpected error: " response))
 
@@ -147,12 +172,14 @@
 
 (reg-event-db
   ::concepts-retrieved
+  interceptors
   (fn concepts-retrieved [db [_ artists]]
     (assoc db :all-concepts (into #{} artists))))
 
 
 (reg-event-db
   ::artists-names-retrieved
+  interceptors
   (fn artists-names-retrieved [db [_ artists]]
     (assoc db :all-artists (into #{} artists))))
 
@@ -186,6 +213,7 @@
 
 (reg-event-db
   ::query-succeeded
+  interceptors
   (fn query-succeeded [db [_ paintings group-name]]
     (let [db-with-query-results (-> db
                                     (assoc :query-loading? false)
@@ -208,48 +236,56 @@
 
 (reg-event-db
  ::update-selected-types
+ interceptors
  (fn update-selected-types [db [_ selected-types]]
    (assoc-in db db/path:type-constraints selected-types)))
 
 
 (reg-event-db
  ::update-selected-schools
+ interceptors
  (fn update-selected-schools [db [_ selected-schools]]
    (assoc-in db db/path:school-constraints selected-schools)))
 
 
 (reg-event-db
  ::update-selected-timeframes
+ interceptors
  (fn update-selected-timeframes [db [_ selected-timeframes]]
    (assoc-in db db/path:timeframe-constraints selected-timeframes)))
 
 
 (reg-event-db
  ::update-selected-concepts
+ interceptors
  (fn update-selected-concepts [db [_ selected-concept]]
    (update-in db db/path:concept-constraints conj selected-concept)))
 
 
 (reg-event-db
  ::remove-selected-concept
+ interceptors
  (fn remove-selected-concept [db [_ selected-concept]]
    (update-in db db/path:concept-constraints disj selected-concept)))
 
 
 (reg-event-db
  ::update-selected-artists
+ interceptors
  (fn update-selected-artists [db [_ selected-artist]]
    (update-in db db/path:artist-constraints conj selected-artist)))
 
 
 (reg-event-db
  ::remove-selected-artist
+ interceptors
  (fn remove-selected-artist [db [_ selected-artist]]
    (update-in db db/path:artist-constraints disj selected-artist)))
 
 
 (reg-event-db
  ::selections-cleared
+ interceptors
  (fn selections-cleared [db _]
   (-> db
      (assoc-in db/path:type-constraints #{})
@@ -263,19 +299,18 @@
 ;; Updating groups
 ;; ------------------------------------------------------
 
-
-
 (defn toggle-save-group-popover-showing [db showing?]
   (assoc db :show-group-name-prompt? showing?))
 
-
 (reg-event-db
   ::hide-save-group-popover
+  interceptors
   (fn hide-save-group-popover [db _]
     (toggle-save-group-popover-showing db false)))
 
 (reg-event-db
   ::show-save-group-popover
+  interceptors
   (fn show-save-group-popover [db _]
     (toggle-save-group-popover-showing db true)))
 
@@ -344,13 +379,10 @@
 ;; (can later add modal dialogue, "Do you want to save current group?" etc.)
 (reg-event-db
  ::switch-groups
+ interceptors
  (fn switch-groups [db [_ destination-group-name]]
-   (do
-    (utils/log "destination-group-name: " destination-group-name)
-    (-> db
-       ;(save-current-group) ;; add current group to group-history i.e. :other-groups
-       ; then take destination group and make current group
-       (bring-in-group destination-group-name)))))
+   (-> db
+     (bring-in-group destination-group-name))))
 
 
 
@@ -377,94 +409,80 @@
 
 (reg-event-db
   ::add-compare-group-name
+  interceptors
   (fn add-compare-group [db [_ group-name]]
     {:pre [(string? group-name)]}
-    (let [group-names (:compared-group-names db)
-          x (assoc
-              db
-              :compared-group-names
-              (add-compare-group-name group-names group-name))]
-      (do
-        (utils/log "add-compare-group :compared-group-names was " group-names)
-        (utils/log "add-compare-group :compared-group-names is now " (:compared-group-names x))
-        x))))
+    (let [group-names (:compared-group-names db)]
+      (assoc
+        db
+        :compared-group-names
+        (add-compare-group-name group-names group-name)))))
 
 
 (reg-event-db
   ::remove-compare-group-name
+  interceptors
   (fn remove-compare-group-name [db [_ group-name]]
-    (do
-      (utils/log "remove-compare-group-name called")
-      ;(update db :compared-group-names disj group-name)
-      (assoc
-        db
-        :compared-group-names
-        (remove #{group-name} (:compared-group-names db))))))
+    (assoc
+      db
+      :compared-group-names
+      (remove #{group-name} (:compared-group-names db)))))
+
 
 (reg-event-db
   ::comparisons-cleared
+  interceptors
   (fn comparisons-cleared [db _]
-    (do
-      (utils/log "comparisons-cleared called")
-      (assoc db :compared-group-names '()))))
+     (assoc db :compared-group-names '())))
 
 
 ;; ------------------------------------------------------
 ;; Examining a single painting
 ;; ------------------------------------------------------
 
-
-;; when examine's done button is clicked,
-;; we no longer have a 'current painting' that we're examining
 (reg-event-db
   ::done-button-clicked
+  interceptors
   (fn done-button-clicked [db _]
     (-> db
-        ;(assoc :current-painting nil))))
-        (assoc :examining? false)
-        (assoc :show-slideshow? false))))
-          ;(assoc :))))
+      (assoc :examining? false)
+      (assoc :show-slideshow? false))))
 
 
-;; how to use ghostwheel with destructuring?
-;; (per tutorial, it's allowed)
-;; ghostwheel syntax to just check the return value?
-
-;(>defn painting-tile-clicked [db [_ painting]]
-(>defn painting-tile-clicked [db data]
-  ;[(s/valid? ::specs/app-db db) => ::specs/app-db]
-  ;[nil]
-  ;[]
-  [::specs/app-db vector? => ::specs/app-db]
-  (let [painting (second data)]
+(reg-event-db
+  ::painting-tile-clicked
+  interceptors
+  (fn painting-tile-clicked [db [_ painting]]
     (-> db
       (assoc :current-painting painting)
       (assoc :show-slideshow? true))))
 
-;; now, when painting tile clicked,
+
+;(reg-event-db
+;  ::show-slideshow
+;  interceptors
+;  (fn show-max-image [db _]
+;    (assoc db :show-slideshow? true)))
+
+;(reg-event-db
+;  ::hide-slideshow
+;  interceptors
+;  (fn hide-max-image [db _]
+;    (assoc db :show-slideshow? false)))
+
+
 (reg-event-db
-  ::painting-tile-clicked painting-tile-clicked)
-
-
-
-(reg-event-db
-  ::show-slideshow
-  (fn show-max-image [db _]
-    (assoc db :show-slideshow? true)))
-
-
-(reg-event-db
-  ::hide-slideshow
-  (fn hide-max-image [db _]
-    (assoc db :show-slideshow? false)))
+  ::toggle-slideshow
+  interceptors
+  (fn toggle-slidehow [db _]
+    (update db :show-slideshow? not)))
 
 
 (reg-event-db
   ::toggle-image-zoomed
+  interceptors
   (fn toggle-image-zoomed [db _]
     (update db ::db/image-zoomed? not)))
-    ;(not (::db/image-zoomed? db))))
-
 
 ;; ------------------------------------------------------
 ;; Slidesow
@@ -490,7 +508,9 @@
                      (last paintings))]
     (assoc db :current-painting prev-slide)))
 
-(reg-event-db ::go-to-previous-slide previous-slide)
+(reg-event-db
+  ::go-to-previous-slide
+  (fn [db _] (previous-slide db)))
 
 
 
@@ -506,7 +526,10 @@
                      (first paintings))]
     (assoc db :current-painting next-slide)))
 
-(reg-event-db ::go-to-next-slide next-slide)
+(reg-event-db
+  ::go-to-next-slide
+  interceptors
+  (fn [db _] (next-slide db)))
 
 ;#_(reg-event-db
 ;    ::go-to-next-slide
@@ -525,17 +548,6 @@
 ;; just gw-spec an event handler,
 ;; then turn on g/check in the namespace
 
-
-;(reg-event-db
-;  ::go-to-details
-;  (fn go-to-details [db [_ painting]]
-;    (-> db
-;        (assoc :current-painting painting)
-;        (assoc :examining? true)
-;        (assoc :show-slideshow? false))))
-
-;; slideshow
-;(reg-event-db)
 
 ;; fails, and can see why in js console :-)
 ;(>defn addition [a b]

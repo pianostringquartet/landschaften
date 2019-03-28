@@ -40,9 +40,10 @@
     #(contains? PAINTING-TYPES %) ; the sepc
     #(s/gen PAINTING-TYPES))) ; the gen
 
-
 (s/def ::title string?)
+
 (s/def ::author string?)
+
 (s/def ::form #{"painting"})
 
 (s/def ::timeframe
@@ -133,6 +134,8 @@
 ;;
 (s/def ::current-painting (s/nilable ::painting))
 ;(s/def ::current-painting #(s/valid? (s/nilable ::painting) %))
+
+
 
 (s/def ::examining? boolean?)
 (s/def ::show-slideshow? boolean?)

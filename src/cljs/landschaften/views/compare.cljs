@@ -26,8 +26,8 @@
                    #(dispatch [::events/remove-compare-group-name group-name])
                    #(dispatch [::events/add-compare-group-name group-name]))
         color (if being-compared?
-                    "btn btn-info"
-                    "btn btn-warning")]
+                "btn btn-info"
+                "btn btn-warning")]
     [group-button group-name color on-click]))
 
 
@@ -47,7 +47,6 @@
         concept-certainty (subscribe [::subs/concept-certainty-above])]
     [graph/frequencies-chart
      "Table"
-     ;(graph/paintings->chart-data paintings @n-chartpoints @concept-certainty)
      (graph/paintings->percentage-chart-data paintings @n-chartpoints @concept-certainty)
      "Concepts' Frequencies"
      ["Concepts" "Frequencies (%)"]]))
@@ -103,6 +102,7 @@
                     ;(goog.string/format "%.3f" (* error 100)))]]])
                     (goog.string/format "%.4f" error))]]])
 
+
 ;; make error rate a subscription;
 ;; get this logic out of the view
 (defn error-between-groups [group-1 group-2]
@@ -114,13 +114,12 @@
 
 
 (defn display-data []
-  (let [compared-groups (subscribe [::subs/compared-groups])]
+  (let [compared-groups (subscribe [::subs/compared-groups])
+        error-rate (subscribe [::subs/error-rate])]
     [rc/h-box
        :gap "16px"
        :children (conj (labeled-tables @compared-groups)
-                       (when (<= 2 (count @compared-groups))
-                         [error-between-groups (first @compared-groups)
-                                               (second @compared-groups)]))]))
+                       (when @error-rate [error-rate-label @error-rate]))]))
 
 
 (defn compare-panel []
@@ -134,4 +133,3 @@
                  :children [[clear-button]
                             [saved-groups]]]
               [display-data]]])
-

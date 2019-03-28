@@ -46,7 +46,6 @@
  {:current-mode            :explore
   :examining?              false
 
-
   ;; EXAMINE
   :current-painting        nil
   :show-slideshow?         false ;; i.e. slideshow

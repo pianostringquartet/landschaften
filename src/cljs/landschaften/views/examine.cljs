@@ -151,7 +151,8 @@
   {:pre [(s/valid? ::specs/painting painting)]}
   (let [image-zoomed? (subscribe [::subs/image-zoomed?])]
     [rc/modal-panel
-     :backdrop-on-click #(dispatch [::events/hide-slideshow])
+     ;:backdrop-on-click #(dispatch [::events/hide-slideshow])
+     :backdrop-on-click #(dispatch [::events/toggle-slideshow])
      :child [rc/h-box
              :align :center
              :justify :between

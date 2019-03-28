@@ -4,8 +4,7 @@
             [re-com.core :as rc]
             [landschaften.subs :as subs]
             [landschaften.views.preview :as preview]
-            [landschaften.views.sidebar :as sidebar]
-            [landschaften.views.examine :as examine]))
+            [landschaften.views.sidebar :as sidebar]))
 
 
 (defn no-paintings-found []

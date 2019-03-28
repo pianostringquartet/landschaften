@@ -1,8 +1,6 @@
 (ns landschaften.views.utils
   (:require [reagent.core :as r]
-            [re-com.core :as rc]
-            [re-frame.core :refer [dispatch]]))
-
+            [re-com.core :as rc]))
 
 ;; ------------------------------------------------------
 ;; Utility functions and components

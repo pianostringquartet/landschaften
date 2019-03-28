@@ -5,7 +5,9 @@
             [landschaften.db :as db]
             [landschaften.helpers :as helpers]
             [landschaften.views.utils :as utils]
-            [day8.re-frame.tracing :refer-macros [fn-traced]]))
+            [day8.re-frame.tracing :refer-macros [fn-traced]]
+            [landschaften.views.graph :as graph]
+            [landschaften.views.stats :as stats]))
 
 
 
@@ -228,10 +230,7 @@
 (reg-sub
   ::compared-group-names
   (fn compared-group-names [db _]
-    ;{:post [(list? %)]}
-    (do
-      (utils/log "(:compared-group-names db): " (:compared-group-names db))
-      (:compared-group-names db))))
+    (:compared-group-names db)))
 
 ;; look at the names in the db, then just
 
@@ -246,25 +245,30 @@
 
 
 
-;; needs to be rounded
-;(reg-sub
-;  :<- [:compared-groups]
-;  ::error-rate
-;  (fn error-rate [groups]))
+(defn error-ready-data [group]
+  (graph/paintings->error-data
+    (:paintings group)
+    20
+    0.94))
 
 
+(reg-sub
+  ::error-rate
+  :<- [::compared-groups]
+  (fn error-rate [groups]
+    {:pre [(s/valid? (s/coll-of ::specs/group) groups)]}
+    (when (<= 2 (count groups))
+      (stats/error-rate
+        (error-ready-data (first groups))
+        (error-ready-data (second groups))))))
 
-
-;(reg-sub
-;  ::error-rate ;; i.e. variance
-;  (fn show-max? [db _]
-;    (:show-max? db)))
 
 (reg-sub
   ::show-n-chart-points
   (fn show-n-chart-points [db _]
     {:post [(int? %)]}
     (:show-n-chart-points db)))
+
 
 (reg-sub
   ::concept-certainty-above
