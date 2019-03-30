@@ -1,6 +1,7 @@
 (ns landschaften.views.mui
   (:require [reagent-material-ui.core :as ui]
-            [reagent.core :as reagent]))
+            [reagent.core :as reagent]
+            [landschaften.subs :as subs]))
 
 
 ; example how to use M-UI in app
@@ -33,9 +34,39 @@
           "Home"]
          [ui/Divider]]]])))
 
-(defn home-page []
-  [ui/MuiThemeProvider theme-defaults
-   [:div
-    [simple-nav]
+
+
+;; official mui site uses GridListItem:
+;; https://material-ui.com/demos/grid-list/
+
+;; but cljs mui lib has only GridTile in macros listed?
+;;
+(defn grid [jpg-urls]
+  (fn []
     [:div
-     [:h2 "Welcome to a simple, example application."]]]])
+     [ui/GridList {:cellHeight "160" :cols "3"}
+      (for [jpg-url jpg-urls]
+        ^{:key jpg-url} [ui/GridTile {:key jpg-url :cols "1"}
+                                     [:img {:src jpg-url}]])]]))
+
+(defn home-page []
+  (let [paintings (re-frame.core/subscribe [::subs/paintings])]
+    [ui/MuiThemeProvider theme-defaults
+     [grid (map :jpg (take 50 @paintings))]]))
+
+
+;(defn home-page []
+;  [ui/MuiThemeProvider theme-defaults
+;    [re-com.core/v-box :children [[simple-nav]
+;                                  [re-com.core/label :label "Welcome to a simple, example application."]
+;                                  [:h4 "Welcome to a simple, example application."]]]])
+
+
+
+;; this divs etc. won't play well with re-com flex...
+;(defn home-page []
+;  [ui/MuiThemeProvider theme-defaults
+;   [:div
+;    [simple-nav]
+;    [:div
+;     [:h2 "Welcome to a simple, example application."]]]])
