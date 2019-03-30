@@ -110,3 +110,41 @@
 ;;(reduce + 0 adjustments)
 ;;  0.4135802469135803 ... matches jupyter :-)
 
+
+; 'max error rate' i.e. highest error rate
+; = no German feature appears in French features; vice-versa
+;
+
+; 'min error rate' i.e. lowest error rate
+; = German and French features totally overlap
+
+;; min and max cannot be assumed to be 0 vs 1
+
+(defn error-rate2
+ "Get the error-rate (measure of (dis)similarity between two datasets.
+
+  Lower error means higher similarity.
+  Higher error means less similarity.
+
+  data-1, data-2: map"
+ [data-1 data-2 adjustment-fn]
+ {:pre [(every? int? (vals data-1))
+        (every? int? (vals data-2))]
+  :post [(<= 0 % 1)]}
+ (let [features (into #{} (concat (keys data-1) (keys data-2)))
+       normalized-data-1 (normalize data-1)
+       normalized-data-2 (normalize data-2)
+       adjustments (map
+                     #(adjustment-fn % normalized-data-1 normalized-data-2)
+                     features)]
+   (reduce + 0 adjustments)))
+
+
+;; assumes
+;; think carefully how to do this, given how you wrote
+;; your original fn
+;;
+;; the adjustment fn approach might not work
+;;
+;(defn max-error-rate [data-1 data-2]
+;  (let [assume-no-overlap ()]))

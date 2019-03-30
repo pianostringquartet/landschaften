@@ -1,5 +1,5 @@
 (ns landschaften.events
-  (:require [re-frame.core :refer [after dispatch reg-event-db reg-sub reg-event-fx reg-fx]]
+  (:require [re-frame.core :refer [reg-cofx inject-cofx after dispatch reg-event-db reg-sub reg-event-fx reg-fx]]
             [landschaften.db :as db]
             [day8.re-frame.tracing :refer-macros [fn-traced]]
             [ajax.core :refer [POST GET]]
@@ -14,7 +14,6 @@
               :as g
               :refer [check >defn >defn- >fdef => | <- ?]]))
 
-
 ;; ------------------------------------------------------
 ;; Interceptors
 ;; ------------------------------------------------------
@@ -22,6 +21,47 @@
 
 ;; persist via local storage
 ;(def ->local-store (after todos->local-store))
+
+(def ls-auth-key "session-info")
+
+
+(>defn ->localstore! [state]
+  [::specs/app-db => nil?]
+  (do (.setItem js/localStorage ls-auth-key state)))
+
+(reg-fx
+  :persist-state
+  ->localstore!)
+
+
+;; rename to ':persisted-data'?
+(reg-cofx
+  :user-session
+  (fn user-session [cofx _]
+    (let [data-from-local-storage (cljs.reader/read-string
+                                    (some->> (.getItem js/localStorage ls-auth-key)))]
+        (assoc cofx :user-session data-from-local-storage))))
+
+
+;; NOTE:
+;; Since we use email-address strings in localStorage to
+;; indicate an active session, and '@' is not valid Clojure,
+;; we don't use (cljs.reader/read-string <localStorage content>).
+
+;(defn ls->cljs [a-str]
+;  (if (= "false" a-str) false a-str))
+
+(reg-event-fx
+  ::retrieve-user-session
+  [(inject-cofx :user-session)]
+  (fn retrieve-user-session [cofx [_ _]]
+    (let [db (:db cofx)
+          session (:user-session cofx)]
+          ;session (cljs.reader/read-string (:user-session cofx))]
+      (do
+        (utils/log "retrieved session type: " (type session))
+        {:db (assoc db :session session)}))))
+      ;{:db (assoc db :session (ls->cljs session))})))
 
 ;; spec check
 (defn check-and-throw
@@ -43,24 +83,46 @@
 ;; ------------------------------------------------------
 
 
-(reg-event-db
- ::initialize-db
- interceptors
- (fn initialize-db [_ _]
-   db/default-db))
+
+;; if persisted data, use that
+;; else do init-db
+;; (NOTE: currently persisting ENTIRE db)
+(reg-event-fx
+  ::initialize-app
+  ;interceptors
+  [(inject-cofx :user-session)] ;; an interceptor
+  (fn initialize-app [cofx _]
+    ;(let [persisted-db (:db cofx)]
+    (let [persisted-db (:user-session cofx)]
+      (do
+        ;(utils/log "persisted-db: " persisted-db)
+        (utils/log "(keys (:saved-groups persisted-db): " (keys (:saved-groups persisted-db)))
+        (if (s/valid? ::specs/app-db persisted-db)
+          {:db persisted-db}
+          {:db db/default-db})))))
+
+
+;(reg-event-db
+; ::initialize-db
+; interceptors
+; (fn initialize-db [_ _]
+;   db/default-db))
 
 
 (reg-event-db
   ::mode-changed
+  interceptors
   (fn mode-changed [db [_ new-mode]]
     {:pre [(s/valid? ::ui-specs/mode new-mode)]}
     (assoc db :current-mode new-mode)))
 
 
+;; not really using :navigate here, so don't include in app
 (reg-event-db
   :navigate
   (fn [db [_ route]]
-    (assoc db :route route)))
+    db))
+    ; (assoc db :route route)))
 
 
 (reg-event-db
@@ -72,62 +134,7 @@
 ;; putting in and pulling from local storage
 ;;
 
-;(def ls-auth-key "session-info")
-;
-;
-;(rf/reg-fx
-;  :create-session
-;  (fn login-localStorage [email]
-;    (.setItem js/localStorage ls-auth-key (str email))))
-;
-;(rf/reg-cofx
-;  :user-session
-;  (fn user-session [cofx _]
-;    (assoc cofx :user-session (some->> (.getItem js/localStorage ls-auth-key)))))
-;
-;
-;;; NOTE:
-;;; Since we use email-address strings in localStorage to
-;;; indicate an active session, and '@' is not valid Clojure,
-;;; we don't use (cljs.reader/read-string <localStorage content>).
-;(defn ls->cljs [a-str]
-;  (if (= "false" a-str) false a-str))
-;
-;(reg-event-fx
-;  ::retrieve-user-session
-;  [(rf/inject-cofx :user-session)]
-;  (fn retrieve-user-session [cofx [_ _]]
-;    (let [db (:db cofx)
-;          session (:user-session cofx)]
-;       {:db (assoc db :session (ls->cljs session))})))
-;
-;
-;(rf/reg-event-fx
-;  ::resume-session
-;  (fn resume-session [cofx [_ session-email]]
-;    {:db (-> (:db cofx))
-;             ;(assoc :logged-in? true :email session-email))
-;             ;(goto :home))
-;     :dispatch [::pull-decks]}))
-;
-;
-;(rf/reg-fx
-;  :end-session
-;  (fn end-session [_]
-;    (.setItem js/localStorage ls-auth-key false)))
 
-;;
-
-;(defn logout-app-db [db]
-;  (assoc db :session false :logged-in? false))
-
-;(rf/reg-event-fx
-;  ::logout
-;  (fn logout [cofx [_]]
-;    {:db (-> (:db cofx)
-;             (logout-app-db)
-;             (goto :auth))
-;     :end-session nil}))
 
 ;; ------------------------------------------------------
 ;; Communicating with server
@@ -211,20 +218,25 @@
 (declare save-current-group)
 
 
-(reg-event-db
-  ::query-succeeded
-  interceptors
-  (fn query-succeeded [db [_ paintings group-name]]
-    (let [db-with-query-results (-> db
-                                    (assoc :query-loading? false)
-                                    (assoc-in db/path:current-paintings paintings)
-                                    (assoc :examining? false))]
-      (if group-name
-        (-> db-with-query-results
+(defn on-query-succeeded [db paintings group-name]
+  (let [db-with-query-results
+          (-> db (assoc :query-loading? false)
+                 (assoc-in db/path:current-paintings paintings)
+                 (assoc :examining? false))]
+    (if group-name
+      (-> db-with-query-results
           (toggle-save-group-popover-showing false) ;; hide the popover
           (save-current-group group-name))
-        db-with-query-results))))
+      db-with-query-results)))
 
+
+(reg-event-fx
+  ::query-succeeded
+  interceptors
+  (fn query-succeeded [cofx [_ paintings group-name]]
+    (let [db (on-query-succeeded (:db cofx) paintings group-name)]
+        {:persist-state db
+         :db db})))
 
 ;; ------------------------------------------------------
 ;; Updating constraints
@@ -330,33 +342,6 @@
       (utils/log "save-current-group: returning x: " x)
       x)))
 
-;; how to test this whole flow?
-;; this entire thing is basically test free -- ugh.
-
-;;
-
-;; someone wants to save group g
-
-;; either g already exists and so g is being edited
-;; or g is new and so can be
-;; ;;
-;; any time g is added to saved groups,
-;; we must query with current constraints,
-;; so that g in gs contains updated paintings
-
-
-;; CUT BACK SCOPE: always query when group is saved
-;; (can later check, "have constraints changed since we queried?")
-;; so, this should dispatch (::query-started
-;(reg-event-db
-; ::group-saved
-; (fn-traced group-saved [db [_ group-name]]
-;   (do
-;     (utils/log "::group-saved group-name: " group-name)
-;     (-> db
-;       (toggle-save-group-popover-showing false) ;; hide the popover
-;       (save-current-group group-name)))))
-
 
 (defn bring-in-group [db group-name]
   {:pre [(string? group-name)]}
@@ -370,21 +355,12 @@
      new-db)))
 
 
-;; when we switch groups,
-;; prompt user (via dialogue) for name of group;
-;; (if group already had name, then prefill the input slot with that name)
-
-
-;; CUT BACK SCOPE: when switching to g2, throwaway current group
-;; (can later add modal dialogue, "Do you want to save current group?" etc.)
 (reg-event-db
  ::switch-groups
  interceptors
  (fn switch-groups [db [_ destination-group-name]]
    (-> db
      (bring-in-group destination-group-name))))
-
-
 
 ;; ------------------------------------------------------
 ;; Comparing groups
@@ -457,20 +433,6 @@
       (assoc :current-painting painting)
       (assoc :show-slideshow? true))))
 
-
-;(reg-event-db
-;  ::show-slideshow
-;  interceptors
-;  (fn show-max-image [db _]
-;    (assoc db :show-slideshow? true)))
-
-;(reg-event-db
-;  ::hide-slideshow
-;  interceptors
-;  (fn hide-max-image [db _]
-;    (assoc db :show-slideshow? false)))
-
-
 (reg-event-db
   ::toggle-slideshow
   interceptors
@@ -488,17 +450,6 @@
 ;; Slidesow
 ;; ------------------------------------------------------
 
-
-;; prev vs next slide should look at current painting
-;; and move forward or backward in the list
-
-;(defn painting-index [painting]
-;  {:pre [(s/valid? ::specs/painting painting)]
-;   :post [(int)]})
-
-;; (take-while (not= x current-painting) xs)
-;; ^^^ will take paintings up until we encounter the current paintng
-
 (>defn previous-slide [db]
   [::specs/app-db => ::specs/app-db]
   (let [paintings (helpers/sort-by-author
@@ -512,10 +463,6 @@
   ::go-to-previous-slide
   (fn [db _] (previous-slide db)))
 
-
-
-;(defn good-db? [db]
-;  (s/valid? ::specs/app-db db))
 
 (>defn next-slide [db]
   [::specs/app-db => ::specs/app-db]

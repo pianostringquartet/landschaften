@@ -150,6 +150,11 @@
 (s/def ::all-concepts (s/coll-of string?))
 (s/def ::all-artists (s/coll-of string?))
 
+;; current-group could just be current-group-name;
+;; and then a sub calcs the full current-group;
+;; but need current-group in event handlers,
+;; where subs aren't available
+;; it just means you end up reusing certain code
 (s/def ::current-group ::group)
 (s/def ::show-group-name-prompt? boolean?)
 

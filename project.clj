@@ -42,7 +42,8 @@
                  [re-com "2.4.0"]
                  [day8.re-frame/tracing-stubs "0.5.1"]
                  [gnl/ghostwheel "0.3.8"]
-                 [gnl/ghostwheel.tracer "0.3.8"]]
+                 [gnl/ghostwheel.tracer "0.3.8"]
+                 [reagent-material-ui "0.2.5"]]
 
 
 

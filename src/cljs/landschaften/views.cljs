@@ -9,7 +9,8 @@
             [landschaften.ui-specs :as ui-specs]
             [landschaften.views.explore :as explore]
             [landschaften.views.compare :as compare]
-            [landschaften.views.examine :as examine]))
+            [landschaften.views.examine :as examine]
+            [landschaften.views.mui :as mui]))
 
 
 (def modes
@@ -28,9 +29,13 @@
 
 
 (defn hello-world []
- (let [current-mode-id (subscribe [::subs/current-mode])]
-   [rc/v-box
-     :gap "8px"
-     :children [[mode-tabs @current-mode-id modes]
-                [(@current-mode-id modes)]]]))
+  [rc/v-box :children [[rc/label :label "LOVE"]
+                       [mui/home-page]]])
+
+;(defn hello-world []
+; (let [current-mode-id (subscribe [::subs/current-mode])]
+;   [rc/v-box
+;     :gap "8px"
+;     :children [[mode-tabs @current-mode-id modes]
+;                [(@current-mode-id modes)]]]))
 

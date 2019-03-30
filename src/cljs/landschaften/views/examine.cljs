@@ -45,9 +45,6 @@
     ;utils/widths->vw
      utils/mid-widths->vw
      ;utils/larger-widths->vw
-
-   ;; now that you have a modal-within-a-modal,
-
     #(dispatch [::events/toggle-image-zoomed])])
 
 (defn modal-image-view [jpg]

@@ -47,6 +47,10 @@
         concept-certainty (subscribe [::subs/concept-certainty-above])]
     [graph/frequencies-chart
      "Table"
+     ;; this can't be made a sub,
+     ;; because an essential component (paintings)
+     ;; is dynamically determined
+     ;; ... could be made a sub, but
      (graph/paintings->percentage-chart-data paintings @n-chartpoints @concept-certainty)
      "Concepts' Frequencies"
      ["Concepts" "Frequencies (%)"]]))
@@ -101,16 +105,6 @@
                     ; but the extremely long decimals were hard to read
                     ;(goog.string/format "%.3f" (* error 100)))]]])
                     (goog.string/format "%.4f" error))]]])
-
-
-;; make error rate a subscription;
-;; get this logic out of the view
-(defn error-between-groups [group-1 group-2]
-  {:pre [(s/valid? ::specs/group group-1)
-         (s/valid? ::specs/group group-2)]}
-  (let [error (stats/error-rate (error-ready-data group-1)
-                                (error-ready-data group-2))]
-    [error-rate-label error]))
 
 
 (defn display-data []
