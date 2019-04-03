@@ -27,6 +27,11 @@
   (fn current-mode [db _]
     (:current-mode db)))
 
+(reg-sub
+  ::mobile?
+  (fn mobile? [db]
+    (< js/window.innerWidth 800)))
+
 ;; ------------------------------------------------------
 ;; Constraint choices
 ;; ------------------------------------------------------
@@ -254,3 +259,4 @@
   (fn concept-certainty-above [db _]
     {:post [(float? %)]}
     (:concept-certainty-above db)))
+

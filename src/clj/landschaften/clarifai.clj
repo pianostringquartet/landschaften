@@ -120,15 +120,15 @@
    (:outputs)
    (map get-concepts-for-image)))
 
-(def two-urls
-  ["https://www.wga.hu/art/p/pontormo/1/00leda.jpg" "https://www.wga.hu/art/p/pontormo/1/01visit.jpg"])
+;(def two-urls
+;  ["https://www.wga.hu/art/p/pontormo/1/00leda.jpg" "https://www.wga.hu/art/p/pontormo/1/01visit.jpg"])
 
 
 ; (s/conform
 ;  ::concepts-for-image (get-concepts-for-image (first outputs)))
 
 ; the first result should conform to ::concepts-for-image
-(def data (get-concepts-for-images :general two-urls))
+;(def data (get-concepts-for-images :general two-urls))
 
 ; data
 ; (expound/expound ::concepts-for-image (first data))

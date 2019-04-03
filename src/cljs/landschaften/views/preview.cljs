@@ -5,7 +5,8 @@
             [landschaften.events :as events]
             [landschaften.subs :as subs]
             [landschaften.views.utils :as utils]
-            [landschaften.views.examine :as examine]))
+            [landschaften.views.examine :as examine]
+            [landschaften.views.mui :as mui]))
 
 
 (defn tile [painting]
@@ -36,8 +37,14 @@
 ;; not correcting wrong classifications etc.
 
 ;; better to call this "the painting grid" ...
+;(defn preview [paintings show-max?]
+;  [rc/v-box
+;   :align :center
+;   :children [[paintings-found (count paintings)]
+;              [columns (take 50 paintings) show-max?]]])
+
+
 (defn preview [paintings show-max?]
-  [rc/v-box
-   :align :center
-   :children [[paintings-found (count paintings)]
-              [columns (take 50 paintings) show-max?]]])
+  [:div
+   [paintings-found (count paintings)]
+   [mui/mui-grid (take 50 paintings) show-max?]])

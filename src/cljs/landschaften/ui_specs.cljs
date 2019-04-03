@@ -8,7 +8,7 @@
 
 ;; Major 'modes' app can be in
 (def MODES
-  #{:explore :compare})
+  #{:explore :compare :search})
 
 (s/def ::mode #(contains? MODES %))
 
