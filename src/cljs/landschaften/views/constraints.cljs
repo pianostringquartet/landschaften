@@ -4,7 +4,8 @@
             [re-com.core :as rc]
             [landschaften.subs :as subs]
             [landschaften.events :as events]
-            [landschaften.views.utils :as utils]))
+            [landschaften.views.utils :as utils]
+            [landschaften.semantic-ui :as semantic-ui]))
 
 
 ;; ------------------------------------------------------
@@ -64,11 +65,18 @@
 
 
 (defn constraints []
-  [rc/h-box
-    :gap "8px"
-    :children [[genre-constraints]
-               [school-constraints]
-               [timeframe-constraints]]])
+  [:> semantic-ui/grid
+     [:> semantic-ui/grid-row
+       [genre-constraints]
+       [school-constraints]
+       [timeframe-constraints]]])
+
+;(defn constraints []
+;  [rc/h-box
+;    :gap "8px"
+;    :children [[genre-constraints]
+;               [school-constraints]
+;               [timeframe-constraints]]])
 
 
 ;; ------------------------------------------------------

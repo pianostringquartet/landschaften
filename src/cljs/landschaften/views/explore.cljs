@@ -5,7 +5,8 @@
             [landschaften.subs :as subs]
             [landschaften.views.preview :as preview]
             [landschaften.views.sidebar :as sidebar]
-            [landschaften.views.mui :as mui]))
+            [landschaften.views.mui :as mui]
+            [landschaften.semantic-ui :as semantic-ui]))
 
 
 (defn no-paintings-found []
@@ -32,19 +33,48 @@
                        [rc/label :label "Loading..."]]]])
 
 
+;(defn explore-panel []
+;  (let [paintings (subscribe [::subs/paintings])
+;        show-slideshow? (subscribe [::subs/show-slideshow?])
+;        loading? (subscribe [::subs/query-loading?])
+;        mobile? (subscribe [::subs/mobile?])]
+;    [rc/h-box
+;       :justify :between
+;       :gap "16px"
+;       :margin "16px"
+;       :style {:padding-left "8px" :padding-right "8px"}
+;       :children [[explore @paintings @show-slideshow?]
+;                  (when-not @mobile? [sidebar/sidebar])
+;                  (when @loading? [loading-modal])]]))
+
+
 (defn explore-panel []
   (let [paintings (subscribe [::subs/paintings])
         show-slideshow? (subscribe [::subs/show-slideshow?])
         loading? (subscribe [::subs/query-loading?])
         mobile? (subscribe [::subs/mobile?])]
-      [rc/h-box
-         :justify :between
-         :gap "16px"
-         :margin "16px"
-         :style {:padding-left "8px" :padding-right "8px"}
-         :children [[explore @paintings @show-slideshow?]
-                    (when-not @mobile? [sidebar/sidebar])
-                    (when @loading? [loading-modal])]]))
+    [:> semantic-ui/grid {:columns 2} ;{:padding "32px"}
+     [:> semantic-ui/grid-column
+      [explore @paintings @show-slideshow?]]
+     [:> semantic-ui/grid-column
+      [sidebar/sidebar]
+      (when @loading? [loading-modal])]]))
+
+
+
+#_(defn explore-panel []
+    (let [paintings (subscribe [::subs/paintings])
+          show-slideshow? (subscribe [::subs/show-slideshow?])
+          loading? (subscribe [::subs/query-loading?])
+          mobile? (subscribe [::subs/mobile?])]
+        [rc/h-box
+           :justify :between
+           :gap "16px"
+           :margin "16px"
+           :style {:padding-left "8px" :padding-right "8px"}
+           :children [[explore @paintings @show-slideshow?]
+                      (when-not @mobile? [sidebar/sidebar])
+                      (when @loading? [loading-modal])]]))
 
      ;:children [[explore @paintings @show-slideshow?]
       ;           [sidebar/sidebar]

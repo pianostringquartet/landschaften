@@ -47,6 +47,7 @@
                  ;[cljsjs/material-ui "0.19.0-0"]] ;; for adding missing mui
                  ;[cljsjs/material-ui "3.9.1-0"]] ;; was using an ancient version?!
                  [cljsjs/semantic-ui-react "0.84.0-0"]]
+                 ;[cljsjs/semantic-ui-react "0.84.0-0"]]
 
 
   :min-lein-version "2.0.0"

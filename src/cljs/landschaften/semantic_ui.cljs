@@ -32,9 +32,23 @@
 (def grid-column (component "Grid" "Column"))
 (def grid-row (component "Grid" "Row"))
 (def image (component "Image"))
+(def icon (component "Icon"))
+(def input (component "Input"))
 (def item (component "Item"))
 (def item-image (component "Item" "Image"))
 (def item-content (component "Item" "Content"))
+(def progress (component "Progress"))
+(def popup (component "Popup"))
+(def popup-content (component "Popup" "Content"))
+(def table (component "Table"))
+(def table-body (component "Table" "Body"))
+(def table-cell (component "Table" "Cell"))
+(def table-row (component "Table" "Row"))
+(def table-header (component "Table" "Header"))
+;(def table-header-cell (component "Table" "Header" "Cell"))
+(def table-header-cell (component "Table" "HeaderCell"))
+
+(js/console.log "popup: " popup)
 
 ;; Reagent usage:
 (defn view []

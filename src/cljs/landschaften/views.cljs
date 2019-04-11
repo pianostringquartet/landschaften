@@ -38,24 +38,17 @@
     :on-change #(dispatch [::events/mode-changed %])]))
 
 
-;(defn hello-world []
-;  [rc/v-box :children [[rc/label :label "LOVE"]
-;                       [mui/mui-grid]]])
-
 ; if window smaller than 768,
 ; use 3 tabs: EXPLORE, SEARCH, COMPARE
 ; where 'searching' on SEARCH tab brings you back to EXPLORE tab
 (js/console.log "js/window.innerWidth: " js/window.innerWidth)
 
-#_(defn hello-world []
-    (let [painting (subscribe [::subs/current-painting])
-          zoomed? (subscribe [::subs/image-zoomed?])]
-      [landschaften.views.examine/semantic-details @painting @zoomed?]))
 
 (defn hello-world []
  (let [current-mode-id (subscribe [::subs/current-mode])
        mobile? (subscribe [::subs/mobile?])
        modes (modes @mobile?)]
+   ;[(@current-mode-id modes)]))
    [rc/v-box
      :gap "8px"
      :children [[mode-tabs @current-mode-id modes]

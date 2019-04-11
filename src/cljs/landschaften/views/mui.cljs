@@ -79,14 +79,25 @@
        :on-click #(re-frame.core/dispatch [::events/painting-tile-clicked painting])}]])
 
 
+;(defn grid [paintings show-max? current-painting]
+;  [:div
+;   (when show-max? [examine/details-slideshow-modal-image current-painting show-max?])
+;   [ui/GridList {:cellHeight 160 :cols 3}
+;   ;[mui-items/GridList {:cellHeight 160 :cols 3}
+;    (for [painting paintings]
+;      ^{:key (:jpg painting)}
+;      [grid-tile painting])]])
+
+
 (defn grid [paintings show-max? current-painting]
-  [:div
-   (when show-max? [examine/details-slideshow-modal-image current-painting show-max?])
-   [ui/GridList {:cellHeight 160 :cols 3}
-   ;[mui-items/GridList {:cellHeight 160 :cols 3}
-    (for [painting paintings]
-      ^{:key (:jpg painting)}
-      [grid-tile painting])]])
+  ;[:div
+   (if show-max?
+     [examine/details-slideshow-modal-image current-painting show-max?]
+     [ui/GridList {:cellHeight 160 :cols 3}
+      ;[mui-items/GridList {:cellHeight 160 :cols 3}
+      (for [painting paintings]
+        ^{:key (:jpg painting)}
+        [grid-tile painting])]))
 
 
 (defn mui-grid [paintings show-max?]

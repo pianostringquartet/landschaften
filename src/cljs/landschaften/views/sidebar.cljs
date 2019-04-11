@@ -9,7 +9,8 @@
             [landschaften.specs :as specs]
             [landschaften.views.constraints :as constraints]
             [landschaften.views.utils :as utils]
-            [landschaften.views.graph :as graph]))
+            [landschaften.views.graph :as graph]
+            [landschaften.semantic-ui :as semantic-ui]))
 
 
 ;; ------------------------------------------------------
@@ -18,21 +19,16 @@
 ;;   save a new group, etc.
 ;; ------------------------------------------------------
 
-
 (defn search-button []
-  [rc/button
-      :label "SEARCH"
-       ;; when searching, don't pass in group-name;
-       ;; i.e. don't force user to save search prematurely
-       :on-click #(dispatch [::events/query-started nil])
-      :class "btn btn-success"]) ; Bootstrap
-
+  [:> semantic-ui/button
+   {:color "green"
+    :on-click #(dispatch [::events/query-started nil])}
+   "SEARCH"])
 
 (defn clear-button []
-  [rc/button
-    :label "CLEAR"
-    :on-click #(dispatch [::events/selections-cleared])
-    :class "btn btn-danger"])
+  [:> semantic-ui/button
+   {:color "red" :on-click #(dispatch [::events/selections-cleared])}
+   "CLEAR"])
 
 
 (defn add-group-name [existing-group-name]
@@ -51,29 +47,66 @@
                (dispatch [::events/query-started (reset! val %)])))])))
 
 
+(defn save-group-button-trigger []
+  [:> semantic-ui/button
+   {:color "blue" :on-click #(dispatch [::events/show-save-group-popover])}
+   "SAVE SEARCH"])
+
 (defn save-group-button [existing-group-name popover-showing?]
-    (fn save-group-button []
-      [rc/popover-anchor-wrapper
-        :showing? popover-showing? ; must be reagent atom or reframe subscription
-        :position :below-center
-        :anchor [rc/button
-                  :label "SAVE SEARCH"
-                  :class "btn btn-secondary"
-                  :on-click #(dispatch [::events/show-save-group-popover])]
-        :popover [rc/popover-content-wrapper
-                    :on-cancel #(dispatch [::events/hide-save-group-popover])
-                    :backdrop-opacity 0.3
-                    :body [add-group-name existing-group-name]]]))
+  [:> semantic-ui/popup
+     {:trigger (r/as-component [save-group-button-trigger])
+               #_[:> semantic-ui/button
+                  {:color "blue"
+                   :on-click #(dispatch [::events/show-save-group-popover])}
+                  "SAVE SEARCH"]
+      :open popover-showing?
+      :position "bottom left" ; to avoid re-com selection-list CSS conflict
+      :content
+        (r/as-component
+          [:> semantic-ui/input {:on-change #(js/console.log "ON CHANGE")
+                                 :placeholder existing-group-name
+                                 :on-key-press (fn [react-synthetic-event]
+                                                 (let [enter-pressed? (= "Enter" (aget react-synthetic-event "key"))
+                                                       input (aget react-synthetic-event "target" "value")]
+                                                   (when (and enter-pressed? (not (empty? input)))
+                                                     (dispatch [::events/query-started input]))))}])}])
+
+
+#_(defn save-group-button [existing-group-name popover-showing?]
+      (fn save-group-button []
+        [rc/popover-anchor-wrapper
+          :showing? popover-showing? ; must be reagent atom or reframe subscription
+          :position :below-center
+          ;:anchor [rc/button
+          ;          :label "SAVE SEARCH"
+          ;          :class "btn btn-secondary"
+          ;          :on-click #(dispatch [::events/show-save-group-popover])]
+         :anchor [:> semantic-ui/button
+                  {:color "blue" :on-click #(dispatch [::events/show-save-group-popover])}
+                  "SAVE SEARCH"]
+         :popover [rc/popover-content-wrapper
+                     :on-cancel #(dispatch [::events/hide-save-group-popover])
+                     :backdrop-opacity 0.3
+                     :body [add-group-name existing-group-name]]]))
 
 
 (defn ui-buttons []
   (let [existing-group-name (subscribe [::subs/group-name])
         save-group-popover-showing? (subscribe [::subs/save-group-popover-showing?])]
-    [rc/h-box :gap "8px" :children [[clear-button]
-                                    [search-button]
-                                    [save-group-button
-                                       @existing-group-name
-                                       save-group-popover-showing?]]]))
+    [:> semantic-ui/grid
+     [:> semantic-ui/grid-row
+      [clear-button]
+      [search-button]
+      [save-group-button @existing-group-name @save-group-popover-showing?]]]))
+
+;(defn ui-buttons []
+;  (let [existing-group-name (subscribe [::subs/group-name])
+;        save-group-popover-showing? (subscribe [::subs/save-group-popover-showing?])]
+;    [rc/h-box :gap "8px" :children [[clear-button]
+;                                    [search-button]
+;                                    [save-group-button
+;                                       @existing-group-name
+;                                       @save-group-popover-showing?]]]))
 
 
 ;; ------------------------------------------------------
@@ -81,12 +114,19 @@
 ;; ------------------------------------------------------
 
 
-(defn group-button [group-name color]
-  [rc/button
-    :label group-name
-    :on-click #(dispatch [::events/switch-groups group-name])
-    :class color
-    :style {:border-radius "30px"}]) ; curvier
+(defn group-button [name color]
+  [:> semantic-ui/button
+     {:color color
+      :style {:border-radius "30px"} ; curvier
+      :on-click #(dispatch [::events/switch-groups name])}
+     name])
+
+#_(defn group-button [group-name color]
+    [rc/button
+      :label group-name
+      :on-click #(dispatch [::events/switch-groups group-name])
+      :class color
+      :style {:border-radius "30px"}]) ; curvier
 
 
 (defn saved-groups []
@@ -100,8 +140,8 @@
                    (keys @saved-groups)
                    2
                    #(group-button % (if (= % @current-group-name)
-                                      "btn btn-info"
-                                      "btn btn-warning"))]]]))
+                                      "blue"
+                                      "grey"))]]]))
 
 
 ;; ------------------------------------------------------
@@ -131,14 +171,46 @@
            ["Concepts" "Frequencies (%)"]]))))
 
 
+;(defn sidebar []
+; [:> semantic-ui/grid
+;  [:> semantic-ui/grid-row
+;   [constraints/constraints]]
+;  [:> semantic-ui/grid-row
+;   [ui-buttons]]
+;  [:> semantic-ui/grid-row
+;   [constraints/concept-typeahead]]
+;  [:> semantic-ui/grid-row
+;   [constraints/selected-concepts]]
+;  [:> semantic-ui/grid-row
+;   [constraints/artist-typeahead]]
+;  [:> semantic-ui/grid-row
+;   [constraints/selected-artists]]
+;  [:> semantic-ui/grid-row
+;   [saved-groups]]
+;  [:> semantic-ui/grid-row
+;   [barchart]]])
+
+
 (defn sidebar []
-  [rc/v-box
-    :gap "8px"
-    :children [[constraints/constraints] ; genre, school, timeframe constraints
-               [ui-buttons]
-               [constraints/concept-typeahead]
-               [constraints/selected-concepts]
-               [constraints/artist-typeahead]
-               [constraints/selected-artists]
-               [saved-groups]
-               [barchart]]])
+  [:> semantic-ui/grid
+   [:> semantic-ui/grid-column
+    [constraints/constraints]
+    [ui-buttons]
+    [constraints/concept-typeahead]
+    [constraints/selected-concepts]
+    [constraints/artist-typeahead]
+    [constraints/selected-artists]
+    [saved-groups]
+    [barchart]]])
+
+#_(defn sidebar []
+    [rc/v-box
+      :gap "8px"
+      :children [[constraints/constraints] ; genre, school, timeframe constraints
+                 [ui-buttons]
+                 [constraints/concept-typeahead]
+                 [constraints/selected-concepts]
+                 [constraints/artist-typeahead]
+                 [constraints/selected-artists]
+                 [saved-groups]
+                 [barchart]]])

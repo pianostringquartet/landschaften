@@ -76,7 +76,9 @@
 (reg-sub
   ::save-group-popover-showing?
   (fn save-group-popover-showing? [db _]
-    (:show-group-name-prompt? db)))
+    (do
+      (utils/log "save-group-popover-showing?: " (:show-group-name-prompt? db))
+      (:show-group-name-prompt? db))))
 
 
 (reg-sub
@@ -129,7 +131,9 @@
   ::concept-constraints
   (fn concepts [db _]
     {:post [(s/valid? ::specs/concept-constraints %)]}
-    (get-in db db/path:concept-constraints db)))
+    (do
+      (utils/log "(get-in db db/path:concept-constraints db)" (get-in db db/path:concept-constraints db))
+      (get-in db db/path:concept-constraints db))))
 
 
 (reg-sub
@@ -141,7 +145,7 @@
 (reg-sub
   ::paintings
   (fn paintings [db _]
-    {:post [(s/valid? ::specs/paintings %)]}
+    ;{:post [(s/valid? ::specs/paintings %)]}
     (helpers/sort-by-author (get-in db db/path:current-paintings))))
 
 

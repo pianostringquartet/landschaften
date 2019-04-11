@@ -52,6 +52,7 @@
 
 ;; where button-fn is e.g. artist button
 (defn button-table [data row-size button-fn]
+  {:pre [(int? row-size)]}
   (let [buttons (map button-fn data)
         rows (mapv ->table-row (partition-all row-size buttons))]
     [rc/v-box :gap "4px" :children rows]))

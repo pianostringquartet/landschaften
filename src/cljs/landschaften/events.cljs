@@ -267,18 +267,34 @@
    (assoc-in db db/path:timeframe-constraints selected-timeframes)))
 
 
+(defn update-selected-concepts [db selected-concept]
+  (update-in db db/path:concept-constraints conj selected-concept))
+
 (reg-event-db
  ::update-selected-concepts
  interceptors
- (fn update-selected-concepts [db [_ selected-concept]]
-   (update-in db db/path:concept-constraints conj selected-concept)))
+ (fn [db [_ selected-concept]]
+   (update-selected-concepts db selected-concept)))
 
+(defn remove-selected-concept [db selected-concept]
+  (update-in db db/path:concept-constraints disj selected-concept))
 
 (reg-event-db
  ::remove-selected-concept
  interceptors
- (fn remove-selected-concept [db [_ selected-concept]]
-   (update-in db db/path:concept-constraints disj selected-concept)))
+ (fn [db [_ selected-concept]]
+   (remove-selected-concept db selected-concept)))
+ ;(fn remove-selected-concept [db [_ selected-concept]]
+ ;  (update-in db db/path:concept-constraints disj selected-concept)))
+
+(reg-event-db
+  ::toggle-concept-selection
+  interceptors
+  (fn toggle-concept-selection [db [_ concept]]
+    (let [currently-selected-concepts (get-in db db/path:concept-constraints)]
+      (if (contains? currently-selected-concepts concept)
+        (remove-selected-concept db concept)
+        (update-selected-concepts db concept)))))
 
 
 (reg-event-db
