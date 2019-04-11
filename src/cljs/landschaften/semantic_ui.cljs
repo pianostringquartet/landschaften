@@ -45,8 +45,11 @@
 (def table-cell (component "Table" "Cell"))
 (def table-row (component "Table" "Row"))
 (def table-header (component "Table" "Header"))
-;(def table-header-cell (component "Table" "Header" "Cell"))
 (def table-header-cell (component "Table" "HeaderCell"))
+
+(def dropdown (component "Dropdown"))
+(def search (component "Search"))
+
 
 (js/console.log "popup: " popup)
 

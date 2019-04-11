@@ -92,21 +92,12 @@
   ;interceptors
   [(inject-cofx :user-session)] ;; an interceptor
   (fn initialize-app [cofx _]
-    ;(let [persisted-db (:db cofx)]
     (let [persisted-db (:user-session cofx)]
       (do
-        ;(utils/log "persisted-db: " persisted-db)
         (utils/log "(keys (:saved-groups persisted-db): " (keys (:saved-groups persisted-db)))
         (if (s/valid? ::specs/app-db persisted-db)
           {:db persisted-db}
           {:db db/default-db})))))
-
-
-;(reg-event-db
-; ::initialize-db
-; interceptors
-; (fn initialize-db [_ _]
-;   db/default-db))
 
 
 (reg-event-db
@@ -250,6 +241,7 @@
  ::update-selected-types
  interceptors
  (fn update-selected-types [db [_ selected-types]]
+   ;(update-in db db/path:type-constraints conj selected-types)
    (assoc-in db db/path:type-constraints selected-types)))
 
 
@@ -284,8 +276,6 @@
  interceptors
  (fn [db [_ selected-concept]]
    (remove-selected-concept db selected-concept)))
- ;(fn remove-selected-concept [db [_ selected-concept]]
- ;  (update-in db db/path:concept-constraints disj selected-concept)))
 
 (reg-event-db
   ::toggle-concept-selection
