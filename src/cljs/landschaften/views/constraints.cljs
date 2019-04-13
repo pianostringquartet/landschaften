@@ -157,3 +157,17 @@
 (defn selected-artists []
   (let [selected-artists (subscribe [::subs/artist-constraints])]
     [utils/button-table @selected-artists 2 artist-button]))
+
+
+;(defn selected-artists []
+;  (let [selected-artists (subscribe [::subs/artist-constraints])
+;        buttons (map artist-button @selected-artists)]
+;    [mui/material-grid buttons 2]))
+
+
+;(defn selected-artists []
+;  (let [selected-artists (subscribe [::subs/artist-constraints])
+;        buttons (map artist-button @selected-artists)]
+;    [semantic-ui/slist {:horizontal true}
+;     buttons]))
+

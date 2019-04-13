@@ -191,17 +191,42 @@
 ;   [barchart]]])
 
 
+;; a smui LIST might be better here than smui Grid
+;; and lists can be made HORIZONTAL
+#_(defn sidebar []
+    [:> semantic-ui/grid
+     [:> semantic-ui/grid-column {:padding "4px"}
+      [constraints/constraints]
+      [ui-buttons]
+      [constraints/concept-typeahead]
+      [constraints/selected-concepts]
+      [constraints/artist-typeahead]
+      [constraints/selected-artists]
+      [saved-groups]
+      [barchart]]])
+
+
+
+
 (defn sidebar []
-  [:> semantic-ui/grid
-   [:> semantic-ui/grid-column
-    [constraints/constraints]
-    [ui-buttons]
-    [constraints/concept-typeahead]
-    [constraints/selected-concepts]
-    [constraints/artist-typeahead]
-    [constraints/selected-artists]
-    [saved-groups]
-    [barchart]]])
+   [:> semantic-ui/slist ;{:horizontal true};{}:padding "4px"
+    [:> semantic-ui/slist-item {:on-click #(js/console.log "constraints/constraints clicked")}
+       [constraints/constraints]]
+    [:> semantic-ui/slist-item {:on-click #(js/console.log "ui-buttons clicked")}
+       [ui-buttons]]
+    [:> semantic-ui/slist-item {:on-click #(js/console.log "constraints/concept-typeahead clicked")}
+       [constraints/concept-typeahead]]
+    [:> semantic-ui/slist-item {:on-click #(js/console.log "constraints/selected-concepts clicked")}
+       [constraints/selected-concepts]]
+    [:> semantic-ui/slist-item {:on-click #(js/console.log "constraints/artist-typeahead clicked")}
+       [constraints/artist-typeahead]]
+    [:> semantic-ui/slist-item {:on-click #(js/console.log "constraints/selected-artists clicked")}
+       [constraints/selected-artists]]
+    [:> semantic-ui/slist-item {:on-click #(js/console.log "saved-groups clicked")}
+       [saved-groups]]
+    [:> semantic-ui/slist-item {:on-click #(js/console.log "barchart clicked")}
+       [barchart]]])
+
 
 #_(defn sidebar []
     [rc/v-box

@@ -106,6 +106,18 @@
      [grid paintings show-max? @current-painting]]))
 
 
+(defn material-grid-tile [key datum]
+  [ui/GridTile
+   {:key key}
+   datum])
+
+
+(defn material-grid [data n-cols]
+  [ui/MuiThemeProvider theme-defaults
+   [ui/GridList ;{:cols n-cols}
+    (map-indexed material-grid-tile data)]])
+
+
 
 (defn mui-explore [paintings show-slideshow? loading? mobile?]
  [:div "love"])

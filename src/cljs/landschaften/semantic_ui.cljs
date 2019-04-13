@@ -49,9 +49,12 @@
 
 (def dropdown (component "Dropdown"))
 (def search (component "Search"))
+(def slist (component "List"))
+(def slist-item (component "List" "Item"))
+(def tab (component "Tab"))
+(def tab-pane (component "Tab" "Pane"))
 
 
-(js/console.log "popup: " popup)
 
 ;; Reagent usage:
 (defn view []
