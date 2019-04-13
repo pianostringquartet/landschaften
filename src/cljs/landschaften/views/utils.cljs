@@ -1,6 +1,7 @@
 (ns landschaften.views.utils
   (:require [reagent.core :as r]
-            [re-com.core :as rc]))
+            [re-com.core :as rc]
+            [landschaften.semantic-ui :as semantic-ui]))
 
 ;; ------------------------------------------------------
 ;; Utility functions and components
@@ -57,6 +58,13 @@
         rows (mapv ->table-row (partition-all row-size buttons))]
     [rc/v-box :gap "4px" :children rows]))
 
+(defn table [data n-per-row]
+  {:pre [(int? n-per-row)]}
+  [:> semantic-ui/slist
+   (for [row (partition-all n-per-row data)]
+     ^{:key (first row)}
+     [:> semantic-ui/slist {:horizontal true}
+      row])])
 
 ;; create the element first,
 ;; THEN hand it over to be UI-arranged

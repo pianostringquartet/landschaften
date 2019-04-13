@@ -71,13 +71,6 @@
     [school-constraints]
     [timeframe-constraints]]])
 
-;(defn constraints []
-;  [rc/h-box
-;    :gap "8px"
-;    :children [[genre-constraints]
-;               [school-constraints]
-;               [timeframe-constraints]]])
-
 
 ;; ------------------------------------------------------
 ;; Concepts, Artists
@@ -103,9 +96,9 @@
   (get-in (js->clj semantic-ui-object) ["result" "title"]))
 
 (defn concept-typeahead []
-  (let [text-val         (r/atom "")
-        results          (r/atom #{})                       ; semantic-ui-react expects 'results' as "array of {:title :description}"
-        concepts         (subscribe [::subs/all-concepts])]
+  (let [text-val (r/atom "")
+        results  (r/atom #{})                               ; semantic-ui-react expects 'results' as "array of {:title :description}"
+        concepts (subscribe [::subs/all-concepts])]
     (fn deck-search-typeahead []
       [:> semantic-ui/search
        {:on-result-select #(dispatch [::events/update-selected-concepts (get-result %2)])
@@ -114,9 +107,9 @@
         :value            @text-val}])))
 
 (defn artist-typeahead []
-  (let [text-val         (r/atom "")
-        results          (r/atom #{})                       ; semantic-ui-react expects 'results' as "array of {:title :description}"
-        artists          (subscribe [::subs/all-artists])]
+  (let [text-val (r/atom "")
+        results  (r/atom #{})                               ; semantic-ui-react expects 'results' as "array of {:title :description}"
+        artists  (subscribe [::subs/all-artists])]
     (fn artist-search []
       [:> semantic-ui/search
        {:on-result-select #(dispatch [::events/update-selected-artists (get-result %2)])
@@ -125,49 +118,33 @@
         :value            @text-val}])))
 
 
-(defn closable-button-label [label]
-  [rc/h-box
-   :align :center
-   :gap "8px"
-   :children [[rc/label :label label]
-              [:i.zmdi.zmdi-close]]])
-
-
 (defn concept-button [concept]
-  [rc/button
-   :label [closable-button-label concept]
-   :on-click #(dispatch [::events/remove-selected-concept concept])
-   :class "btn btn-info"                                    ; Bootstrap
-   :style {:border-radius "30px"}])                         ; curvier corners
-
+  [:> semantic-ui/button
+   {:color         "teal"
+    :icon          true
+    :labelPosition "right"
+    :style         {:border-radius "30px" :padding "4px"}}
+   [:> semantic-ui/icon {:name     "close"
+                         :on-click #(dispatch [::events/remove-selected-concept concept])}]
+   concept])
 
 (defn artist-button [artist]
-  [rc/button
-   :label [closable-button-label artist]
-   :on-click #(dispatch [::events/remove-selected-artist artist])
-   :class "btn btn-warning"                                 ; Bootstrap
-   :style {:border-radius "30px"}])                         ; curvier corners
+  [:> semantic-ui/button
+   {:color         "teal"
+    :icon          true
+    :labelPosition "right"
+    :style         {:border-radius "30px" :padding "8px"}}
+   [:> semantic-ui/icon {:name     "close"
+                         :on-click #(dispatch [::events/remove-selected-artist artist])}]
+   artist])
 
 
 (defn selected-concepts []
   (let [selected-concepts (subscribe [::subs/concept-constraints])]
-    [utils/button-table @selected-concepts 3 concept-button]))
-
+    [utils/table (map concept-button @selected-concepts) 2]))
 
 (defn selected-artists []
   (let [selected-artists (subscribe [::subs/artist-constraints])]
-    [utils/button-table @selected-artists 2 artist-button]))
-
-
-;(defn selected-artists []
-;  (let [selected-artists (subscribe [::subs/artist-constraints])
-;        buttons (map artist-button @selected-artists)]
-;    [mui/material-grid buttons 2]))
-
-
-;(defn selected-artists []
-;  (let [selected-artists (subscribe [::subs/artist-constraints])
-;        buttons (map artist-button @selected-artists)]
-;    [semantic-ui/slist {:horizontal true}
-;     buttons]))
-
+    [utils/table
+     (map artist-button @selected-artists)
+     2]))

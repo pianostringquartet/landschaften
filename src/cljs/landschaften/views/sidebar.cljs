@@ -42,24 +42,23 @@
        :attr {:auto-focus "true"}
        :on-change
        #(when (not (empty? %))
-          (do
-            ;(dispatch [::events/group-saved (reset! val %)])))])))
-            (dispatch [::events/query-started (reset! val %)])))])))
+          (dispatch [::events/query-started (reset! val %)]))])))
 
 
+;; add logic here for removing a group!
+;; needs to be removed from local storage too
 (defn save-group-button-trigger []
   [:> semantic-ui/button
-   {:color "blue" :on-click #(dispatch [::events/show-save-group-popover])}
+   {:color    "blue"
+    :on-click #(dispatch [::events/show-save-group-popover])}
    "SAVE SEARCH"])
 
 
-;; needs to be a modal, not a popup
-;; the popup
 (defn save-group-button [existing-group-name popover-showing?]
   [:> semantic-ui/popup
    {:trigger  (r/as-component [save-group-button-trigger])
     :open     popover-showing?
-    :on "click"
+    :on       "click"
     :position "bottom left"                                 ; to avoid re-com selection-list CSS conflict
     :on-close #(dispatch [::events/hide-save-group-popover])
     :content  (r/as-component
@@ -92,25 +91,55 @@
 
 (defn group-button [name color]
   [:> semantic-ui/button
-   {:color    color
-    :style    {:border-radius "30px"}                       ; curvier
-    :on-click #(dispatch [::events/switch-groups name])}
+   {:color         color
+    :icon          true
+    :labelPosition "right"
+    :style         {:border-radius "30px" :padding "4px"}   ; curvier
+    :on-click      #(dispatch [::events/switch-groups name])}
+   [:> semantic-ui/icon {:name     "close"
+                         :on-click #(utils/log "Remove Group: " name)}]
    name])
+
+
+;(defn group-button [concept]
+;  [:> semantic-ui/button
+;   {:color         "teal"
+;    :icon          true
+;    :labelPosition "right"
+;    :style         {:border-radius "30px" :padding "4px"}}
+;   [:> semantic-ui/icon {:name     "close"
+;                         :on-click #(dispatch [::events/remove-selected-concept concept])}]
+;   concept])
 
 
 (defn saved-groups []
   (let [saved-groups       (subscribe [::subs/saved-groups])
-        current-group-name (subscribe [::subs/group-name])]
-    [rc/v-box
-     :gap "8px"
-     :children [(when-not (empty? @saved-groups)
-                  [rc/label :label "Saved searches:"])
-                [utils/button-table
-                 (keys @saved-groups)
-                 2
-                 #(group-button % (if (= % @current-group-name)
-                                    "blue"
-                                    "grey"))]]]))
+        current-group-name (subscribe [::subs/group-name])
+        color              #(if (= % @current-group-name) "orange" "grey")]
+    (when-not (empty? @saved-groups)
+      ;[:> semantic-ui/slist
+      [:div
+       [rc/label :label "Saved searches:"]
+       [utils/table
+        (map #(group-button % (color %)) (keys @saved-groups))
+        2]])))
+
+
+
+
+#_(defn saved-groups []
+    (let [saved-groups       (subscribe [::subs/saved-groups])
+          current-group-name (subscribe [::subs/group-name])]
+      [rc/v-box
+       :gap "8px"
+       :children [(when-not (empty? @saved-groups)
+                    [rc/label :label "Saved searches:"])
+                  [utils/button-table
+                   (keys @saved-groups)
+                   2
+                   #(group-button % (if (= % @current-group-name)
+                                      "orange"
+                                      "grey"))]]]))
 
 
 ;; ------------------------------------------------------
