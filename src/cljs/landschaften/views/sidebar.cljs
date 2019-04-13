@@ -210,13 +210,15 @@
    [:> semantic-ui/slist-item
     [ui-buttons]]
    [:> semantic-ui/slist-item
-    [constraints/concept-typeahead]]
+    [:> semantic-ui/segment
+     [constraints/concept-typeahead]
+   ;[:> semantic-ui/slist-item
+     [constraints/selected-concepts]]]
    [:> semantic-ui/slist-item
-    [constraints/selected-concepts]]
-   [:> semantic-ui/slist-item
-    [constraints/artist-typeahead]]
-   [:> semantic-ui/slist-item
-    [constraints/selected-artists]]
+    [:> semantic-ui/segment
+     [constraints/artist-typeahead]
+   ;[:> semantic-ui/slist-item
+     [constraints/selected-artists]]]
    [:> semantic-ui/slist-item
     [saved-groups]]
    [:> semantic-ui/slist-item

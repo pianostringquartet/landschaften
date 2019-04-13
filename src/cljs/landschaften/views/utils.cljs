@@ -60,11 +60,15 @@
 
 (defn table [data n-per-row]
   {:pre [(int? n-per-row)]}
-  [:> semantic-ui/slist
-   (for [row (partition-all n-per-row data)]
-     ^{:key (first row)}
-     [:> semantic-ui/slist {:horizontal true}
-      row])])
+  (let [rows (partition-all n-per-row data)]
+    [:> semantic-ui/slist
+     (do
+       (log "(count rows): " (count rows))
+       (log "rows: " rows)
+       (for [row rows]
+         ^{:key (first row)}
+         [:> semantic-ui/slist {:horizontal true}
+          row]))]))
 
 ;; create the element first,
 ;; THEN hand it over to be UI-arranged
