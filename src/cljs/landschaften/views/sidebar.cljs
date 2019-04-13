@@ -21,7 +21,7 @@
 
 (defn search-button []
   [:> semantic-ui/button
-   {:color "green"
+   {:color    "green"
     :on-click #(dispatch [::events/query-started nil])}
    "SEARCH"])
 
@@ -36,15 +36,15 @@
   (let [val (r/atom existing-group-name)]
     (fn add-group-name-input []
       [rc/input-text
-        :model val
-        :change-on-blur? true
-        :placeholder "Enter name"
-        :attr {:auto-focus "true"}
-        :on-change
-          #(when (not (empty? %))
-             (do
-              ;(dispatch [::events/group-saved (reset! val %)])))])))
-               (dispatch [::events/query-started (reset! val %)])))])))
+       :model val
+       :change-on-blur? true
+       :placeholder "Enter name"
+       :attr {:auto-focus "true"}
+       :on-change
+       #(when (not (empty? %))
+          (do
+            ;(dispatch [::events/group-saved (reset! val %)])))])))
+            (dispatch [::events/query-started (reset! val %)])))])))
 
 
 (defn save-group-button-trigger []
@@ -52,61 +52,37 @@
    {:color "blue" :on-click #(dispatch [::events/show-save-group-popover])}
    "SAVE SEARCH"])
 
+
+;; needs to be a modal, not a popup
+;; the popup
 (defn save-group-button [existing-group-name popover-showing?]
   [:> semantic-ui/popup
-     {:trigger (r/as-component [save-group-button-trigger])
-               #_[:> semantic-ui/button
-                  {:color "blue"
-                   :on-click #(dispatch [::events/show-save-group-popover])}
-                  "SAVE SEARCH"]
-      :open popover-showing?
-      :position "bottom left" ; to avoid re-com selection-list CSS conflict
-      :content
-        (r/as-component
-          [:> semantic-ui/input {:on-change #(js/console.log "ON CHANGE")
-                                 :placeholder existing-group-name
-                                 :on-key-press (fn [react-synthetic-event]
-                                                 (let [enter-pressed? (= "Enter" (aget react-synthetic-event "key"))
-                                                       input (aget react-synthetic-event "target" "value")]
-                                                   (when (and enter-pressed? (not (empty? input)))
-                                                     (dispatch [::events/query-started input]))))}])}])
-
-
-#_(defn save-group-button [existing-group-name popover-showing?]
-      (fn save-group-button []
-        [rc/popover-anchor-wrapper
-          :showing? popover-showing? ; must be reagent atom or reframe subscription
-          :position :below-center
-          ;:anchor [rc/button
-          ;          :label "SAVE SEARCH"
-          ;          :class "btn btn-secondary"
-          ;          :on-click #(dispatch [::events/show-save-group-popover])]
-         :anchor [:> semantic-ui/button
-                  {:color "blue" :on-click #(dispatch [::events/show-save-group-popover])}
-                  "SAVE SEARCH"]
-         :popover [rc/popover-content-wrapper
-                     :on-cancel #(dispatch [::events/hide-save-group-popover])
-                     :backdrop-opacity 0.3
-                     :body [add-group-name existing-group-name]]]))
+   {:trigger  (r/as-component [save-group-button-trigger])
+    :open     popover-showing?
+    :on "click"
+    :position "bottom left"                                 ; to avoid re-com selection-list CSS conflict
+    :on-close #(dispatch [::events/hide-save-group-popover])
+    :content  (r/as-component
+                [:> semantic-ui/input {:on-change    #(js/console.log "ON CHANGE")
+                                       :placeholder  existing-group-name
+                                       :on-key-press (fn [react-synthetic-event]
+                                                       (let [enter-pressed? (= "Enter" (aget react-synthetic-event "key"))
+                                                             input          (aget react-synthetic-event "target" "value")]
+                                                         (do
+                                                           (when (and enter-pressed? (empty? input))
+                                                             (dispatch [::events/hide-save-group-popover]))
+                                                           (when (and enter-pressed? (not (empty? input)))
+                                                             (dispatch [::events/query-started input])))))}])}])
 
 
 (defn ui-buttons []
-  (let [existing-group-name (subscribe [::subs/group-name])
+  (let [existing-group-name         (subscribe [::subs/group-name])
         save-group-popover-showing? (subscribe [::subs/save-group-popover-showing?])]
     [:> semantic-ui/grid
      [:> semantic-ui/grid-row
       [clear-button]
       [search-button]
       [save-group-button @existing-group-name @save-group-popover-showing?]]]))
-
-;(defn ui-buttons []
-;  (let [existing-group-name (subscribe [::subs/group-name])
-;        save-group-popover-showing? (subscribe [::subs/save-group-popover-showing?])]
-;    [rc/h-box :gap "8px" :children [[clear-button]
-;                                    [search-button]
-;                                    [save-group-button
-;                                       @existing-group-name
-;                                       @save-group-popover-showing?]]]))
 
 
 ;; ------------------------------------------------------
@@ -116,32 +92,25 @@
 
 (defn group-button [name color]
   [:> semantic-ui/button
-     {:color color
-      :style {:border-radius "30px"} ; curvier
-      :on-click #(dispatch [::events/switch-groups name])}
-     name])
-
-#_(defn group-button [group-name color]
-    [rc/button
-      :label group-name
-      :on-click #(dispatch [::events/switch-groups group-name])
-      :class color
-      :style {:border-radius "30px"}]) ; curvier
+   {:color    color
+    :style    {:border-radius "30px"}                       ; curvier
+    :on-click #(dispatch [::events/switch-groups name])}
+   name])
 
 
 (defn saved-groups []
-  (let [saved-groups (subscribe [::subs/saved-groups])
+  (let [saved-groups       (subscribe [::subs/saved-groups])
         current-group-name (subscribe [::subs/group-name])]
-     [rc/v-box
-       :gap "8px"
-       :children [(when-not (empty? @saved-groups)
-                   [rc/label :label "Saved searches:"])
-                  [utils/button-table
-                   (keys @saved-groups)
-                   2
-                   #(group-button % (if (= % @current-group-name)
-                                      "blue"
-                                      "grey"))]]]))
+    [rc/v-box
+     :gap "8px"
+     :children [(when-not (empty? @saved-groups)
+                  [rc/label :label "Saved searches:"])
+                [utils/button-table
+                 (keys @saved-groups)
+                 2
+                 #(group-button % (if (= % @current-group-name)
+                                    "blue"
+                                    "grey"))]]]))
 
 
 ;; ------------------------------------------------------
@@ -157,18 +126,18 @@
 ;; it's okay to have the push the side...
 ;; also, may be hiding this anyway
 (defn barchart []
-  (let [paintings (subscribe [::subs/paintings])
+  (let [paintings  (subscribe [::subs/paintings])
         ;chart-data (graph/paintings->chart-data @paintings 20 0.94)]
         chart-data (graph/paintings->percentage-chart-data @paintings 20 0.94)]
     (do
-      (utils/log "chart-data: " (str chart-data));
+      (utils/log "chart-data: " (str chart-data))           ;
       (when (> (count @paintings) 0)
         ;[graph/frequencies-chart "BarChart" chart-data "Search's most frequent concepts" ["Concepts" "Frequencies"]]))))
         [graph/frequencies-chart
-           "BarChart"
-           chart-data
-           "Search's most frequent concepts"
-           ["Concepts" "Frequencies (%)"]]))))
+         "BarChart"
+         chart-data
+         "Search's most frequent concepts"
+         ["Concepts" "Frequencies (%)"]]))))
 
 
 ;(defn sidebar []
@@ -194,48 +163,45 @@
 ;; a smui LIST might be better here than smui Grid
 ;; and lists can be made HORIZONTAL
 #_(defn sidebar []
-    [:> semantic-ui/grid
-     [:> semantic-ui/grid-column {:padding "4px"}
-      [constraints/constraints]
-      [ui-buttons]
-      [constraints/concept-typeahead]
-      [constraints/selected-concepts]
-      [constraints/artist-typeahead]
-      [constraints/selected-artists]
-      [saved-groups]
-      [barchart]]])
-
-
+    [:> semantic-ui/slist {:relaxed true}
+     [constraints/constraints]
+     [ui-buttons]
+     [constraints/concept-typeahead]
+     [constraints/selected-concepts]
+     [constraints/artist-typeahead]
+     [constraints/selected-artists]
+     [saved-groups]
+     [barchart]])
 
 
 (defn sidebar []
-   [:> semantic-ui/slist ;{:horizontal true};{}:padding "4px"
-    [:> semantic-ui/slist-item {:on-click #(js/console.log "constraints/constraints clicked")}
-       [constraints/constraints]]
-    [:> semantic-ui/slist-item {:on-click #(js/console.log "ui-buttons clicked")}
-       [ui-buttons]]
-    [:> semantic-ui/slist-item {:on-click #(js/console.log "constraints/concept-typeahead clicked")}
-       [constraints/concept-typeahead]]
-    [:> semantic-ui/slist-item {:on-click #(js/console.log "constraints/selected-concepts clicked")}
-       [constraints/selected-concepts]]
-    [:> semantic-ui/slist-item {:on-click #(js/console.log "constraints/artist-typeahead clicked")}
-       [constraints/artist-typeahead]]
-    [:> semantic-ui/slist-item {:on-click #(js/console.log "constraints/selected-artists clicked")}
-       [constraints/selected-artists]]
-    [:> semantic-ui/slist-item {:on-click #(js/console.log "saved-groups clicked")}
-       [saved-groups]]
-    [:> semantic-ui/slist-item {:on-click #(js/console.log "barchart clicked")}
-       [barchart]]])
+  [:> semantic-ui/slist {:relaxed true}                     ;{:horizontal true};{}:padding "4px"
+   [:> semantic-ui/slist-item
+    [constraints/constraints]]
+   [:> semantic-ui/slist-item
+    [ui-buttons]]
+   [:> semantic-ui/slist-item
+    [constraints/concept-typeahead]]
+   [:> semantic-ui/slist-item
+    [constraints/selected-concepts]]
+   [:> semantic-ui/slist-item
+    [constraints/artist-typeahead]]
+   [:> semantic-ui/slist-item
+    [constraints/selected-artists]]
+   [:> semantic-ui/slist-item
+    [saved-groups]]
+   [:> semantic-ui/slist-item
+    [barchart]]])
 
 
 #_(defn sidebar []
     [rc/v-box
-      :gap "8px"
-      :children [[constraints/constraints] ; genre, school, timeframe constraints
-                 [ui-buttons]
-                 [constraints/concept-typeahead]
-                 [constraints/selected-concepts]
-                 [constraints/artist-typeahead]
-                 [constraints/selected-artists]
-                 [saved-groups]
-                 [barchart]]])
+     :gap "8px"
+     :children [[constraints/constraints]                   ; genre, school, timeframe constraints
+                [ui-buttons]
+                [constraints/concept-typeahead]
+                [constraints/selected-concepts]
+                [constraints/artist-typeahead]
+                [constraints/selected-artists]
+                [saved-groups]
+                [barchart]]])
