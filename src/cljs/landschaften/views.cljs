@@ -25,25 +25,42 @@
 (defn compare-pane []
   [:> semantic-ui/tab-pane [compare/compare-panel]])
 
+
+(def search-tab {:id       :search
+                 :menuItem "SEARCH"
+                 :render   #(r/as-component [sidebar/sidebar])})
+
+(def tabs [{:id       :explore
+            :menuItem "EXPLORE"
+            :render   #(r/as-component [explore-pane])}
+           {:id       :compare
+            :menuItem "COMPARE"
+            :render   #(r/as-component [compare-pane])}
+           #_{:id       :search
+              :menuItem "SEARCH"
+              :render   #(r/as-component [sidebar/sidebar])}])
+
 ;; how to show/hide 3rd tab based on screen size?
 (defn mode-tabs [current-tab-id]
   {:pre [(s/valid? ::ui-specs/mode current-tab-id)]}
-  (let [tabs      [{:id       :explore
+  (let [panes     [{:id       :explore
                     :menuItem "EXPLORE"
                     :render   #(r/as-component [explore-pane])}
                    {:id       :compare
                     :menuItem "COMPARE"
                     :render   #(r/as-component [compare-pane])}
-                   {:id       :search
-                    :menuItem "SEARCH"
-                    :render   #(r/as-component [sidebar/sidebar])}]
+                   #_{:id       :search
+                      :menuItem "SEARCH"
+                      :render   #(r/as-component [sidebar/sidebar])}]
         ; Semantic UI uses indices; Clojure uses names (keywords)
-        id->tab   (fn [id] (first (filter #(= (:id %) id) tabs)))
-        index->id (fn [index] (:id (nth tabs index)))]
+        id->tab   (fn [id] (first (filter #(= (:id %) id) panes)))
+        index->id (fn [index] (:id (nth panes index)))
+        default-index #(if (neg? %) 0 %)]
     [:> semantic-ui/tab
-     {:active-index (.indexOf (to-array tabs) (id->tab current-tab-id))
+     {:active-index  (default-index
+                       (.indexOf (to-array panes) (id->tab current-tab-id)))
       :on-tab-change #(dispatch [::events/mode-changed (index->id (goog.object/get %2 "activeIndex"))])
-      :panes       tabs}]))
+      :panes         panes}]))
 
 
 ; if window smaller than 768,
@@ -52,10 +69,15 @@
 (js/console.log "js/window.innerWidth: " js/window.innerWidth)
 
 
+;; mobile is sometimes undefined...
+;; when is js/window.innerWidth able to be called?
 (defn hello-world []
-  (let [current-mode-id (subscribe [::subs/current-mode])
-        mobile?         (subscribe [::subs/mobile?])]
-    [rc/v-box
-     :gap "8px"
-     :children [[mode-tabs @current-mode-id]]]))
+  (let [current-mode-id (subscribe [::subs/current-mode])]
+    ;mobile?         (< js/window.innerWidth 800)]       ;(subscribe [::subs/mobile?])]
+    (do
+      ;(utils/log "mobile?: " @mobile?)
+      [:> semantic-ui/container {:fluid true}
+       [mode-tabs @current-mode-id]])))
+;:gap "8px"
+;:children [[mode-tabs @current-mode-id]]]))
 

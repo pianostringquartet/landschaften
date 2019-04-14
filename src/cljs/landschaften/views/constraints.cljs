@@ -66,10 +66,14 @@
 
 (defn constraints []
   [:> semantic-ui/grid
-   [:> semantic-ui/grid-row
-    [genre-constraints]
-    [school-constraints]
-    [timeframe-constraints]]])
+   [:> semantic-ui/grid-row]
+  ;[:> semantic-ui/slist
+  ; [:> semantic-ui/slist-item]
+   [genre-constraints]
+   ;[:> semantic-ui/slist-item]
+   [school-constraints]
+   ;[:> semantic-ui/slist-item]
+   [timeframe-constraints]])
 
 
 ;; ------------------------------------------------------
