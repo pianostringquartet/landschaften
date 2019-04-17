@@ -22,56 +22,14 @@
     [preview/preview paintings show-max?]))
 
 
-(defn loading-modal []
-  [rc/modal-panel
-   :backdrop-on-click #(js/console.log "please wait ...")
-   :child [rc/v-box
-           :children [[rc/throbber :size :large]
-                      [rc/label :label "Loading..."]]]])
+(defn loading-modal [loading?]
+  [:> semantic-ui/modal {:open loading?}
+   [:> semantic-ui/loader {:size "big"} "Loading..."]])
 
-;(defn love-modal []
-;  [rc/modal-panel
-;   :backdrop-on-click #(js/console.log "you love me...")
-;   :child [rc/v-box
-;           :children [[rc/throbber :size :large]
-;                      [rc/label :label "Love..."]]]])
-
-
-;; responsive components are counted
 
 (defn b []
-  [:> semantic-ui/button "Hello"])
-
-;; need to set a max width on the items in a list
-;; otherwise, when one-item is too long, the row becomes stacked
-
-#_(defn explore-panel []
-    (let [paintings       (subscribe [::subs/paintings])
-          show-slideshow? (subscribe [::subs/show-slideshow?])]
-      [:> semantic-ui/slist {:horizontal true}
-       [:> semantic-ui/slist-item
-        [:> semantic-ui/slist-content
-         [:> semantic-ui/responsive {:max-width 799} [b]]]]
-       [:> semantic-ui/slist-item
-        [:> semantic-ui/slist-content {:floated "left"}
-         [:> semantic-ui/container {:fluid false}
-          (clojure.string/join (repeat 20 "love"))]]]
-       ;[explore @paintings @show-slideshow?]]]
-
-       [:> semantic-ui/slist-item
-        [:> semantic-ui/slist-content {:floated "right"}
-         [:> semantic-ui/responsive {:min-width 800} [sidebar/sidebar]]]]]))
-;(when @loading? [loading-modal])]))
-
-
-;; two different panels;
-;; show mobile, hide desktop when mobile
-;; and vice-versa
-
-
-;; re-com loading modal doesn't play nicely here...
-;; try semantic-ui; may need to put in different position too
-#_(when @loading? [loading-modal])
+  [sidebar/mobile-sidebar])
+  ;[:> semantic-ui/button "Hello"])
 
 
 (defn mobile-explore-panel [paintings show-slideshow?]
@@ -91,5 +49,6 @@
         show-slideshow? (subscribe [::subs/show-slideshow?])
         loading?        (subscribe [::subs/query-loading?])]
     [:> semantic-ui/slist
+      [loading-modal @loading?]
       [:> semantic-ui/responsive {:max-width 799} [mobile-explore-panel @paintings @show-slideshow?]]
       [:> semantic-ui/responsive {:min-width 800} [desktop-explore-panel @paintings @show-slideshow?]]]))

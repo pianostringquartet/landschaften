@@ -28,10 +28,18 @@
      :on-change #(on-change %)]))
 
 
+;(defn labeled-selection [label choices selections on-change]
+;  [rc/v-box
+;   :children [[rc/label :label label :class "h5"]
+;              [->selection-list choices selections on-change]]])
+
+
 (defn labeled-selection [label choices selections on-change]
-  [rc/v-box
-   :children [[rc/label :label label :class "h5"]
-              [->selection-list choices selections on-change]]])
+  [:> semantic-ui/slist
+   [:> semantic-ui/slist-item
+    [rc/label :label label :class "h5"]]
+   [:> semantic-ui/slist-item
+    [->selection-list choices selections on-change]]])
 
 
 (defn genre-constraints []
@@ -65,7 +73,7 @@
 
 
 (defn constraints []
-  [:> semantic-ui/grid
+  [:> semantic-ui/grid {:padded true}
    [:> semantic-ui/grid-row]
   ;[:> semantic-ui/slist
   ; [:> semantic-ui/slist-item]

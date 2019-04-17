@@ -17,6 +17,10 @@
     (apply goog.object/getValueByKeys semantic-ui k ks)
     (goog.object/get semantic-ui k)))
 
+(def accordion (component "Accordion"))
+(def accordion-content (component "Accordion" "Content"))
+(def accordion-title (component "Accordion" "Title"))
+
 (def container (component "Container"))
 (def button (component "Button"))
 (def segment (component "Segment"))
@@ -56,7 +60,6 @@
 (def tab-pane (component "Tab" "Pane"))
 
 (def responsive (component "Responsive"))
-
 
 
 ;; Reagent usage:

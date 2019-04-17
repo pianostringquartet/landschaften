@@ -77,11 +77,12 @@
 (defn ui-buttons []
   (let [existing-group-name         (subscribe [::subs/group-name])
         save-group-popover-showing? (subscribe [::subs/save-group-popover-showing?])]
-    [:> semantic-ui/grid
-     [:> semantic-ui/grid-row
-      [clear-button]
-      [search-button]
-      [save-group-button @existing-group-name @save-group-popover-showing?]]]))
+    ;[:> semantic-ui/grid
+    ; [:> semantic-ui/grid-row
+    [:> semantic-ui/slist {:horizontal true :relaxed true}
+     [clear-button]
+     [search-button]
+     [save-group-button @existing-group-name @save-group-popover-showing?]]))
 
 
 ;; ------------------------------------------------------
@@ -169,7 +170,7 @@
          ["Concepts" "Frequencies (%)"]]))))
 
 
-;(defn sidebar []
+;(defn -sidebar []
 ; [:> semantic-ui/grid
 ;  [:> semantic-ui/grid-row
 ;   [constraints/constraints]]
@@ -189,6 +190,27 @@
 ;   [barchart]]])
 
 
+#_(defn -sidebar []
+    [:> semantic-ui/grid
+     [:> semantic-ui/grid-row
+      [constraints/constraints]]
+     [:> semantic-ui/grid-row
+      [ui-buttons]]
+     [:> semantic-ui/grid-column
+      [:> semantic-ui/slist-item
+       [constraints/concept-typeahead]
+       [constraints/selected-concepts]
+       [constraints/artist-typeahead]
+       [constraints/selected-artists]
+       [saved-groups]]]
+
+     [:> semantic-ui/grid-row
+      [barchart]]])
+
+;[:> semantic-ui/grid-row
+
+
+
 ;; a smui LIST might be better here than smui Grid
 ;; and lists can be made HORIZONTAL
 #_(defn sidebar []
@@ -203,26 +225,152 @@
      [barchart]])
 
 
-(defn sidebar []
+
+;; the constraints are not aligned,
+;; because they're re-com?
+(defn -sidebar []
   [:> semantic-ui/slist {:relaxed true}                     ;{:horizontal true};{}:padding "4px"
    [:> semantic-ui/slist-item
+    ;[:> semantic-ui/segment
     [constraints/constraints]]
    [:> semantic-ui/slist-item
     [ui-buttons]]
    [:> semantic-ui/slist-item
-    [:> semantic-ui/segment
-     [constraints/concept-typeahead]
-   ;[:> semantic-ui/slist-item
-     [constraints/selected-concepts]]]
+    ;[:> semantic-ui/segment
+    [constraints/concept-typeahead]
+    ;[:> semantic-ui/slist-item
+    [constraints/selected-concepts]]
    [:> semantic-ui/slist-item
-    [:> semantic-ui/segment
-     [constraints/artist-typeahead]
-   ;[:> semantic-ui/slist-item
-     [constraints/selected-artists]]]
+    ;[:> semantic-ui/segment
+    [constraints/artist-typeahead]
+    ;[:> semantic-ui/slist-item
+    [constraints/selected-artists]]
    [:> semantic-ui/slist-item
     [saved-groups]]
    [:> semantic-ui/slist-item
     [barchart]]])
+
+
+
+;(defn accordion-constraints []
+;  (let [active-index (r/atom 0)
+;        on-click (fn [event props]
+;                   (do
+;                     (utils/log "accordion on-click called")
+;                     (utils/log "props: " props)
+;                     (utils/log "event: " event)
+;                     (let [index (.-index props)
+;                           new-index (if (= index @active-index)
+;                                       -1
+;                                       index)]
+;                       (reset! active-index new-index))))]
+;    (fn []
+;      [:> semantic-ui/accordion
+;       [:> semantic-ui/accordion-title
+;        {:active (= @active-index 0)
+;         :index 0
+;         :on-click on-click}
+;        [:> semantic-ui/icon {:name "dropdown"}]
+;        "genre constraints"]
+;       [:> semantic-ui/accordion-content
+;        {:active (= @active-index 0)}
+;        [constraints/genre-constraints]]
+;
+;       [:> semantic-ui/accordion-title
+;        {:active (= @active-index 1)
+;         :index 1
+;         :on-click on-click}
+;        [:> semantic-ui/icon {:name "dropdown"}]
+;        "school constraints"]
+;       [:> semantic-ui/accordion-content
+;         {:active (= @active-index 1)}
+;         [constraints/school-constraints]]
+;
+;
+;       [:> semantic-ui/accordion-title
+;        {:active (= @active-index 2)
+;         :index 2
+;         :on-click on-click}
+;        [:> semantic-ui/icon {:name "dropdown"}]
+;        "timeframe constraints"]
+;       [:> semantic-ui/accordion-content
+;        {:active (= @active-index 2)}
+;        [constraints/timeframe-constraints]]])))
+
+
+;; great -- but very noisy / verbose
+;; do the shorthand version instead?
+(defn accordion-constraints []
+  (let [active-index (r/atom 0)
+        on-click     (fn [event props]
+                       (do
+                         (utils/log "accordion on-click called")
+                         (utils/log "props: " props)
+                         (utils/log "event: " event)
+                         (let [index     (.-index props)
+                               new-index (if (= index @active-index)
+                                           -1
+                                           index)]
+                           (reset! active-index new-index))))]
+    (fn []
+      [:> semantic-ui/accordion
+       [:> semantic-ui/accordion-title
+        {:active   (= @active-index 0)
+         :index    0
+         :on-click on-click}
+        [:> semantic-ui/icon {:name "dropdown"}]
+        "genre constraints"]
+       [:> semantic-ui/accordion-content
+        {:active (= @active-index 0)}
+        [constraints/genre-constraints]]
+
+       [:> semantic-ui/accordion-title
+        {:active   (= @active-index 1)
+         :index    1
+         :on-click on-click}
+        [:> semantic-ui/icon {:name "dropdown"}]
+        "school constraints"]
+       [:> semantic-ui/accordion-content
+        {:active (= @active-index 1)}
+        [constraints/school-constraints]]
+
+
+       [:> semantic-ui/accordion-title
+        {:active   (= @active-index 2)
+         :index    2
+         :on-click on-click}
+        [:> semantic-ui/icon {:name "dropdown"}]
+        "timeframe constraints"]
+       [:> semantic-ui/accordion-content
+        {:active (= @active-index 2)}
+        [constraints/timeframe-constraints]]])))
+
+
+(defn mobile-sidebar []
+  [:> semantic-ui/slist {:relaxed true}                     ;{:horizontal true};{}:padding "4px"
+   [:> semantic-ui/slist-item
+    [accordion-constraints]]
+   ;[:> semantic-ui/segment
+   ;[constraints/constraints]]
+   [:> semantic-ui/slist-item
+    [ui-buttons]]
+   [:> semantic-ui/slist-item
+    ;[:> semantic-ui/segment
+    [constraints/concept-typeahead]
+    ;[:> semantic-ui/slist-item
+    [constraints/selected-concepts]]
+   [:> semantic-ui/slist-item
+    ;[:> semantic-ui/segment
+    [constraints/artist-typeahead]
+    ;[:> semantic-ui/slist-item
+    [constraints/selected-artists]]
+   [:> semantic-ui/slist-item
+    [saved-groups]]])
+
+
+(defn sidebar []
+  [-sidebar])
+
 
 
 #_(defn sidebar []
