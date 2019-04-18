@@ -27,6 +27,13 @@
   (fn current-mode [db _]
     (:current-mode db)))
 
+;; whether to show 'search' bar or 'results' paintings
+;; in the mobile version of the explore panel
+(reg-sub
+  ::mobile-search?
+  (fn mobile-search? [db]
+    (:mobile-search? db)))
+
 (reg-sub
   ::mobile?
   (fn mobile? [db]

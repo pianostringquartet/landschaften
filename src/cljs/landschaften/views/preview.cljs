@@ -44,7 +44,7 @@
 ;              [columns (take 50 paintings) show-max?]]])
 
 
-(defn preview [paintings show-max?]
+(defn preview [paintings show-max? n-columns]
   [:div
    [paintings-found (count paintings)]
-   [mui/mui-grid (take 50 paintings) show-max?]])
+   [mui/mui-grid (take 50 paintings) show-max? n-columns]])

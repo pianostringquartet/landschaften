@@ -42,6 +42,14 @@
     [->selection-list choices selections on-change]]])
 
 
+(defn mobile-genre-constraints []
+  (let [genre-choices    (subscribe [::subs/all-types])
+        genre-selections (subscribe [::subs/types])]
+    [->selection-list
+     (apply sorted-set @genre-choices)
+     @genre-selections
+     #(dispatch [::events/update-selected-types %])]))
+
 (defn genre-constraints []
   (let [genre-choices    (subscribe [::subs/all-types])
         genre-selections (subscribe [::subs/types])]
@@ -52,6 +60,14 @@
      #(dispatch [::events/update-selected-types %])]))
 
 
+(defn mobile-school-constraints []
+  (let [school-choices   (subscribe [::subs/all-schools])
+        selected-schools (subscribe [::subs/school-constraints])]
+    [->selection-list
+     (apply sorted-set @school-choices)
+     @selected-schools
+     #(dispatch [::events/update-selected-schools %])]))
+
 (defn school-constraints []
   (let [school-choices   (subscribe [::subs/all-schools])
         selected-schools (subscribe [::subs/school-constraints])]
@@ -61,6 +77,14 @@
      @selected-schools
      #(dispatch [::events/update-selected-schools %])]))
 
+
+(defn mobile-timeframe-constraints []
+  (let [timeframe-choices   (subscribe [::subs/all-timeframes])
+        selected-timeframes (subscribe [::subs/timeframe-constraints])]
+    [->selection-list
+     (apply sorted-set @timeframe-choices)
+     @selected-timeframes
+     #(dispatch [::events/update-selected-timeframes %])]))
 
 (defn timeframe-constraints []
   (let [timeframe-choices   (subscribe [::subs/all-timeframes])

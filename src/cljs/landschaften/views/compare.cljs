@@ -8,16 +8,31 @@
             [landschaften.views.stats :as stats]
             [landschaften.views.utils :as utils]
             [landschaften.specs :as specs]
-            [clojure.spec.alpha :as s]))
+            [clojure.spec.alpha :as s]
+            [landschaften.semantic-ui :as semantic-ui]))
 
 
-(defn group-button [group-name color on-click]
-  [rc/button
-    :label group-name
-     :on-click on-click
-     :class color ; Bootstrap
-    :style {:border-radius "30px"}]) ; curvier
+;(defn group-button [group-name color on-click]
+;  [rc/button
+;    :label group-name
+;     :on-click on-click
+;     :class color ; Bootstrap
+;    :style {:border-radius "30px"}]) ; curvier
 
+;(defn group-button [group-name color on-click]
+;  [:> landschaften.semantic-ui/button
+;   :label group-name
+;   :on-click on-click
+;   ;:class color ; Bootstrap
+;   :style {:border-radius "30px"}]) ; curvier
+
+
+(defn group-button [name color on-click]
+  [:> semantic-ui/button
+   {:color         color
+    :style         {:border-radius "30px" :padding "8px"}   ; curvier
+    :on-click      on-click}
+   name])
 
 (defn selected-button [group-name compared-group-names]
   {:pre [(string? group-name)]}
@@ -26,8 +41,8 @@
                    #(dispatch [::events/remove-compare-group-name group-name])
                    #(dispatch [::events/add-compare-group-name group-name]))
         color (if being-compared?
-                "btn btn-info"
-                "btn btn-warning")]
+                "orange"
+                "grey")]
     [group-button group-name color on-click]))
 
 
@@ -64,10 +79,17 @@
 
 
 (defn clear-button []
-  [rc/button
-   :label "CLEAR"
-   :on-click #(dispatch [::events/comparisons-cleared])
-   :class "btn btn-danger"])
+  [:> semantic-ui/button
+   {:on-click #(dispatch [::events/comparisons-cleared])
+    :color "red"
+    :compact true}
+   "CLEAR"])
+
+#_(defn clear-button []
+    [rc/button
+     :label "CLEAR"
+     :on-click #(dispatch [::events/comparisons-cleared])
+     :class "btn btn-danger"])
 
 
 (defn labeled-tables [groups]
@@ -117,13 +139,20 @@
 
 
 (defn compare-panel []
-  [rc/v-box
-   :justify :between
-   :gap "32px"
-   :padding "16px"
-   :style {:padding-left "16px" :padding-right "16px"}
-   :children [[rc/h-box
-                 :gap "32px"
-                 :children [[clear-button]
-                            [saved-groups]]]
-              [display-data]]])
+  [:> semantic-ui/slist {:relaxed true}
+   [:> semantic-ui/slist-item [clear-button]]
+   [:> semantic-ui/slist-item [saved-groups]]
+   [:> semantic-ui/slist-item [display-data]]])
+
+
+#_(defn compare-panel []
+    [rc/v-box
+     :justify :between
+     :gap "32px"
+     :padding "16px"
+     :style {:padding-left "16px" :padding-right "16px"}
+     :children [[rc/h-box
+                   :gap "32px"
+                   :children [[clear-button]
+                              [saved-groups]]]
+                [display-data]]])

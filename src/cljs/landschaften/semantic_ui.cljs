@@ -23,6 +23,8 @@
 
 (def container (component "Container"))
 (def button (component "Button"))
+(def button-group (component "Button" "Group"))
+(def button-or (component "Button" "Or"))
 (def segment (component "Segment"))
 (def dimmer (component "Dimmer"))
 (def loader (component "Loader"))

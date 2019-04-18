@@ -35,10 +35,7 @@
             :render   #(r/as-component [explore-pane])}
            {:id       :compare
             :menuItem "COMPARE"
-            :render   #(r/as-component [compare-pane])}
-           #_{:id       :search
-              :menuItem "SEARCH"
-              :render   #(r/as-component [sidebar/sidebar])}])
+            :render   #(r/as-component [compare-pane])}])
 
 ;; how to show/hide 3rd tab based on screen size?
 (defn mode-tabs [current-tab-id]
@@ -48,10 +45,7 @@
                     :render   #(r/as-component [explore-pane])}
                    {:id       :compare
                     :menuItem "COMPARE"
-                    :render   #(r/as-component [compare-pane])}
-                   #_{:id       :search
-                      :menuItem "SEARCH"
-                      :render   #(r/as-component [sidebar/sidebar])}]
+                    :render   #(r/as-component [compare-pane])}]
         ; Semantic UI uses indices; Clojure uses names (keywords)
         id->tab   (fn [id] (first (filter #(= (:id %) id) panes)))
         index->id (fn [index] (:id (nth panes index)))

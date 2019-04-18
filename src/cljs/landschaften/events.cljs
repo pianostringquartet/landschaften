@@ -33,7 +33,6 @@
   :persist-state
   ->localstore!)
 
-
 ;; rename to ':persisted-data'?
 (reg-cofx
   :user-session
@@ -106,6 +105,12 @@
   (fn mode-changed [db [_ new-mode]]
     {:pre [(s/valid? ::ui-specs/mode new-mode)]}
     (assoc db :current-mode new-mode)))
+
+(reg-event-db
+  ::toggle-mobile-search
+  interceptors
+  (fn mobile-search-toggled [db]
+    (update db :mobile-search? not)))
 
 
 ;; not really using :navigate here, so don't include in app
@@ -213,6 +218,7 @@
   (let [db-with-query-results
           (-> db (assoc :query-loading? false)
                  (assoc-in db/path:current-paintings paintings)
+                 (assoc :mobile-search? false) ; switch back to paintings
                  (assoc :examining? false))]
     (if group-name
       (-> db-with-query-results

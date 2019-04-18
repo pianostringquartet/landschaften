@@ -89,21 +89,22 @@
 ;      [grid-tile painting])]])
 
 
-(defn grid [paintings show-max? current-painting]
+(defn grid [paintings show-max? current-painting n-columns]
   ;[:div
-   (if show-max?
-     [examine/details-slideshow-modal-image current-painting show-max?]
-     [ui/GridList {:cellHeight 160 :cols 3}
-      ;[mui-items/GridList {:cellHeight 160 :cols 3}
-      (for [painting paintings]
-        ^{:key (:jpg painting)}
-        [grid-tile painting])]))
+  {:pre [(pos? n-columns)]}
+  (if show-max?
+    [examine/details-slideshow-modal-image current-painting show-max?]
+    [ui/GridList {:cellHeight 160 :cols n-columns}
+     ;[mui-items/GridList {:cellHeight 160 :cols 3}
+     (for [painting paintings]
+       ^{:key (:jpg painting)}
+       [grid-tile painting])]))
 
 
-(defn mui-grid [paintings show-max?]
+(defn mui-grid [paintings show-max? n-columns]
   (let [current-painting (re-frame.core/subscribe [::subs/current-painting])]
     [ui/MuiThemeProvider theme-defaults
-     [grid paintings show-max? @current-painting]]))
+     [grid paintings show-max? @current-painting n-columns]]))
 
 
 (defn material-grid-tile [key datum]

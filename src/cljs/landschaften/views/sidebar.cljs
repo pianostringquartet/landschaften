@@ -322,7 +322,7 @@
         "genre constraints"]
        [:> semantic-ui/accordion-content
         {:active (= @active-index 0)}
-        [constraints/genre-constraints]]
+        [constraints/mobile-genre-constraints]]
 
        [:> semantic-ui/accordion-title
         {:active   (= @active-index 1)
@@ -332,7 +332,7 @@
         "school constraints"]
        [:> semantic-ui/accordion-content
         {:active (= @active-index 1)}
-        [constraints/school-constraints]]
+        [constraints/mobile-school-constraints]]
 
 
        [:> semantic-ui/accordion-title
@@ -343,7 +343,7 @@
         "timeframe constraints"]
        [:> semantic-ui/accordion-content
         {:active (= @active-index 2)}
-        [constraints/timeframe-constraints]]])))
+        [constraints/mobile-timeframe-constraints]]])))
 
 
 (defn mobile-sidebar []
