@@ -14,10 +14,6 @@
 
 ;; make group-buttons a table like others
 
-;; make specific selected groups as accordions
-
-;;
-
 
 (defn group-button [name color on-click]
   [:> semantic-ui/button
@@ -27,27 +23,56 @@
    name])
 
 (defn selected-button [group-name compared-group-names]
-  {:pre [(string? group-name)]}
-  (let [being-compared? (some #{group-name} compared-group-names)
+  {:pre [(string? group-name) (set? compared-group-names)]}
+  (let [being-compared? (contains? compared-group-names group-name) ;(some #{group-name} compared-group-names)
         on-click        (if being-compared?
                           #(dispatch [::events/remove-compare-group-name group-name])
                           #(dispatch [::events/add-compare-group-name group-name]))
         color           (if being-compared?
                           "orange"
                           "grey")]
-    [group-button group-name color on-click]))
+    (do
+      (utils/log "compared-group-names: " compared-group-names)
+      [group-button group-name color on-click])))
 
+
+;(defn saved-groups []
+;  (let [saved-groups         (subscribe [::subs/saved-groups])
+;        compared-group-names (subscribe [::subs/compared-group-names])]
+;    [rc/v-box
+;     :gap "8px"
+;     :children [[utils/button-table
+;                 (keys @saved-groups)
+;                 2
+;                 #(selected-button % @compared-group-names)]]]))
+
+#_(defn saved-groups []
+    (let [saved-groups         (subscribe [::subs/saved-groups])
+          compared-group-names (subscribe [::subs/compared-group-names])]
+      [rc/v-box
+       :gap "8px"
+       :children [[utils/table
+
+                   ;(keys @saved-groups)
+                   2
+                   #(selected-button % @compared-group-names)]]]))
 
 (defn saved-groups []
-  (let [saved-groups         (subscribe [::subs/saved-groups])
+  (let [saved-groups       (subscribe [::subs/saved-groups])
         compared-group-names (subscribe [::subs/compared-group-names])]
-    [rc/v-box
-     :gap "8px"
-     :children [[utils/button-table
-                 (keys @saved-groups)
-                 2
-                 #(selected-button % @compared-group-names)]]]))
+        ;color              #(contains? (= % @current-group-name)
+        ;                               "orange" "grey")]
+       ;data (map)
 
+    (do
+      (utils/log "saved groups: " @saved-groups)
+      (when-not (empty? @saved-groups)
+        ;[:> semantic-ui/slist
+        [utils/table
+         (map #(selected-button % (into #{} @compared-group-names))
+              (keys @saved-groups))
+         2]))))
+       ;(map #(group-button % (color %)) (keys @saved-groups))
 
 (defn table [paintings]
   (let [n-chartpoints     (subscribe [::subs/show-n-chart-points])
@@ -78,44 +103,7 @@
    "CLEAR"])
 
 
-(defn accordion-title [title active-index index on-click]
-  [:> semantic-ui/accordion-title
-   {:active   (= active-index index)
-    :index    index
-    :on-click on-click}
-   [:> semantic-ui/icon {:name "dropdown"}]
-   title])
-
-(defn accordion-content [content active-index index]
-  [:> semantic-ui/accordion-content
-   {:active (= active-index index)}
-   content])
-
-#_(defn mobile-labeled-tables [[group-1 group-2]]
-    (let [active-index (r/atom 0)
-          on-click     (fn [event props]
-                         (do
-                           (utils/log "accordion on-click called")
-                           (utils/log "props: " props)
-                           (utils/log "event: " event)
-                           (let [index     (.-index props)
-                                 new-index (if (= index @active-index)
-                                             -1
-                                             index)]
-                             (reset! active-index new-index))))]
-        (fn []
-          [:> semantic-ui/accordion
-           [accordion-title
-            (:group-name group-1) @active-index 0 on-click]
-           [accordion-content
-             [table (:paintings group-1)] @active-index 0]
-           [accordion-title
-            (:group-name group-2) @active-index 1 on-click]
-           [accordion-content
-            [table (:paintings group-2)] @active-index 1]])))
-
-
-(defn mobile-labeled-tables [groups]
+(defn accordion-tables [groups]
   (let [->accordion-panel
         (fn [group]
           {:key (:group-name group)
@@ -166,7 +154,7 @@
 
 (defn mobile-compare-panel [groups]
   (when-not (empty? groups)
-   [mobile-labeled-tables groups]))
+   [accordion-tables groups]))
 
 
 (defn desktop-compare-panel [groups]

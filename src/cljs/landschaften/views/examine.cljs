@@ -104,50 +104,6 @@
   [:> semantic-ui/icon
    {:name "caret right" :size "big" :on-click #(dispatch [::events/go-to-next-slide painting])}])
 
-;; redo with semantic ui?
-#_(defn concept-table [painting]
-    [utils/button-table
-     (reverse (sort-by :value (:concepts painting)))
-     3
-     bubble-button])
-
-
-
-;; BETTER?: accordion, unfolds to show progress bar for each concept
-#_(defn concept-table [painting]
-    {:pre [(s/valid? ::specs/painting painting)]}
-    (let [concepts (take 20 (reverse (sort-by :value (:concepts painting))))
-          ->row    (fn [concept] [:> grid-column {:width 4}
-                                  (bubble-button concept)])]
-      [:> grid {:columns 3 :stackable true}
-       (for [concept concepts]
-         (->row concept))]))
-
-#_(defn concept-table [painting]
-    {:pre [(s/valid? ::specs/painting painting)]}
-    (let [concepts (take 20 (reverse (sort-by :value (:concepts painting))))
-          ->row    (fn [xs] [:> grid-row
-                             (into [] (map bubble-button xs))])]
-      [:> grid {:stackable true}
-       (for [xs (partition-all 3 concepts)]
-         [:grid-row
-          (when-let [x1 (first xs)] (bubble-button x1))
-          (when-let [x2 (second xs)] (bubble-button x2))
-          (when-let [x3 (nth xs 2 nil)] (bubble-button x3))])]))
-;(->row xs))]))
-
-
-#_(defn concept-table [painting]
-    {:pre [(s/valid? ::specs/painting painting)]}
-    (let [concepts (take 20 (reverse (sort-by :value (:concepts painting))))
-          ->row    (fn [concept]
-                     [:> grid-column
-                      [:> semantic-ui/progress {:size    "small"
-                                                :percent (* 100 (:value concept))}]])]
-      [:> grid {:columns 1 :stackable true}
-       (for [concept concepts]
-         (->row concept))]))
-
 
 (defn concept-table-row [current-concepts {:keys [name value]}]
   {:pre [(string? name) (float? value)]}
@@ -239,7 +195,6 @@
                            :close-on-document-click true    ; not working?
                            :close-icon              true
                            :centered                false
-                           ;:size "small"
                            :on-close                #(dispatch [::events/toggle-slideshow])}
      [:> semantic-ui/modal-content {:image true}
       [semantic-details painting @image-zoomed? @selected-concepts]]]))

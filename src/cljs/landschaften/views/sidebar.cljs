@@ -251,99 +251,22 @@
     [barchart]]])
 
 
-
-;(defn accordion-constraints []
-;  (let [active-index (r/atom 0)
-;        on-click (fn [event props]
-;                   (do
-;                     (utils/log "accordion on-click called")
-;                     (utils/log "props: " props)
-;                     (utils/log "event: " event)
-;                     (let [index (.-index props)
-;                           new-index (if (= index @active-index)
-;                                       -1
-;                                       index)]
-;                       (reset! active-index new-index))))]
-;    (fn []
-;      [:> semantic-ui/accordion
-;       [:> semantic-ui/accordion-title
-;        {:active (= @active-index 0)
-;         :index 0
-;         :on-click on-click}
-;        [:> semantic-ui/icon {:name "dropdown"}]
-;        "genre constraints"]
-;       [:> semantic-ui/accordion-content
-;        {:active (= @active-index 0)}
-;        [constraints/genre-constraints]]
-;
-;       [:> semantic-ui/accordion-title
-;        {:active (= @active-index 1)
-;         :index 1
-;         :on-click on-click}
-;        [:> semantic-ui/icon {:name "dropdown"}]
-;        "school constraints"]
-;       [:> semantic-ui/accordion-content
-;         {:active (= @active-index 1)}
-;         [constraints/school-constraints]]
-;
-;
-;       [:> semantic-ui/accordion-title
-;        {:active (= @active-index 2)
-;         :index 2
-;         :on-click on-click}
-;        [:> semantic-ui/icon {:name "dropdown"}]
-;        "timeframe constraints"]
-;       [:> semantic-ui/accordion-content
-;        {:active (= @active-index 2)}
-;        [constraints/timeframe-constraints]]])))
-
-
 ;; great -- but very noisy / verbose
 ;; do the shorthand version instead?
 (defn accordion-constraints []
-  (let [active-index (r/atom 0)
-        on-click     (fn [event props]
-                       (do
-                         (utils/log "accordion on-click called")
-                         (utils/log "props: " props)
-                         (utils/log "event: " event)
-                         (let [index     (.-index props)
-                               new-index (if (= index @active-index)
-                                           -1
-                                           index)]
-                           (reset! active-index new-index))))]
+  (let [->accordion-panel (fn [group]
+                            {:key (:name group)
+                             :title {:content (:name group)}
+                             :content {:content (r/as-component [(:component group)])}})
+        constraints [{:name "genre constraints"
+                      :component constraints/mobile-genre-constraints}
+                     {:name "school constraints"
+                      :component constraints/mobile-school-constraints}
+                     {:name "timeframe constraints"
+                      :component constraints/mobile-timeframe-constraints}]]
     (fn []
       [:> semantic-ui/accordion
-       [:> semantic-ui/accordion-title
-        {:active   (= @active-index 0)
-         :index    0
-         :on-click on-click}
-        [:> semantic-ui/icon {:name "dropdown"}]
-        "genre constraints"]
-       [:> semantic-ui/accordion-content
-        {:active (= @active-index 0)}
-        [constraints/mobile-genre-constraints]]
-
-       [:> semantic-ui/accordion-title
-        {:active   (= @active-index 1)
-         :index    1
-         :on-click on-click}
-        [:> semantic-ui/icon {:name "dropdown"}]
-        "school constraints"]
-       [:> semantic-ui/accordion-content
-        {:active (= @active-index 1)}
-        [constraints/mobile-school-constraints]]
-
-
-       [:> semantic-ui/accordion-title
-        {:active   (= @active-index 2)
-         :index    2
-         :on-click on-click}
-        [:> semantic-ui/icon {:name "dropdown"}]
-        "timeframe constraints"]
-       [:> semantic-ui/accordion-content
-        {:active (= @active-index 2)}
-        [constraints/mobile-timeframe-constraints]]])))
+       {:panels (mapv ->accordion-panel constraints)}])))
 
 
 (defn mobile-sidebar []
