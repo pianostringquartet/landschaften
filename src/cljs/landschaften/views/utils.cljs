@@ -1,11 +1,16 @@
 (ns landschaften.views.utils
   (:require [reagent.core :as r]
             [re-com.core :as rc]
-            [landschaften.semantic-ui :as semantic-ui]))
+            [landschaften.semantic-ui :as semantic-ui]
+            [clojure.spec.alpha :as s]))
 
 ;; ------------------------------------------------------
 ;; Utility functions and components
 ;; ------------------------------------------------------
+
+(defn valid? [spec data]
+  (or (s/valid? spec data)
+      (s/explain spec data)))
 
 
 (def special-chars

@@ -12,53 +12,45 @@
             [landschaften.semantic-ui :as semantic-ui]))
 
 
-;(defn group-button [group-name color on-click]
-;  [rc/button
-;    :label group-name
-;     :on-click on-click
-;     :class color ; Bootstrap
-;    :style {:border-radius "30px"}]) ; curvier
+;; make group-buttons a table like others
 
-;(defn group-button [group-name color on-click]
-;  [:> landschaften.semantic-ui/button
-;   :label group-name
-;   :on-click on-click
-;   ;:class color ; Bootstrap
-;   :style {:border-radius "30px"}]) ; curvier
+;; make specific selected groups as accordions
+
+;;
 
 
 (defn group-button [name color on-click]
   [:> semantic-ui/button
-   {:color         color
-    :style         {:border-radius "30px" :padding "8px"}   ; curvier
-    :on-click      on-click}
+   {:color    color
+    :style    {:border-radius "30px" :padding "8px"}        ; curvier
+    :on-click on-click}
    name])
 
 (defn selected-button [group-name compared-group-names]
   {:pre [(string? group-name)]}
   (let [being-compared? (some #{group-name} compared-group-names)
-        on-click (if being-compared?
-                   #(dispatch [::events/remove-compare-group-name group-name])
-                   #(dispatch [::events/add-compare-group-name group-name]))
-        color (if being-compared?
-                "orange"
-                "grey")]
+        on-click        (if being-compared?
+                          #(dispatch [::events/remove-compare-group-name group-name])
+                          #(dispatch [::events/add-compare-group-name group-name]))
+        color           (if being-compared?
+                          "orange"
+                          "grey")]
     [group-button group-name color on-click]))
 
 
 (defn saved-groups []
-  (let [saved-groups (subscribe [::subs/saved-groups])
+  (let [saved-groups         (subscribe [::subs/saved-groups])
         compared-group-names (subscribe [::subs/compared-group-names])]
     [rc/v-box
      :gap "8px"
      :children [[utils/button-table
-                   (keys @saved-groups)
-                   2
-                   #(selected-button % @compared-group-names)]]]))
+                 (keys @saved-groups)
+                 2
+                 #(selected-button % @compared-group-names)]]]))
 
 
 (defn table [paintings]
-  (let [n-chartpoints (subscribe [::subs/show-n-chart-points])
+  (let [n-chartpoints     (subscribe [::subs/show-n-chart-points])
         concept-certainty (subscribe [::subs/concept-certainty-above])]
     [graph/frequencies-chart
      "Table"
@@ -73,23 +65,66 @@
 
 (defn labeled-table [name paintings]
   [rc/v-box
-     :gap "8px"
-     :children [[rc/title :label name :level :level3]
-                [table paintings]]])
+   :gap "8px"
+   :children [[rc/title :label name :level :level3]
+              [table paintings]]])
 
 
 (defn clear-button []
   [:> semantic-ui/button
    {:on-click #(dispatch [::events/comparisons-cleared])
-    :color "red"
-    :compact true}
+    :color    "red"
+    :compact  true}
    "CLEAR"])
 
-#_(defn clear-button []
-    [rc/button
-     :label "CLEAR"
-     :on-click #(dispatch [::events/comparisons-cleared])
-     :class "btn btn-danger"])
+
+(defn accordion-title [title active-index index on-click]
+  [:> semantic-ui/accordion-title
+   {:active   (= active-index index)
+    :index    index
+    :on-click on-click}
+   [:> semantic-ui/icon {:name "dropdown"}]
+   title])
+
+(defn accordion-content [content active-index index]
+  [:> semantic-ui/accordion-content
+   {:active (= active-index index)}
+   content])
+
+#_(defn mobile-labeled-tables [[group-1 group-2]]
+    (let [active-index (r/atom 0)
+          on-click     (fn [event props]
+                         (do
+                           (utils/log "accordion on-click called")
+                           (utils/log "props: " props)
+                           (utils/log "event: " event)
+                           (let [index     (.-index props)
+                                 new-index (if (= index @active-index)
+                                             -1
+                                             index)]
+                             (reset! active-index new-index))))]
+        (fn []
+          [:> semantic-ui/accordion
+           [accordion-title
+            (:group-name group-1) @active-index 0 on-click]
+           [accordion-content
+             [table (:paintings group-1)] @active-index 0]
+           [accordion-title
+            (:group-name group-2) @active-index 1 on-click]
+           [accordion-content
+            [table (:paintings group-2)] @active-index 1]])))
+
+
+(defn mobile-labeled-tables [groups]
+  (let [->accordion-panel
+        (fn [group]
+          {:key (:group-name group)
+           :title {:content (:group-name group)}
+           :content {:content (r/as-component [table (:paintings group)])}})]
+    (fn []
+      [:> semantic-ui/accordion
+       {:defaultActiveIndex 0
+        :panels (mapv ->accordion-panel groups)}])))
 
 
 (defn labeled-tables [groups]
@@ -113,46 +148,53 @@
 
 (defn error-rate-label [error]
   [rc/v-box
-     :children
-       [[rc/p
-           {:style {:color "lightGrey"}}
-           "Error measures similarity of two groups of paintings."]
-        [rc/p
-           {:style {:color "lightGrey"}}
-           "Smaller error -> greater similarity"]
-        [rc/label
-           :label (str "Error rate: "
-                    ;   doesn't have to be "times 100"
-                    ; error rate isn't actually a percent,
-                    ; but the extremely long decimals were hard to read
-                    ;(goog.string/format "%.3f" (* error 100)))]]])
-                    (goog.string/format "%.4f" error))]]])
+   :children
+   [[rc/p
+     {:style {:color "lightGrey"}}
+     "Error measures similarity of two groups of paintings."]
+    [rc/p
+     {:style {:color "lightGrey"}}
+     "Smaller error -> greater similarity"]
+    [rc/label
+     :label (str "Error rate: "
+                 ;   doesn't have to be "times 100"
+                 ; error rate isn't actually a percent,
+                 ; but the extremely long decimals were hard to read
+                 ;(goog.string/format "%.3f" (* error 100)))]]])
+                 (goog.string/format "%.4f" error))]]])
 
 
-(defn display-data []
-  (let [compared-groups (subscribe [::subs/compared-groups])
-        error-rate (subscribe [::subs/error-rate])]
+(defn mobile-compare-panel [groups]
+  (when-not (empty? groups)
+   [mobile-labeled-tables groups]))
+
+
+(defn desktop-compare-panel [groups]
+  (when-not (empty? groups)
     [rc/h-box
-       :gap "16px"
-       :children (conj (labeled-tables @compared-groups)
-                       (when @error-rate [error-rate-label @error-rate]))]))
+     :gap "16px"
+     :children (labeled-tables groups)]))
 
 
 (defn compare-panel []
-  [:> semantic-ui/slist {:relaxed true}
-   [:> semantic-ui/slist-item [clear-button]]
-   [:> semantic-ui/slist-item [saved-groups]]
-   [:> semantic-ui/slist-item [display-data]]])
+  (let [error-rate (subscribe [::subs/error-rate])
+        groups (subscribe [::subs/compared-groups])]
+    [:> semantic-ui/slist
+     [:> semantic-ui/slist-item [clear-button]]
+     [:> semantic-ui/slist-item [saved-groups]]
+     (when @error-rate
+       [:> semantic-ui/slist-item [error-rate-label @error-rate]])
+     [:> semantic-ui/responsive {:max-width 799}
+      [mobile-compare-panel @groups]]
+     [:> semantic-ui/responsive {:min-width 800}
+      [desktop-compare-panel @groups]]]))
 
 
 #_(defn compare-panel []
-    [rc/v-box
-     :justify :between
-     :gap "32px"
-     :padding "16px"
-     :style {:padding-left "16px" :padding-right "16px"}
-     :children [[rc/h-box
-                   :gap "32px"
-                   :children [[clear-button]
-                              [saved-groups]]]
-                [display-data]]])
+    (let [error-rate (subscribe [::subs/error-rate])]
+      [:> semantic-ui/slist {:relaxed true}
+       ;[:> semantic-ui/slist-item [clear-button]]
+       ;[:> semantic-ui/slist-item [saved-groups]]
+       ;(when @error-rate
+       ;  [:> semantic-ui/slist-item [error-rate-label @error-rate]])
+       [:> semantic-ui/slist-item [display-data]]]))

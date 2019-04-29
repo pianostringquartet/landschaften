@@ -72,6 +72,8 @@
       ;(utils/log "mobile?: " @mobile?)
       [:> semantic-ui/container {:fluid true}
        [mode-tabs @current-mode-id]])))
+
+
 ;:gap "8px"
 ;:children [[mode-tabs @current-mode-id]]]))
 

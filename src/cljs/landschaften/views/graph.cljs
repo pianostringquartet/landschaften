@@ -4,7 +4,8 @@
             [re-com.core :as rc]
             [clojure.spec.alpha :as s]
             [landschaften.specs :as specs]
-            [landschaften.sample :as sample]))
+            [landschaften.sample :as sample]
+            [landschaften.views.utils :as utils]))
 
 
 ;; this component will actually be part of 'preview' screen/panel, later.
@@ -74,7 +75,8 @@
   "Return the n-many concepts' frequencies,
     where each concept's certainty is above some level."
   [paintings n-many certainty-above]
-  {:pre [(s/valid? ::specs/paintings paintings)
+  ;{:pre [(s/valid? ::specs/paintings paintings)
+  {:pre [(utils/valid? ::specs/paintings paintings)
          (int? n-many)
          (float? certainty-above)]}
   (->> (frequencies-of-concepts-with-certainty-above paintings certainty-above)

@@ -18,6 +18,7 @@
     (goog.object/get semantic-ui k)))
 
 (def accordion (component "Accordion"))
+(def accordion-panel (component "Accordion" "Panel"))
 (def accordion-content (component "Accordion" "Content"))
 (def accordion-title (component "Accordion" "Title"))
 
