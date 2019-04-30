@@ -239,7 +239,6 @@
       (map #(get groups %) names))))
 
 
-
 (defn error-ready-data [group]
   (graph/paintings->error-data
     (:paintings group)

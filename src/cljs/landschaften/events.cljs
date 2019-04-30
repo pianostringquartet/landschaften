@@ -387,12 +387,16 @@
           (>= 2 (count %))]}
   (let [already-comparing? (boolean (some #{group-name} group-names))
         already-full? (boolean (= 2 (count group-names)))]
-    (cond
-      already-comparing? group-names
-      ;; group-names MUST BE A LIST, not a vector,
-      ;; we want to prepend the group-name
-      already-full? (conj (drop-last group-names) group-name)
-      :else (conj group-names group-name))))
+
+    (do
+      (utils/log "already-comparing?: " already-comparing?)
+      (utils/log "already-full?: " already-full?)
+      (cond
+        already-comparing? group-names
+        ;; group-names MUST BE A LIST, not a vector,
+        ;; we want to prepend the group-name
+        already-full? (conj (drop-last group-names) group-name)
+        :else (conj group-names group-name)))))
 
 
 (reg-event-db
@@ -401,20 +405,24 @@
   (fn add-compare-group [db [_ group-name]]
     {:pre [(string? group-name)]}
     (let [group-names (:compared-group-names db)]
-      (assoc
-        db
-        :compared-group-names
-        (add-compare-group-name group-names group-name)))))
+      (do
+        (utils/log "add-compare-group-name called")
+        (assoc
+          db
+          :compared-group-names
+          (add-compare-group-name group-names group-name))))))
 
 
 (reg-event-db
   ::remove-compare-group-name
   interceptors
   (fn remove-compare-group-name [db [_ group-name]]
-    (assoc
-      db
-      :compared-group-names
-      (remove #{group-name} (:compared-group-names db)))))
+    (do
+      (utils/log "remove-compare-group-name called; group-name: " group-name)
+      (assoc
+        db
+        :compared-group-names
+        (remove #{group-name} (:compared-group-names db))))))
 
 
 (reg-event-db

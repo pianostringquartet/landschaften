@@ -12,9 +12,6 @@
             [landschaften.semantic-ui :as semantic-ui]))
 
 
-;; make group-buttons a table like others
-
-
 (defn group-button [name color on-click]
   [:> semantic-ui/button
    {:color    color
@@ -22,8 +19,10 @@
     :on-click on-click}
    name])
 
+
 (defn selected-button [group-name compared-group-names]
-  {:pre [(string? group-name) (set? compared-group-names)]}
+  {:pre [(string? group-name)
+         (set? compared-group-names)]}
   (let [being-compared? (contains? compared-group-names group-name) ;(some #{group-name} compared-group-names)
         on-click        (if being-compared?
                           #(dispatch [::events/remove-compare-group-name group-name])
@@ -32,47 +31,19 @@
                           "orange"
                           "grey")]
     (do
+      (utils/log "selected-button called")
       (utils/log "compared-group-names: " compared-group-names)
+
       [group-button group-name color on-click])))
 
 
-;(defn saved-groups []
-;  (let [saved-groups         (subscribe [::subs/saved-groups])
-;        compared-group-names (subscribe [::subs/compared-group-names])]
-;    [rc/v-box
-;     :gap "8px"
-;     :children [[utils/button-table
-;                 (keys @saved-groups)
-;                 2
-;                 #(selected-button % @compared-group-names)]]]))
 
-#_(defn saved-groups []
-    (let [saved-groups         (subscribe [::subs/saved-groups])
-          compared-group-names (subscribe [::subs/compared-group-names])]
-      [rc/v-box
-       :gap "8px"
-       :children [[utils/table
-
-                   ;(keys @saved-groups)
-                   2
-                   #(selected-button % @compared-group-names)]]]))
-
-(defn saved-groups []
-  (let [saved-groups       (subscribe [::subs/saved-groups])
-        compared-group-names (subscribe [::subs/compared-group-names])]
-        ;color              #(contains? (= % @current-group-name)
-        ;                               "orange" "grey")]
-       ;data (map)
-
-    (do
-      (utils/log "saved groups: " @saved-groups)
-      (when-not (empty? @saved-groups)
-        ;[:> semantic-ui/slist
-        [utils/table
-         (map #(selected-button % (into #{} @compared-group-names))
-              (keys @saved-groups))
-         2]))))
-       ;(map #(group-button % (color %)) (keys @saved-groups))
+(defn saved-group-buttons [saved-groups compared-group-names]
+  (when-not (empty? saved-groups)
+    [utils/table
+     (map #(selected-button % (into #{} compared-group-names))
+          (keys saved-groups))
+     2]))
 
 (defn table [paintings]
   (let [n-chartpoints     (subscribe [::subs/show-n-chart-points])
@@ -109,10 +80,9 @@
           {:key (:group-name group)
            :title {:content (:group-name group)}
            :content {:content (r/as-component [table (:paintings group)])}})]
-    (fn []
+    ;(fn []
       [:> semantic-ui/accordion
-       {:defaultActiveIndex 0
-        :panels (mapv ->accordion-panel groups)}])))
+       {:panels (mapv ->accordion-panel groups)}]))
 
 
 (defn labeled-tables [groups]
@@ -161,28 +131,24 @@
   (when-not (empty? groups)
     [rc/h-box
      :gap "16px"
+     ;; needs to be vector?
      :children (labeled-tables groups)]))
 
 
 (defn compare-panel []
   (let [error-rate (subscribe [::subs/error-rate])
-        groups (subscribe [::subs/compared-groups])]
+        groups (subscribe [::subs/compared-groups])
+        saved-groups         (subscribe [::subs/saved-groups])
+        compared-group-names (subscribe [::subs/compared-group-names])]
     [:> semantic-ui/slist
      [:> semantic-ui/slist-item [clear-button]]
-     [:> semantic-ui/slist-item [saved-groups]]
+     (do
+       (utils/log "compare-panel: @saved-groups: " @saved-groups)
+       (utils/log "compare-panel: @compared-group-names: " @compared-group-names)
+       [:> semantic-ui/slist-item [saved-group-buttons @saved-groups @compared-group-names]])
      (when @error-rate
        [:> semantic-ui/slist-item [error-rate-label @error-rate]])
      [:> semantic-ui/responsive {:max-width 799}
       [mobile-compare-panel @groups]]
      [:> semantic-ui/responsive {:min-width 800}
       [desktop-compare-panel @groups]]]))
-
-
-#_(defn compare-panel []
-    (let [error-rate (subscribe [::subs/error-rate])]
-      [:> semantic-ui/slist {:relaxed true}
-       ;[:> semantic-ui/slist-item [clear-button]]
-       ;[:> semantic-ui/slist-item [saved-groups]]
-       ;(when @error-rate
-       ;  [:> semantic-ui/slist-item [error-rate-label @error-rate]])
-       [:> semantic-ui/slist-item [display-data]]]))
