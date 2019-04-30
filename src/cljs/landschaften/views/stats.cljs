@@ -71,13 +71,29 @@
 ;   {"red" 0.1111111111111111, "blue" 0.3333333333333333, "white" 0.5555555555555556})
 
 
+;; this actually doesn't quite work --
+;; because it has to be manually changed in cases when
+;; the datasets don't overlap
+;(defn adjustment
+;  "How much to adjust error rate, for given feature."
+;  [feature data-1 data-2]
+;  (let [diff (- (get data-1 feature 0)
+;                (get data-2 feature 0))]
+;    (* diff diff)))
+
+
+;; this updated version is still not quite right
 (defn adjustment
   "How much to adjust error rate, for given feature."
   [feature data-1 data-2]
-  (let [diff (- (get data-1 feature 0)
-                (get data-2 feature 0))]
-    (* diff diff)))
-
+  (let [square #(* % %)
+        in-1 (get data-1 feature 0.0)
+        in-2 (get data-2 feature 0.0)]
+      (if (and (< 0 in-1) (< 0 in-2))
+        (square (- in-1 in-2))
+        (if (< 0 in-1)
+          (square in-1)
+          (square in-2)))))
 
 (defn error-rate
   "Get the error-rate (measure of (dis)similarity between two datasets.
@@ -98,53 +114,97 @@
                       features)]
     (reduce + 0 adjustments)))
 
-;(def german {"red" 2 "blue" 3 "black" 1})
-;(def french {"red" 10 "blue" 30 "white" 50})
+(def german {"red" 2 "blue" 3 "black" 1})
+(def french {"red" 10 "blue" 30 "white" 50})
+; this is exactly what Thiago had :)
+(= (error-rate french german)
+   0.4135802469135803)
+
+;; SOME OVERLAP: all features same, but values differ
+(def some-overlap-german {"red" 2 "blue" 3 "black" 1})
+(def some-overlap-french {"red" 10 "blue" 30 "black" 50})
+(error-rate some-overlap-french some-overlap-german)
+;0.22839506172839513
+
+
+;; PERFECT OVERLAP: even the values are the same
+(def all-overlap-german {"red" 2 "blue" 3 "black" 1})
+(def all-overlap-french {"red" 2 "blue" 3 "black" 1})
+(= (error-rate all-overlap-french all-overlap-german)
+   0.0)
+;; ^^ as expected when datasets are IDENTICAL
+
+(def no-overlap-german  {"red" 2 "blue" 3 "black" 1})
+(def no-overlap-french {"k" 10 "b" 30 "w" 50})
+(= (error-rate no-overlap-french no-overlap-german)
+   0.8209876543209876)
+;; ^^ same as what Thiago gets
+
+
+
+
+
+
+
+
+;;; here, you're going to assume we always get the max adjustment
+;;; ie that no French feature appears in German features, and vice-versa
+;;; so there's never going to be a genuine diff
+;;; so it's always color_count^2
+;(defn assume-no-overlap
+;  "How much to adjust error rate, for given feature.
 ;
-;(= (error-rate french german)
-;   0.4135802469135803)
-;0.4135802469135803
+;  Assumes that a given feature is present only
+;  "
+;  [feature data-1]
+;  {:post [(double? %)]}
+;  (let [feature-val (get data-1 feature 0.0)]
+;    (* feature-val feature-val)))
+;
+;;;; assuming error starts as 0
+;;;(reduce + 0 adjustments)
+;;;  0.4135802469135803 ... matches jupyter :-)
 ;
 ;
-;;; assuming error starts as 0
-;;(reduce + 0 adjustments)
-;;  0.4135802469135803 ... matches jupyter :-)
-
-
-; 'max error rate' i.e. highest error rate
-; = no German feature appears in French features; vice-versa
-;
-
-; 'min error rate' i.e. lowest error rate
-; = German and French features totally overlap
-
-;; min and max cannot be assumed to be 0 vs 1
-
-(defn error-rate2
- "Get the error-rate (measure of (dis)similarity between two datasets.
-
-  Lower error means higher similarity.
-  Higher error means less similarity.
-
-  data-1, data-2: map"
- [data-1 data-2 adjustment-fn]
- {:pre [(every? int? (vals data-1))
-        (every? int? (vals data-2))]
-  :post [(<= 0 % 1)]}
- (let [features (into #{} (concat (keys data-1) (keys data-2)))
-       normalized-data-1 (normalize data-1)
-       normalized-data-2 (normalize data-2)
-       adjustments (map
-                     #(adjustment-fn % normalized-data-1 normalized-data-2)
-                     features)]
-   (reduce + 0 adjustments)))
-
-
-;; assumes
-;; think carefully how to do this, given how you wrote
-;; your original fn
+;; 'max error rate' i.e. highest error rate
+;; = no German feature appears in French features; vice-versa
 ;;
-;; the adjustment fn approach might not work
-;;
-;(defn max-error-rate [data-1 data-2]
-;  (let [assume-no-overlap ()]))
+;
+;; 'min error rate' i.e. lowest error rate
+;; = German and French features totally overlap
+;
+;;; min and max cannot be assumed to be 0 vs 1
+;
+;(defn max-error-rate
+; "Get the maximum error-rate (measure of (dis)similarity between two datasets.
+;
+;  Assumes that no features of the datasets overlap."
+; [data-1 data-2]
+; {:pre [(every? int? (vals data-1))
+;        (every? int? (vals data-2))]
+;  :post [(<= 0 % 1)]}
+; (let [features (into #{} (concat (keys data-1) (keys data-2)))
+;       normalized-data-1 (normalize data-1)
+;       normalized-data-2 (normalize data-2)
+;       adjustments-1 (map
+;                       #(assume-no-overlap % normalized-data-1)
+;                       features)
+;       adjustments-2 (map
+;                       #(assume-no-overlap % normalized-data-2)
+;                       features)]
+;   (reduce + 0 (flatten (conj [adjustments-1] adjustments-2)))))
+;
+;(max-error-rate french german)
+;;0.8209876543209876
+;;; ^^^ this matches Thiago's code (when we supply totally non-overlapping dictionaries)
+;
+;
+;
+;;; assumes
+;;; think carefully how to do this, given how you wrote
+;;; your original fn
+;;;
+;;; the adjustment fn approach might not work
+;;;
+;;(defn max-error-rate [data-1 data-2]
+;;  (let [assume-no-overlap ()]))

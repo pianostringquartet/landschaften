@@ -101,18 +101,6 @@
                          :on-click #(utils/log "Remove Group: " name)}]
    name])
 
-
-;(defn group-button [concept]
-;  [:> semantic-ui/button
-;   {:color         "teal"
-;    :icon          true
-;    :labelPosition "right"
-;    :style         {:border-radius "30px" :padding "4px"}}
-;   [:> semantic-ui/icon {:name     "close"
-;                         :on-click #(dispatch [::events/remove-selected-concept concept])}]
-;   concept])
-
-
 (defn saved-groups []
   (let [saved-groups       (subscribe [::subs/saved-groups])
         current-group-name (subscribe [::subs/group-name])
@@ -124,24 +112,6 @@
        [utils/table
         (map #(group-button % (color %)) (keys @saved-groups))
         2]])))
-
-
-
-
-#_(defn saved-groups []
-    (let [saved-groups       (subscribe [::subs/saved-groups])
-          current-group-name (subscribe [::subs/group-name])]
-      [rc/v-box
-       :gap "8px"
-       :children [(when-not (empty? @saved-groups)
-                    [rc/label :label "Saved searches:"])
-                  [utils/button-table
-                   (keys @saved-groups)
-                   2
-                   #(group-button % (if (= % @current-group-name)
-                                      "orange"
-                                      "grey"))]]]))
-
 
 ;; ------------------------------------------------------
 ;; Sidebar
@@ -293,17 +263,3 @@
 
 (defn sidebar []
   [-sidebar])
-
-
-
-#_(defn sidebar []
-    [rc/v-box
-     :gap "8px"
-     :children [[constraints/constraints]                   ; genre, school, timeframe constraints
-                [ui-buttons]
-                [constraints/concept-typeahead]
-                [constraints/selected-concepts]
-                [constraints/artist-typeahead]
-                [constraints/selected-artists]
-                [saved-groups]
-                [barchart]]])

@@ -22,27 +22,6 @@
     [rc/v-box :children (mapv ->ui-label info-categories)]))
 
 
-
-
-#_(defn bubble-button [{:keys [name value]}]
-    {:pre [(string? name)]}
-    (let [formatted-number (goog.string/format "%.2f" value)]
-      [rc/button
-       :label (str name " (" formatted-number ")")
-       :on-click #(dispatch [::events/update-selected-concepts name])
-       :class "btn btn-info"                                ; Bootstrap
-       :style {:border-radius "30px"}]))                    ; curvier corners
-
-#_(defn responsive-image [jpg]
-    [utils/max-responsive-image
-     ;[utils/responsive-image
-     jpg
-     ;utils/widths->vw
-     utils/mid-widths->vw
-     ;utils/larger-widths->vw
-     #(dispatch [::events/toggle-image-zoomed])])
-
-
 (defn bubble-button [{:keys [name value]}]
   (let [formatted-number (goog.string/format "%.2f" value)]
     [:> button
@@ -51,7 +30,6 @@
       :on-click #(dispatch [::events/update-selected-concepts name])}
      (str name " (" formatted-number ")")]))
 
-;; NEEDS TO BE UPDATED TO USE Semantic modal
 
 (defn modal-image-view [jpg zoomed?]
   [:> semantic-ui/modal {:open                    zoomed?
@@ -66,35 +44,15 @@
       :style    {:padding "8px"}
       :on-click #(dispatch [::events/toggle-image-zoomed])}]]])
 
-#_(defn modal-image-view [jpg]
-    [rc/modal-panel
-     :backdrop-on-click #(dispatch [::events/toggle-image-zoomed])
-     :child [:img
-             {:on-click #(dispatch [::events/toggle-image-zoomed])
-              :style    {:max-height "600px"}
-              :src      jpg}]])
-
 
 ;; just pass in jpg?
 (defn image [painting zoomed?]
-  ;[:div
   [:> semantic-ui/image
    {:fluid    true
     :wrapped  true                                          ;; added for semantic ui modal
     :src      (:jpg painting)
     :style    {:padding "8px"}
     :on-click #(dispatch [::events/toggle-image-zoomed])}])
-;[modal-image-view (:jpg painting) zoomed?]])
-
-;(when image-zoomed? [modal-image-view (:jpg painting)])]]])
-
-
-;; the 'show' value needs to be determined by a different value in db
-
-;[:img {:on-click #(dispatch [::events/hide-max-image])
-;       :style {:max-width "300px"}
-;       :src (:jpg painting)}]
-
 
 (defn prev-slide-button [painting]
   [:> semantic-ui/icon

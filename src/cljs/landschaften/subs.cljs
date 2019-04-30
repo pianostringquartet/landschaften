@@ -239,11 +239,8 @@
       (map #(get groups %) names))))
 
 
-(defn error-ready-data [group]
-  (graph/paintings->error-data
-    (:paintings group)
-    20
-    0.94))
+(defn error-ready-data [paintings]
+  (graph/paintings->error-data paintings 20 0.94))
 
 
 (reg-sub
@@ -253,8 +250,37 @@
     {:pre [(s/valid? (s/coll-of ::specs/group) groups)]}
     (when (<= 2 (count groups))
       (stats/error-rate
-        (error-ready-data (first groups))
-        (error-ready-data (second groups))))))
+        (error-ready-data (:paintings (first groups)))
+        (error-ready-data (:paintings (second groups)))))))
+
+(defn scramble-concept-names [painting]
+  {:post [(s/valid? ::specs/painting %)]}
+  (let [scramble (fn [concept-set]
+                   (->> concept-set
+                        (map (fn [concept]
+                               (update concept :name #(str "#" %))))
+                        (into #{})))]
+                   ;(into #{}
+                   ;  (map (fn [concept]
+                   ;         (assoc concept :name (str "#" (:name concept))))
+                   ;       concept-set)))]
+    (update painting :concepts scramble)))
+
+
+
+(reg-sub
+  ::max-error-rate
+  :<- [::compared-groups]
+  (fn max-error-rate [groups]
+    {:pre [(s/valid? (s/coll-of ::specs/group) groups)]}
+    (when (<= 2 (count groups))
+      (stats/error-rate
+        (error-ready-data
+            ;; so that no features will overlap;
+            ;; i.e. so that no paintings' concepts will overlap
+            (map scramble-concept-names (:paintings (first groups))))
+
+        (error-ready-data (:paintings (second groups)))))))
 
 
 (reg-sub

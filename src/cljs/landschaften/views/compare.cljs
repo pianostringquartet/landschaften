@@ -104,28 +104,33 @@
 ;; could you try e.g. (actual error rate / maximum error rate)
 ;; 'max error rate' would be different for each group
 
-(defn error-rate-label [error]
-  [rc/v-box
-   :children
-   [[rc/p
-     {:style {:color "lightGrey"}}
-     "Error measures similarity of two groups of paintings."]
-    [rc/p
-     {:style {:color "lightGrey"}}
-     "Smaller error -> greater similarity"]
-    [rc/label
-     :label (str "Error rate: "
-                 ;   doesn't have to be "times 100"
-                 ; error rate isn't actually a percent,
-                 ; but the extremely long decimals were hard to read
-                 ;(goog.string/format "%.3f" (* error 100)))]]])
-                 (goog.string/format "%.4f" error))]]])
+(defn error-rate-label [error max-error]
+  (let [formatter #(goog.string/format "%.4f" %)]
+    [rc/v-box
+     :children
+     [[rc/p
+       {:style {:color "lightGrey"}}
+       "Error measures similarity of two groups of paintings."]
+      [rc/p
+       {:style {:color "lightGrey"}}
+       "Smaller error -> greater similarity"]
+      [rc/label
+       :label (str "Error rate: "
+                   (formatter error))]
+      [rc/label
+       :label (str "Max Error rate: "
+                   (formatter max-error))]
+      [:> semantic-ui/progress {
+                                ;:value (formatter error)
+                                :success "true"
+                                :percent (goog.string/format "%.1f" (* 100 (/ error max-error)))
+                                ;:total (formatter max-error)
+                                :progress "percent"}]]]))
 
 
 (defn mobile-compare-panel [groups]
   (when-not (empty? groups)
    [accordion-tables groups]))
-
 
 (defn desktop-compare-panel [groups]
   (when-not (empty? groups)
@@ -137,6 +142,7 @@
 
 (defn compare-panel []
   (let [error-rate (subscribe [::subs/error-rate])
+        max-error-rate (subscribe [::subs/max-error-rate])
         groups (subscribe [::subs/compared-groups])
         saved-groups         (subscribe [::subs/saved-groups])
         compared-group-names (subscribe [::subs/compared-group-names])]
@@ -147,7 +153,7 @@
        (utils/log "compare-panel: @compared-group-names: " @compared-group-names)
        [:> semantic-ui/slist-item [saved-group-buttons @saved-groups @compared-group-names]])
      (when @error-rate
-       [:> semantic-ui/slist-item [error-rate-label @error-rate]])
+       [:> semantic-ui/slist-item [error-rate-label @error-rate @max-error-rate]])
      [:> semantic-ui/responsive {:max-width 799}
       [mobile-compare-panel @groups]]
      [:> semantic-ui/responsive {:min-width 800}
