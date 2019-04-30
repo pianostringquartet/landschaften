@@ -114,15 +114,13 @@
 (defn display-table [group]
   [:> semantic-ui/slist-item
    {:header  (:group-name group)
-    :content (r/as-component [table (:paintings group)])}])
+    :content (r/as-component ^{:key (:group-name group)} [table (:paintings group)])}])
 
 (defn desktop-compare-panel [groups]
   (when-not (empty? groups)
     [:> semantic-ui/slist
      {:horizontal true :relaxed true}
-     (for [group groups]
-       ^{:key (:group-name group)}
-       [display-table group])]))
+     (for [group groups] [display-table group])]))
 
 
 (defn compare-panel []

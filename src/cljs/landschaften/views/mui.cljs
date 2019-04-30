@@ -119,50 +119,11 @@
     (map-indexed material-grid-tile data)]])
 
 
-
-(defn mui-explore [paintings show-slideshow? loading? mobile?]
- [:div "love"])
- ;[mui-items/Grid "container" {:spacing 24}
- ;  [mui-items/Grid "item" {:xs 12}
- ;                         [mui-items/Paper "x=12"]]
- ;  [mui-items/Grid "item" {:xs 6}
- ;                         [mui-items/Paper "x=6"]]
- ;  [mui-items/Grid "item" {:xs 6}
- ;                         [mui-items/Paper "x=6"]]])
-
-
-;; must nest MUI comps for MuiThemeProvider?; or can reuse MUiTheme provider?
-(defn mui-explore-panel []
-  (let [paintings (subscribe [::subs/paintings])
-        show-slideshow? (subscribe [::subs/show-slideshow?])
-        loading? (subscribe [::subs/query-loading?])
-        mobile? (subscribe [::subs/mobile?])]
-    [ui/MuiThemeProvider theme-defaults
-     [mui-explore @paintings @show-slideshow? @loading? @mobile?]]))
-
-    ;[rc/h-box
-    ; :justify :between
-    ; :gap "16px"
-    ; :margin "16px"
-    ; :style {:padding-left "8px" :padding-right "8px"}
-    ; :children [[explore @paintings @show-slideshow?]
-    ;            [sidebar/sidebar]
-    ;            (when @loading? [loading-modal])]]))
-
-
-
-;(defn home-page []
-;  [ui/MuiThemeProvider theme-defaults
-;    [re-com.core/v-box :children [[simple-nav]
-;                                  [re-com.core/label :label "Welcome to a simple, example application."]
-;                                  [:h4 "Welcome to a simple, example application."]]]])
-
-
-
-;; this divs etc. won't play well with re-com flex...
-;(defn home-page []
-;  [ui/MuiThemeProvider theme-defaults
-;   [:div
-;    [simple-nav]
-;    [:div
-;     [:h2 "Welcome to a simple, example application."]]]])
+;;; must nest MUI comps for MuiThemeProvider?; or can reuse MUiTheme provider?
+;(defn mui-explore-panel []
+;  (let [paintings (subscribe [::subs/paintings])
+;        show-slideshow? (subscribe [::subs/show-slideshow?])
+;        loading? (subscribe [::subs/query-loading?])
+;        mobile? (subscribe [::subs/mobile?])]
+;    [ui/MuiThemeProvider theme-defaults
+;     [mui-explore @paintings @show-slideshow? @loading? @mobile?]]))
