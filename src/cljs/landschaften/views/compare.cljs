@@ -30,11 +30,7 @@
         color           (if being-compared?
                           "orange"
                           "grey")]
-    (do
-      (utils/log "selected-button called")
-      (utils/log "compared-group-names: " compared-group-names)
-
-      [group-button group-name color on-click])))
+      [group-button group-name color on-click]))
 
 
 
@@ -77,25 +73,11 @@
 (defn accordion-tables [groups]
   (let [->accordion-panel
         (fn [group]
-          {:key (:group-name group)
-           :title {:content (:group-name group)}
+          {:key     (:group-name group)
+           :title   {:content (:group-name group)}
            :content {:content (r/as-component [table (:paintings group)])}})]
-    ;(fn []
-      [:> semantic-ui/accordion
-       {:panels (mapv ->accordion-panel groups)}]))
-
-
-(defn labeled-tables [groups]
-  (mapv
-    (fn [group] [labeled-table (:group-name group) (:paintings group)])
-    groups))
-
-
-(defn error-ready-data [group]
-  (graph/paintings->error-data
-    (:paintings group)
-    20
-    0.94))
+    [:> semantic-ui/accordion
+     {:panels (mapv ->accordion-panel groups)}]))
 
 
 ;; want to do a progress bar etc. for error rate;
@@ -120,30 +102,33 @@
       [rc/label
        :label (str "Max Error rate: "
                    (formatter max-error))]
-      [:> semantic-ui/progress {
-                                ;:value (formatter error)
-                                :success "true"
-                                :percent (goog.string/format "%.1f" (* 100 (/ error max-error)))
-                                ;:total (formatter max-error)
+      [:> semantic-ui/progress {:success  "true"
+                                :percent  (goog.string/format "%.1f" (* 100 (/ error max-error)))
                                 :progress "percent"}]]]))
 
 
 (defn mobile-compare-panel [groups]
   (when-not (empty? groups)
-   [accordion-tables groups]))
+    [accordion-tables groups]))
+
+(defn display-table [group]
+  [:> semantic-ui/slist-item
+   {:header  (:group-name group)
+    :content (r/as-component [table (:paintings group)])}])
 
 (defn desktop-compare-panel [groups]
   (when-not (empty? groups)
-    [rc/h-box
-     :gap "16px"
-     ;; needs to be vector?
-     :children (labeled-tables groups)]))
+    [:> semantic-ui/slist
+     {:horizontal true :relaxed true}
+     (for [group groups]
+       ^{:key (:group-name group)}
+       [display-table group])]))
 
 
 (defn compare-panel []
-  (let [error-rate (subscribe [::subs/error-rate])
-        max-error-rate (subscribe [::subs/max-error-rate])
-        groups (subscribe [::subs/compared-groups])
+  (let [error-rate           (subscribe [::subs/error-rate])
+        max-error-rate       (subscribe [::subs/max-error-rate])
+        groups               (subscribe [::subs/compared-groups])
         saved-groups         (subscribe [::subs/saved-groups])
         compared-group-names (subscribe [::subs/compared-group-names])]
     [:> semantic-ui/slist

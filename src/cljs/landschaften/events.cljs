@@ -268,6 +268,7 @@
 (defn update-selected-concepts [db selected-concept]
   (update-in db db/path:concept-constraints conj selected-concept))
 
+
 (reg-event-db
  ::update-selected-concepts
  interceptors
