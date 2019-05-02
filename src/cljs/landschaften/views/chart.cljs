@@ -1,4 +1,4 @@
-(ns landschaften.views.graph
+(ns landschaften.views.chart
   (:require [reagent.core :as r]
             [re-frame.core :refer [subscribe dispatch]]
             [re-com.core :as rc]
@@ -95,7 +95,6 @@
       (frequencies->google-chart-data)))
 
 
-;; (->percent (/ certainty total))
 (defn ->percent [frequency total]
   (->> (/ frequency total)
        (double)

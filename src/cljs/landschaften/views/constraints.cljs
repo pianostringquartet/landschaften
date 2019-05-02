@@ -27,63 +27,35 @@
      :model selections
      :on-change #(on-change %)]))
 
-(defn labeled-selection [label choices selections on-change]
+
+(defn labeled-constraints [label selection-list-component]
   [:> semantic-ui/slist
-   [:> semantic-ui/slist-item
-    [rc/label :label label :class "h5"]]
-   [:> semantic-ui/slist-item
-    [->selection-list choices selections on-change]]])
+   [:> semantic-ui/slist-item [rc/label :label label :class "h5"]]
+   [:> semantic-ui/slist-item [selection-list-component]]])
 
-
-(defn mobile-genre-constraints []
-  (let [genre-choices    (subscribe [::subs/all-types])
-        genre-selections (subscribe [::subs/types])]
-    [->selection-list
-     (apply sorted-set @genre-choices)
-     @genre-selections
-     #(dispatch [::events/update-selected-types %])]))
 
 (defn genre-constraints []
   (let [genre-choices    (subscribe [::subs/all-types])
         genre-selections (subscribe [::subs/types])]
-    [labeled-selection
-     "genres"
+    [->selection-list
      (apply sorted-set @genre-choices)
      @genre-selections
      #(dispatch [::events/update-selected-types %])]))
 
 
-(defn mobile-school-constraints []
-  (let [school-choices   (subscribe [::subs/all-schools])
-        selected-schools (subscribe [::subs/school-constraints])]
-    [->selection-list
-     (apply sorted-set @school-choices)
-     @selected-schools
-     #(dispatch [::events/update-selected-schools %])]))
-
 (defn school-constraints []
   (let [school-choices   (subscribe [::subs/all-schools])
         selected-schools (subscribe [::subs/school-constraints])]
-    [labeled-selection
-     "schools"
+    [->selection-list
      (apply sorted-set @school-choices)
      @selected-schools
      #(dispatch [::events/update-selected-schools %])]))
 
-
-(defn mobile-timeframe-constraints []
-  (let [timeframe-choices   (subscribe [::subs/all-timeframes])
-        selected-timeframes (subscribe [::subs/timeframe-constraints])]
-    [->selection-list
-     (apply sorted-set @timeframe-choices)
-     @selected-timeframes
-     #(dispatch [::events/update-selected-timeframes %])]))
 
 (defn timeframe-constraints []
   (let [timeframe-choices   (subscribe [::subs/all-timeframes])
         selected-timeframes (subscribe [::subs/timeframe-constraints])]
-    [labeled-selection
-     "timeframes"
+    [->selection-list
      (apply sorted-set @timeframe-choices)
      @selected-timeframes
      #(dispatch [::events/update-selected-timeframes %])]))
@@ -91,10 +63,9 @@
 
 (defn constraints []
   [:> semantic-ui/grid {:padded true}
-   [:> semantic-ui/grid-row]
-   [genre-constraints]
-   [school-constraints]
-   [timeframe-constraints]])
+   [labeled-constraints "genres" genre-constraints]
+   [labeled-constraints "schools" school-constraints]
+   [labeled-constraints "timeframes" timeframe-constraints]])
 
 
 ;; ------------------------------------------------------
@@ -110,15 +81,18 @@
                 (for [option options :when (matches-input? (utils/replace-special-chars option))]
                   {:title option})))))
 
+
 (defn on-search-change [options search-val result-set obj]
   (let [user-input (.-value obj)]
     (do
       (reset! search-val user-input)
       (reset! result-set (suggestions user-input options 6)))))
 
+
 (defn get-result [semantic-ui-object]
   {:post [(string? %)]}
   (get-in (js->clj semantic-ui-object) ["result" "title"]))
+
 
 (defn concept-typeahead []
   (let [text-val (r/atom "")
@@ -130,6 +104,7 @@
         :on-search-change #(on-search-change @concepts text-val results %2)
         :results          @results
         :value            @text-val}])))
+
 
 (defn artist-typeahead []
   (let [text-val (r/atom "")
@@ -153,6 +128,7 @@
                          :on-click #(dispatch [::events/remove-selected-concept concept])}]
    concept])
 
+
 (defn artist-button [artist]
   [:> semantic-ui/button
    {:color         "teal"
@@ -168,8 +144,25 @@
   (let [selected-concepts (subscribe [::subs/concept-constraints])]
     [utils/table (map concept-button @selected-concepts) 2]))
 
+
 (defn selected-artists []
   (let [selected-artists (subscribe [::subs/artist-constraints])]
     [utils/table
      (map artist-button @selected-artists)
      2]))
+
+
+(defn accordion-constraints []
+  (let [->accordion-panel (fn [constraint]
+                            {:key     (:name constraint)
+                             :title   {:content (:name constraint)}
+                             :content {:content (r/as-component [(:component constraint)])}})
+        constraints       [{:name      "genre constraints"
+                            :component genre-constraints}
+                           {:name      "school constraints"
+                            :component school-constraints}
+                           {:name      "timeframe constraints"
+                            :component timeframe-constraints}]]
+    (fn []
+      [:> semantic-ui/accordion
+       {:panels (mapv ->accordion-panel constraints)}])))

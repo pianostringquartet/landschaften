@@ -11,7 +11,6 @@
   #{"Russian" "Bohemian" "Catalan" "Finnish" "Greek" "Irish" "Norwegian" "Other" "Polish" "Portuguese" "Swedish" "Hungarian" "Scottish" "Swiss" "Danish" "Austrian"})
 
 
-
 (def example-group
   {:group-name            "Michelangelo's saints"
    :paintings             #{}
@@ -20,26 +19,6 @@
    :timeframe-constraints #{"1451-1500", "1501-1550", "1551-1600"}
    :concept-constraints   #{"saint"}
    :artist-constraints    #{"MICHELANGELO Buonarroti"}})
-
-
-(def french-landscapes
-  {:group-name            "French landscapes"
-   :paintings             #{}                               ;; normally not possible
-   :type-constraints      #{"landscape"}
-   :school-constraints    #{"French"}
-   :timeframe-constraints #{}
-   :artist-constraints    #{}
-   :concept-constraints   #{}})
-
-
-(def spanish-religious
-  {:group-name            "Spanish religious"
-   :paintings             #{}                               ;; normally not possible
-   :type-constraints      #{"religious"}
-   :school-constraints    #{"Spanish"}
-   :timeframe-constraints #{}
-   :artist-constraints    #{}
-   :concept-constraints   #{"religion"}})
 
 
 (def default-db
@@ -75,13 +54,6 @@
    :show-n-chart-points     20
    ;; only interested in concepts with certainty above ...
    :concept-certainty-above 0.94})
-
-;; ah, can i use the same namespaced keyword?
-;; e.g. could I use the default db as the 'source of truth'?
-;; e.g. access landschacften.db/slideshow-paintings
-;; in the subs and events?
-;::show-slideshow? false})
-
 
 
 ;; PATHS: abstractions over db-locations

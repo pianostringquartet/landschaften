@@ -101,19 +101,9 @@
   (load-interceptors!)
   (fetch-docs!)
   (hook-browser-navigation!)
-
-
-  ;; either
-  ;(rf/dispatch-sync [::core-events/initialize-db])
   (rf/dispatch-sync [::core-events/initialize-app])
-
-  ;; these need to be retrieved from backend on start;
-  ;; too many to hardcode in db;
-  ;; these are persisted in db but are independent of
   (rf/dispatch-sync [::core-events/retrieve-artists-names])
   (rf/dispatch-sync [::core-events/retrieve-concepts])
-
-  ;; this is for development purposes
   (rf/dispatch-sync [::core-events/query-started (:group-name db/example-group)])
   (mount-components))
 

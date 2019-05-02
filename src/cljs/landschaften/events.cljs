@@ -104,7 +104,9 @@
   interceptors
   (fn mode-changed [db [_ new-mode]]
     {:pre [(s/valid? ::ui-specs/mode new-mode)]}
-    (assoc db :current-mode new-mode)))
+    (do
+      (utils/log "::mode-changed called")
+      (assoc db :current-mode new-mode))))
 
 (reg-event-db
   ::toggle-mobile-search

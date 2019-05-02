@@ -12,7 +12,6 @@
 
 (s/def ::mode #(contains? MODES %))
 
-
 (s/def ::google-chart-type
   #(contains? #{"LineChart" "PieChart" "ColumnChart" "AreaChart", "BarChart" "Table"} %))
 

@@ -6,8 +6,8 @@
             [landschaften.helpers :as helpers]
             [landschaften.views.utils :as utils]
             [day8.re-frame.tracing :refer-macros [fn-traced]]
-            [landschaften.views.graph :as graph]
-            [landschaften.views.stats :as stats]))
+            [landschaften.views.chart :as graph]
+            [landschaften.variance :as stats]))
 
 
 
@@ -34,10 +34,10 @@
   (fn mobile-search? [db]
     (:mobile-search? db)))
 
-(reg-sub
-  ::mobile?
-  (fn mobile? [db]
-    (< js/window.innerWidth 800)))
+;(reg-sub
+;  ::mobile?
+;  (fn mobile? [db]
+;    (< js/window.innerWidth 800)))
 
 ;; ------------------------------------------------------
 ;; Constraint choices
@@ -188,34 +188,13 @@
       (utils/log "(:show-slideshow? db): " (:show-slideshow? db))
       (:show-slideshow? db))))
 
+
 (reg-sub
   ::image-zoomed?
   (fn image-zoomed? [db _]
     (do
-      (utils/log "image-zoomed?: " (::db/image-zoomed? db))
-      (::db/image-zoomed? db))))
-
-
-
-;; ------------------------------------------------------
-;; Slideshow
-;; ------------------------------------------------------
-
-
-;; current slide should just be the current painting
-;(reg-sub
-;  ::current-slide)
-
-;; don't need "paintings vs. slideshow paintings"
-
-;; try namespace qualified keywords
-;(reg-sub
-;  :<- [:paintings]
-;  ::slideshow-paintings
-;  (fn slideshow-paintings [paintings _]
-;    {:post [(s/valid? (s/nilable ::specs/paintings) %)]}
-;    (::db/slideshow-paintings db)))
-
+      (utils/log "image-zoomed?: " (:image-zoomed? db))
+      (:image-zoomed? db))))
 
 
 ;; ------------------------------------------------------
@@ -260,13 +239,7 @@
                         (map (fn [concept]
                                (update concept :name #(str "#" %))))
                         (into #{})))]
-                   ;(into #{}
-                   ;  (map (fn [concept]
-                   ;         (assoc concept :name (str "#" (:name concept))))
-                   ;       concept-set)))]
     (update painting :concepts scramble)))
-
-
 
 (reg-sub
   ::max-error-rate
@@ -276,8 +249,7 @@
     (when (<= 2 (count groups))
       (stats/error-rate
         (error-ready-data
-            ;; so that no features will overlap;
-            ;; i.e. so that no paintings' concepts will overlap
+            ;; so that no paintings' concepts will overlap
             (map scramble-concept-names (:paintings (first groups))))
 
         (error-ready-data (:paintings (second groups)))))))

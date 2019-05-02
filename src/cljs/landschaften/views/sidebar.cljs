@@ -9,11 +9,9 @@
             [landschaften.specs :as specs]
             [landschaften.views.constraints :as constraints]
             [landschaften.views.utils :as utils]
-            [landschaften.views.graph :as graph]
+            [landschaften.views.chart :as graph]
             [landschaften.semantic-ui :as semantic-ui]
-            [ghostwheel.core
-             :as g
-             :refer [check >defn >defn- >fdef => | <- ?]]))
+            [ghostwheel.core :as g :refer [check >defn >defn- >fdef => | <- ?]]))
 
 
 ;; ------------------------------------------------------
@@ -27,6 +25,7 @@
    {:color    "green"
     :on-click #(dispatch [::events/query-started nil])}
    "SEARCH"])
+
 
 (defn clear-button []
   [:> semantic-ui/button
@@ -50,16 +49,16 @@
 
 ;; add logic here for removing a group!
 ;; needs to be removed from local storage too
-(defn save-group-button-trigger []
+(defn save-search-button-trigger []
   [:> semantic-ui/button
    {:color    "blue"
     :on-click #(dispatch [::events/show-save-group-popover])}
    "SAVE SEARCH"])
 
 
-(defn save-group-button [existing-group-name popover-showing?]
+(defn save-search-button [existing-group-name popover-showing?]
   [:> semantic-ui/popup
-   {:trigger  (r/as-component [save-group-button-trigger])
+   {:trigger  (r/as-component [save-search-button-trigger])
     :open     popover-showing?
     :on       "click"
     :position "bottom left"                                 ; to avoid re-com selection-list CSS conflict
@@ -83,7 +82,7 @@
     [:> semantic-ui/slist {:horizontal true :relaxed true}
      [clear-button]
      [search-button]
-     [save-group-button @existing-group-name @save-group-popover-showing?]]))
+     [save-search-button @existing-group-name @save-group-popover-showing?]]))
 
 
 ;; ------------------------------------------------------
@@ -102,11 +101,6 @@
                          :on-click #(utils/log "Remove Group: " name)}]
    name])
 
-;; why must list passed to utils/table be a VECTOR?
-;; it's because they're going to be updated dynamically, by changing subs?
-;; maybe a parens "breaks" the cycle, and so the components are no longer scene as nesting?
-
-;;
 (defn saved-groups-buttons []
   (let [saved-groups       (subscribe [::subs/saved-groups])
         current-group-name (subscribe [::subs/group-name])
@@ -124,24 +118,17 @@
 ;; - 'control center' for exploring paintings
 ;; ------------------------------------------------------
 
+
 (defn barchart []
   (let [paintings  (subscribe [::subs/paintings])
         chart-data (graph/paintings->percentage-chart-data @paintings 20 0.94)]
-    (do
-      (utils/log "chart-data: " (str chart-data))           ;
-      (when (> (count @paintings) 0)
-        [graph/frequencies-chart
-         "BarChart"
-         chart-data
-         "Search's most frequent concepts"
-         ["Concepts" "Frequencies (%)"]]))))
+    (when (> (count @paintings) 0)
+      [graph/frequencies-chart
+       "BarChart"
+       chart-data
+       "Search's most frequent concepts"
+       ["Concepts" "Frequencies (%)"]])))
 
-(defn as-semantic-ui-list-items
-  "Assumes components is list of Hiccup forms,
-  i.e. don't wrap in brackets again."
-  [components]
-  (for [[i component] (utils/enumerate components)]
-    ^{:key i} [:> semantic-ui/slist-item component]))
 
 (defn desktop-sidebar []
   (let [components (list [constraints/constraints]
@@ -153,26 +140,11 @@
                          [saved-groups-buttons]
                          [barchart])]
     [:> semantic-ui/slist {:relaxed true}
-     (as-semantic-ui-list-items components)]))
+     (utils/as-semantic-ui-list-items components)]))
 
-
-(defn accordion-constraints []
-  (let [->accordion-panel (fn [constraint]
-                            {:key     (:name constraint)
-                             :title   {:content (:name constraint)}
-                             :content {:content (r/as-component [(:component constraint)])}})
-        constraints [{:name "genre constraints"
-                      :component constraints/mobile-genre-constraints}
-                     {:name "school constraints"
-                      :component constraints/mobile-school-constraints}
-                     {:name "timeframe constraints"
-                      :component constraints/mobile-timeframe-constraints}]]
-    (fn []
-      [:> semantic-ui/accordion
-       {:panels (mapv ->accordion-panel constraints)}])))
 
 (defn mobile-sidebar []
-  (let [components (list [accordion-constraints]
+  (let [components (list [constraints/accordion-constraints]
                          [ui-buttons]
                          [:div [constraints/concept-typeahead]
                                [constraints/selected-concepts]]
@@ -180,4 +152,4 @@
                                    [constraints/selected-artists]]
                          [saved-groups-buttons])]
     [:> semantic-ui/slist {:relaxed true}
-     (as-semantic-ui-list-items components)]))
+     (utils/as-semantic-ui-list-items components)]))

@@ -1,10 +1,10 @@
-(ns landschaften.views.explore
+(ns landschaften.screens.explore
   (:require [reagent.core :as r]
             [re-frame.core :refer [subscribe dispatch]]
             [re-com.core :as rc]
             [landschaften.subs :as subs]
             [landschaften.events :as events]
-            [landschaften.views.preview :as preview]
+            [landschaften.views.paintings :as preview]
             [landschaften.views.sidebar :as sidebar]
             [landschaften.semantic-ui :as semantic-ui]))
 
@@ -17,10 +17,10 @@
 
 (defn explore
   "Find paintings satisfying constraints"
-  [paintings show-max? n-columns]
+  [current-painting paintings show-max? n-columns]
   (if (empty? paintings)
     [no-paintings-found]
-    [preview/preview paintings show-max? n-columns]))
+    [preview/paintings-grid current-painting paintings show-max? n-columns]))
 
 
 (defn loading-modal [loading?]
@@ -42,22 +42,23 @@
                             "paintings"]]))
 
 
-(defn mobile-explore-panel [paintings show-slideshow? search?]
+(defn mobile-explore-panel [current-painting paintings show-slideshow? search?]
   [:> semantic-ui/slist
    [:> semantic-ui/slist-item [search-or-results search?]]
    (if search?
      [:> semantic-ui/slist-item [sidebar/mobile-sidebar]]
-     [:> semantic-ui/slist-item [explore paintings show-slideshow? 2]])])
+     [:> semantic-ui/slist-item [explore current-painting paintings show-slideshow? 2]])])
 
 
-(defn desktop-explore-panel [paintings show-slideshow?]
+(defn desktop-explore-panel [current-painting paintings show-slideshow?]
   [:> semantic-ui/grid {:columns 2}
-   [:> semantic-ui/grid-column [explore paintings show-slideshow? 3]]
+   [:> semantic-ui/grid-column [explore current-painting paintings show-slideshow? 3]]
    [:> semantic-ui/grid-column [sidebar/desktop-sidebar]]])
 
 
 (defn explore-panel []
   (let [paintings       (subscribe [::subs/paintings])
+        current-painting (subscribe [::subs/current-painting])
         show-slideshow? (subscribe [::subs/show-slideshow?])
         loading?        (subscribe [::subs/query-loading?])
         mobile-search?  (subscribe [::subs/mobile-search?])]
@@ -65,7 +66,7 @@
      [loading-modal @loading?]
      [:> semantic-ui/responsive
       {:max-width 799}
-      [mobile-explore-panel @paintings @show-slideshow? @mobile-search?]]
+      [mobile-explore-panel @current-painting @paintings @show-slideshow? @mobile-search?]]
      [:> semantic-ui/responsive
       {:min-width 800}
-      [desktop-explore-panel @paintings @show-slideshow?]]]))
+      [desktop-explore-panel @current-painting @paintings @show-slideshow?]]]))
