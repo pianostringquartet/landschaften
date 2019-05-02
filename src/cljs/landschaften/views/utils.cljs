@@ -23,6 +23,11 @@
     (clojure.string/join [lower-case (clojure.string/upper-case lower-case)])))
 
 
+(def enumerate (partial map-indexed
+                        (fn [index item] (list index item))))
+
+;(defn mapv-indexed (into [] (map-indexed)))
+
 (def special->normal-char
   (into {}
     (map
@@ -63,20 +68,16 @@
         rows (mapv ->table-row (partition-all row-size buttons))]
     [rc/v-box :gap "4px" :children rows]))
 
+;; assumes data are react-components
 (defn table [data n-per-row]
   {:pre [(int? n-per-row)]}
   (let [rows (partition-all n-per-row data)]
     [:> semantic-ui/slist
-     (do
-       (log "(count rows): " (count rows))
-       (log "rows: " rows)
-       (for [row rows]
-         ^{:key (first row)}
-         [:> semantic-ui/slist {:horizontal true}
-          row]))]))
+       (for [[index datum] (map-indexed (fn [i r] [i r]) rows)]
+          ^{:key index}
+          [:> semantic-ui/slist {:horizontal true} datum])]))
 
-;; create the element first,
-;; THEN hand it over to be UI-arranged
+
 
 (defn ->table-column [data]
   ;(let [boxes (map (fn [datum] [rc/box :size "auto" :child datum]) data)]

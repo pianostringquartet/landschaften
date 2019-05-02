@@ -28,7 +28,7 @@
 
 (def search-tab {:id       :search
                  :menuItem "SEARCH"
-                 :render   #(r/as-component [sidebar/sidebar])})
+                 :render   #(r/as-component [sidebar/desktop-sidebar])})
 
 (def tabs [{:id       :explore
             :menuItem "EXPLORE"
@@ -56,24 +56,9 @@
       :on-tab-change #(dispatch [::events/mode-changed (index->id (goog.object/get %2 "activeIndex"))])
       :panes         panes}]))
 
-
-; if window smaller than 768,
-; use 3 tabs: EXPLORE, SEARCH, COMPARE
-; where 'searching' on SEARCH tab brings you back to EXPLORE tab
-(js/console.log "js/window.innerWidth: " js/window.innerWidth)
-
-
-;; mobile is sometimes undefined...
-;; when is js/window.innerWidth able to be called?
 (defn hello-world []
   (let [current-mode-id (subscribe [::subs/current-mode])]
-    ;mobile?         (< js/window.innerWidth 800)]       ;(subscribe [::subs/mobile?])]
-    (do
-      ;(utils/log "mobile?: " @mobile?)
-      [:> semantic-ui/container {:fluid true}
-       [mode-tabs @current-mode-id]])))
+    [:> semantic-ui/container {:fluid true}
+     [mode-tabs @current-mode-id]]))
 
-
-;:gap "8px"
-;:children [[mode-tabs @current-mode-id]]]))
 

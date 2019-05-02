@@ -13,8 +13,7 @@
 
 ;; needed for async load of
 ;; ... take a different, better approach?
-(defonce google-chart-ready?
-         (r/atom false))
+(defonce google-chart-ready? (r/atom false))
 
 ;; asychronously initialize the Google Chart
 ;; need initialize-chart and initialize-table versions
@@ -40,8 +39,8 @@
                                    (clj->js options))))]
     [rc/box :child
      (if @google-chart-ready?
-       [:div {:style {:height "500px"} :ref ref-fn}
-        [rc/label :label "Loading..."]])]))
+       [:div {:style {:height "500px"} :ref ref-fn}]
+       [rc/label :label "Loading..."])]))
 
 
 (defn chart [some-data chart-type title]

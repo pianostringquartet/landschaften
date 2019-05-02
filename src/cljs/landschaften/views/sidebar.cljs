@@ -10,7 +10,10 @@
             [landschaften.views.constraints :as constraints]
             [landschaften.views.utils :as utils]
             [landschaften.views.graph :as graph]
-            [landschaften.semantic-ui :as semantic-ui]))
+            [landschaften.semantic-ui :as semantic-ui]
+            [ghostwheel.core
+             :as g
+             :refer [check >defn >defn- >fdef => | <- ?]]))
 
 
 ;; ------------------------------------------------------
@@ -77,8 +80,6 @@
 (defn ui-buttons []
   (let [existing-group-name         (subscribe [::subs/group-name])
         save-group-popover-showing? (subscribe [::subs/save-group-popover-showing?])]
-    ;[:> semantic-ui/grid
-    ; [:> semantic-ui/grid-row
     [:> semantic-ui/slist {:horizontal true :relaxed true}
      [clear-button]
      [search-button]
@@ -101,16 +102,21 @@
                          :on-click #(utils/log "Remove Group: " name)}]
    name])
 
-(defn saved-groups []
+;; why must list passed to utils/table be a VECTOR?
+;; it's because they're going to be updated dynamically, by changing subs?
+;; maybe a parens "breaks" the cycle, and so the components are no longer scene as nesting?
+
+;;
+(defn saved-groups-buttons []
   (let [saved-groups       (subscribe [::subs/saved-groups])
         current-group-name (subscribe [::subs/group-name])
         color              #(if (= % @current-group-name) "orange" "grey")]
     (when-not (empty? @saved-groups)
-      ;[:> semantic-ui/slist
       [:div
        [rc/label :label "Saved searches:"]
        [utils/table
-        (map #(group-button % (color %)) (keys @saved-groups))
+          (mapv (fn [group-name] [group-button group-name (color group-name)])
+                (keys @saved-groups))
         2]])))
 
 ;; ------------------------------------------------------
@@ -118,116 +124,43 @@
 ;; - 'control center' for exploring paintings
 ;; ------------------------------------------------------
 
-
-;; The chart apparently interferes with Flexbox alignment.
-;; e.g. introduces a larger margin on the right
-;; ... need to revisit Google chart, especially not have it in own :div
-;; not sure how to do that...
-;; it's okay to have the push the side...
-;; also, may be hiding this anyway
 (defn barchart []
   (let [paintings  (subscribe [::subs/paintings])
-        ;chart-data (graph/paintings->chart-data @paintings 20 0.94)]
         chart-data (graph/paintings->percentage-chart-data @paintings 20 0.94)]
     (do
       (utils/log "chart-data: " (str chart-data))           ;
       (when (> (count @paintings) 0)
-        ;[graph/frequencies-chart "BarChart" chart-data "Search's most frequent concepts" ["Concepts" "Frequencies"]]))))
         [graph/frequencies-chart
          "BarChart"
          chart-data
          "Search's most frequent concepts"
          ["Concepts" "Frequencies (%)"]]))))
 
+(defn as-semantic-ui-list-items
+  "Assumes components is list of Hiccup forms,
+  i.e. don't wrap in brackets again."
+  [components]
+  (for [[i component] (utils/enumerate components)]
+    ^{:key i} [:> semantic-ui/slist-item component]))
 
-;(defn -sidebar []
-; [:> semantic-ui/grid
-;  [:> semantic-ui/grid-row
-;   [constraints/constraints]]
-;  [:> semantic-ui/grid-row
-;   [ui-buttons]]
-;  [:> semantic-ui/grid-row
-;   [constraints/concept-typeahead]]
-;  [:> semantic-ui/grid-row
-;   [constraints/selected-concepts]]
-;  [:> semantic-ui/grid-row
-;   [constraints/artist-typeahead]]
-;  [:> semantic-ui/grid-row
-;   [constraints/selected-artists]]
-;  [:> semantic-ui/grid-row
-;   [saved-groups]]
-;  [:> semantic-ui/grid-row
-;   [barchart]]])
-
-
-#_(defn -sidebar []
-    [:> semantic-ui/grid
-     [:> semantic-ui/grid-row
-      [constraints/constraints]]
-     [:> semantic-ui/grid-row
-      [ui-buttons]]
-     [:> semantic-ui/grid-column
-      [:> semantic-ui/slist-item
-       [constraints/concept-typeahead]
-       [constraints/selected-concepts]
-       [constraints/artist-typeahead]
-       [constraints/selected-artists]
-       [saved-groups]]]
-
-     [:> semantic-ui/grid-row
-      [barchart]]])
-
-;[:> semantic-ui/grid-row
-
-
-
-;; a smui LIST might be better here than smui Grid
-;; and lists can be made HORIZONTAL
-#_(defn sidebar []
+(defn desktop-sidebar []
+  (let [components (list [constraints/constraints]
+                         [ui-buttons]
+                         [:div [constraints/concept-typeahead]
+                               [constraints/selected-concepts]]
+                         [:div [constraints/artist-typeahead]
+                               [constraints/selected-artists]]
+                         [saved-groups-buttons]
+                         [barchart])]
     [:> semantic-ui/slist {:relaxed true}
-     [constraints/constraints]
-     [ui-buttons]
-     [constraints/concept-typeahead]
-     [constraints/selected-concepts]
-     [constraints/artist-typeahead]
-     [constraints/selected-artists]
-     [saved-groups]
-     [barchart]])
+     (as-semantic-ui-list-items components)]))
 
 
-
-;; the constraints are not aligned,
-;; because they're re-com?
-(defn -sidebar []
-  [:> semantic-ui/slist {:relaxed true}                     ;{:horizontal true};{}:padding "4px"
-   [:> semantic-ui/slist-item
-    ;[:> semantic-ui/segment
-    [constraints/constraints]]
-   [:> semantic-ui/slist-item
-    [ui-buttons]]
-   [:> semantic-ui/slist-item
-    ;[:> semantic-ui/segment
-    [constraints/concept-typeahead]
-    ;[:> semantic-ui/slist-item
-    [constraints/selected-concepts]]
-   [:> semantic-ui/slist-item
-    ;[:> semantic-ui/segment
-    [constraints/artist-typeahead]
-    ;[:> semantic-ui/slist-item
-    [constraints/selected-artists]]
-   [:> semantic-ui/slist-item
-    [saved-groups]]
-   [:> semantic-ui/slist-item
-    [barchart]]])
-
-
-;; great -- but very noisy / verbose
-;; do the shorthand version instead?
 (defn accordion-constraints []
-  (let [->accordion-panel (fn [group]
-                            {:key (:name group)
-                             :title {:content (:name group)}
-                             :content {:content (r/as-component [(:component group)])}})
+  (let [->accordion-panel (fn [constraint]
+                            {:key     (:name constraint)
+                             :title   {:content (:name constraint)}
+                             :content {:content (r/as-component [(:component constraint)])}})
         constraints [{:name "genre constraints"
                       :component constraints/mobile-genre-constraints}
                      {:name "school constraints"
@@ -238,28 +171,13 @@
       [:> semantic-ui/accordion
        {:panels (mapv ->accordion-panel constraints)}])))
 
-
 (defn mobile-sidebar []
-  [:> semantic-ui/slist {:relaxed true}                     ;{:horizontal true};{}:padding "4px"
-   [:> semantic-ui/slist-item
-    [accordion-constraints]]
-   ;[:> semantic-ui/segment
-   ;[constraints/constraints]]
-   [:> semantic-ui/slist-item
-    [ui-buttons]]
-   [:> semantic-ui/slist-item
-    ;[:> semantic-ui/segment
-    [constraints/concept-typeahead]
-    ;[:> semantic-ui/slist-item
-    [constraints/selected-concepts]]
-   [:> semantic-ui/slist-item
-    ;[:> semantic-ui/segment
-    [constraints/artist-typeahead]
-    ;[:> semantic-ui/slist-item
-    [constraints/selected-artists]]
-   [:> semantic-ui/slist-item
-    [saved-groups]]])
-
-
-(defn sidebar []
-  [-sidebar])
+  (let [components (list [accordion-constraints]
+                         [ui-buttons]
+                         [:div [constraints/concept-typeahead]
+                               [constraints/selected-concepts]]
+                         [:div     [constraints/artist-typeahead]
+                                   [constraints/selected-artists]]
+                         [saved-groups-buttons])]
+    [:> semantic-ui/slist {:relaxed true}
+     (as-semantic-ui-list-items components)]))

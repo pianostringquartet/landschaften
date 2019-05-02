@@ -27,13 +27,6 @@
      :model selections
      :on-change #(on-change %)]))
 
-
-;(defn labeled-selection [label choices selections on-change]
-;  [rc/v-box
-;   :children [[rc/label :label label :class "h5"]
-;              [->selection-list choices selections on-change]]])
-
-
 (defn labeled-selection [label choices selections on-change]
   [:> semantic-ui/slist
    [:> semantic-ui/slist-item
@@ -99,12 +92,8 @@
 (defn constraints []
   [:> semantic-ui/grid {:padded true}
    [:> semantic-ui/grid-row]
-  ;[:> semantic-ui/slist
-  ; [:> semantic-ui/slist-item]
    [genre-constraints]
-   ;[:> semantic-ui/slist-item]
    [school-constraints]
-   ;[:> semantic-ui/slist-item]
    [timeframe-constraints]])
 
 
