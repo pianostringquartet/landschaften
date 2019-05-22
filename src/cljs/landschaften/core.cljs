@@ -104,7 +104,7 @@
   (rf/dispatch-sync [::core-events/initialize-app])
   (rf/dispatch-sync [::core-events/retrieve-artists-names])
   (rf/dispatch-sync [::core-events/retrieve-concepts])
-  (rf/dispatch-sync [::core-events/query-started (:group-name db/example-group)])
+  (rf/dispatch-sync [::core-events/add-default-group? db/example-group])
   (mount-components))
 
 

@@ -6,8 +6,8 @@
             [landschaften.helpers :as helpers]
             [landschaften.views.utils :as utils]
             [day8.re-frame.tracing :refer-macros [fn-traced]]
-            [landschaften.views.chart :as graph]
-            [landschaften.variance :as stats]))
+            [landschaften.variance :as stats]
+            [ghostwheel.core :as g :refer [check >defn >defn- >fdef => | <- ?]]))
 
 
 
@@ -33,11 +33,6 @@
   ::mobile-search?
   (fn mobile-search? [db]
     (:mobile-search? db)))
-
-;(reg-sub
-;  ::mobile?
-;  (fn mobile? [db]
-;    (< js/window.innerWidth 800)))
 
 ;; ------------------------------------------------------
 ;; Constraint choices
@@ -206,8 +201,6 @@
   (fn compared-group-names [db _]
     (:compared-group-names db)))
 
-;; look at the names in the db, then just
-
 ;; should only allow two at a time
 (reg-sub
   ::compared-groups
@@ -218,8 +211,13 @@
       (map #(get groups %) names))))
 
 
+(defn paintings->error-data [paintings n-many certainty-above]
+  (->> (utils/paintings->concepts-frequencies paintings n-many certainty-above)
+       (into {})))
+
+
 (defn error-ready-data [paintings]
-  (graph/paintings->error-data paintings 20 0.94))
+  (paintings->error-data paintings 20 0.94))
 
 
 (reg-sub
@@ -232,6 +230,7 @@
         (error-ready-data (:paintings (first groups)))
         (error-ready-data (:paintings (second groups)))))))
 
+
 (defn scramble-concept-names [painting]
   {:post [(s/valid? ::specs/painting %)]}
   (let [scramble (fn [concept-set]
@@ -240,6 +239,7 @@
                                (update concept :name #(str "#" %))))
                         (into #{})))]
     (update painting :concepts scramble)))
+
 
 (reg-sub
   ::max-error-rate
@@ -251,7 +251,6 @@
         (error-ready-data
             ;; so that no paintings' concepts will overlap
             (map scramble-concept-names (:paintings (first groups))))
-
         (error-ready-data (:paintings (second groups)))))))
 
 

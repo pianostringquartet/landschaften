@@ -43,11 +43,9 @@
                  [day8.re-frame/tracing-stubs "0.5.1"]
                  [gnl/ghostwheel "0.3.8"]
                  [gnl/ghostwheel.tracer "0.3.8"]
+                 [day8.re-frame/test "0.1.5"]
                  [reagent-material-ui "0.2.5"] ;; library, with incomplete list of mui tags
-                 ;[cljsjs/material-ui "0.19.0-0"]] ;; for adding missing mui
-                 ;[cljsjs/material-ui "3.9.1-0"]] ;; was using an ancient version?!
                  [cljsjs/semantic-ui-react "0.84.0-0"]]
-                 ;[cljsjs/semantic-ui-react "0.84.0-0"]]
 
 
   :min-lein-version "2.0.0"
@@ -101,7 +99,7 @@
                                  [ring/ring-mock "0.3.2"]
                                  [day8.re-frame/tracing "0.5.1"]]
                   :plugins      [[com.jakemccrary/lein-test-refresh "0.19.0"]
-                                 ; [lein-doo "0.1.10"]
+                                 [lein-doo "0.1.10"]
                                  [lein-figwheel "0.5.16"]
                                  [org.clojure/clojurescript "1.10.339"]]
                   :cljsbuild

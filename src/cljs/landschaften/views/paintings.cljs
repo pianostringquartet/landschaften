@@ -19,7 +19,8 @@
 
 (defn grid [current-painting paintings show-max? n-columns]
   {:pre [(pos? n-columns)
-         (s/nilable (s/valid? ::specs/painting current-painting))]}
+         (s/nilable (s/valid? ::specs/painting current-painting))
+         (boolean? show-max?)]}
   [:div
    (when show-max?
      [examine/painting-modal! current-painting show-max?])

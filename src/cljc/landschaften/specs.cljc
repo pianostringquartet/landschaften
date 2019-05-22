@@ -33,11 +33,9 @@
     #(contains? SCHOOLS %)
     #(s/gen SCHOOLS)))
 
-;(s/def ::type #(contains? PAINTING-TYPES %))
-
 (s/def ::type
   (s/with-gen
-    #(contains? PAINTING-TYPES %) ; the sepc
+    #(contains? PAINTING-TYPES %) ; the spec
     #(s/gen PAINTING-TYPES))) ; the gen
 
 (s/def ::title string?)

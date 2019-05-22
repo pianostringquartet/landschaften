@@ -27,11 +27,16 @@
 
 (>defn ->localstore! [state]
   [::specs/app-db => nil?]
-  (do (.setItem js/localStorage ls-auth-key state)))
+  (do
+    (utils/log "->localstore! called")
+    (utils/log "(:current-group state): " (:current-group state))
+    (.setItem js/localStorage ls-auth-key state)))
+
 
 (reg-fx
   :persist-state
   ->localstore!)
+
 
 ;; rename to ':persisted-data'?
 (reg-cofx
@@ -41,26 +46,6 @@
                                     (some->> (.getItem js/localStorage ls-auth-key)))]
         (assoc cofx :user-session data-from-local-storage))))
 
-
-;; NOTE:
-;; Since we use email-address strings in localStorage to
-;; indicate an active session, and '@' is not valid Clojure,
-;; we don't use (cljs.reader/read-string <localStorage content>).
-
-;(defn ls->cljs [a-str]
-;  (if (= "false" a-str) false a-str))
-
-(reg-event-fx
-  ::retrieve-user-session
-  [(inject-cofx :user-session)]
-  (fn retrieve-user-session [cofx [_ _]]
-    (let [db (:db cofx)
-          session (:user-session cofx)]
-          ;session (cljs.reader/read-string (:user-session cofx))]
-      (do
-        (utils/log "retrieved session type: " (type session))
-        {:db (assoc db :session session)}))))
-      ;{:db (assoc db :session (ls->cljs session))})))
 
 ;; spec check
 (defn check-and-throw
@@ -94,6 +79,7 @@
     (let [persisted-db (:user-session cofx)]
       (do
         (utils/log "(keys (:saved-groups persisted-db): " (keys (:saved-groups persisted-db)))
+        (utils/log ":type-constraints of (:saved-groups persisted-db): " (map #(-> % second :type-constraints) (:saved-groups persisted-db)))
         (if (s/valid? ::specs/app-db persisted-db)
           {:db persisted-db}
           {:db db/default-db})))))
@@ -107,6 +93,7 @@
     (do
       (utils/log "::mode-changed called")
       (assoc db :current-mode new-mode))))
+
 
 (reg-event-db
   ::toggle-mobile-search
@@ -127,11 +114,6 @@
   :set-docs
   (fn [db [_ docs]]
     (assoc db :docs docs)))
-
-
-;; putting in and pulling from local storage
-;;
-
 
 
 ;; ------------------------------------------------------
@@ -200,34 +182,100 @@
      {:column "author" :values (into [] (get-in db db/path:artist-constraints))}
      {:column "name" :values (into [] (get-in db db/path:concept-constraints))}}))
 
+;; rather than drawing 'hidden params' from the db within the handler,
+;; would be better to pass in everything needed for action explicitly,
+;; within the action itself
 
+;; but, from the UI itself, will you really have access to the constraints?
+
+;; you could instead optionally add another action,
+;; which would be triggered
+
+
+;; this is impure! the desired logic of the fn
+;; actually depends on db being a certain way
+
+;; querying alone is fine
+;;
+;;;; but when group-name is provided, we're implicitly depending on db having
+;;;; certain constraints!
 (reg-event-fx
   ::query-started
   (fn query [cofx [_ group-name]]
     (let [db (:db cofx)]
-      {:db (assoc db :query-loading? true)
-       :post-request
-        {:uri "/query"
-         :params {:constraints (->query-constraints db)}
-         :handler #(dispatch [::query-succeeded % group-name])}})))
+      (do
+        (utils/log "::query-started called")
+        (utils/log "::query-started constraints: " (->query-constraints db))
+        {:db (assoc db :query-loading? true)
+         :post-request
+          {:uri "/query"
+           ;; grabs the persisted constraints from the database?
+           :params {:constraints (->query-constraints db)}
+           :handler #(dispatch [::query-succeeded % group-name])}}))))
+
+
+(reg-event-fx
+  ::add-default-group?
+  (fn add-default-group? [cofx [_ default-group]]
+    (let [db (:db cofx)]
+      (if-not (:current-group db)
+        {:db (assoc db :current-group default-group)
+         :dispatch [::query-started (:group-name default-group)]}
+        db))))
+
+;; the action of 'adding a new group' depends on a NAME and a set of CONSTRAINTS
+;; so the "function" that does this needs to explicitly receive a NAME and CONSTRAINTS
+
+;; EITHER:
+;; [dispatch :add-group] (and then handler pulls NEW-NAME and CONSTRAINTS from db)
+;; OR:
+;; [dispatch :add-group new-name constraints] (and handler just does request)
+;; WOULD BE FINE.
+
+
+(reg-event-fx
+  ::add-group
+  (fn [db [_ group-name constraints]]))
 
 
 (declare toggle-save-group-popover-showing)
+
 (declare save-current-group)
 
 
+;; big picture:
+
+;; when a query has succeeded,
+;; we're receiving a new set of paintings
+;; and MAYBE a new-group-name
+
+;; new paintings should always be
+
+
+;; maybe save the current-group first?
+;; =
+
+
+
+;; persist-state receives the db returned from this fn
+;; assume we're calling it with a
 (defn on-query-succeeded [db paintings group-name]
   (let [db-with-query-results
           (-> db (assoc :query-loading? false)
                  (assoc-in db/path:current-paintings paintings)
                  (assoc :mobile-search? false) ; switch back to paintings
                  (assoc :examining? false))]
-    (if group-name
-      (-> db-with-query-results
-          (toggle-save-group-popover-showing false) ;; hide the popover
-          (save-current-group group-name))
-      db-with-query-results)))
 
+    (do
+      (utils/log "on-query-succeeded: group-name: " group-name)
+      (if group-name
+        (-> db-with-query-results
+            (toggle-save-group-popover-showing false) ;; hide the popover
+            (save-current-group group-name))
+        db-with-query-results))))
+
+
+;; you persist the data whenever a query succeeds
 
 (reg-event-fx
   ::query-succeeded
@@ -354,7 +402,9 @@
             (assoc-in [:saved-groups group-name] updated-group)
             (assoc :current-group updated-group))]
     (do
-      (utils/log "save-current-group: returning x: " x)
+      (utils/log "save-current-group CALLED")
+      (utils/log "(keys (:saved-groups db): " (keys (:saved-groups x)))
+      (utils/log ":type-constraints of (:saved-groups db): " (map #(-> % second :type-constraints) (:saved-groups x)))
       x)))
 
 
@@ -364,8 +414,10 @@
         new-db (assoc db :current-group new-current-group)]
 
     (do
+     (utils/log "bring-in-group CALLED: " group-name)
      (utils/log "bring-in-group group-name: " group-name)
-     (utils/log "bring-in-group new-db: " new-db)
+     (utils/log "(keys (:saved-groups db): " (keys (:saved-groups new-db)))
+     (utils/log ":type-constraints of (:saved-groups db): " (map #(-> % second :type-constraints) (:saved-groups new-db)))
      (utils/log "bring-in-group new-current-group: " new-current-group)
      new-db)))
 
@@ -467,7 +519,7 @@
   ::toggle-image-zoomed
   interceptors
   (fn toggle-image-zoomed [db _]
-    (update db ::db/image-zoomed? not)))
+    (update db :image-zoomed? not)))
 
 ;; ------------------------------------------------------
 ;; Slidesow

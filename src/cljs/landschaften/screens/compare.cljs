@@ -4,8 +4,7 @@
             [re-com.core :as rc]
             [landschaften.subs :as subs]
             [landschaften.events :as events]
-            [landschaften.views.chart :as graph]
-            [landschaften.variance :as stats]
+            [landschaften.views.chart :as chart]
             [landschaften.views.utils :as utils]
             [landschaften.specs :as specs]
             [clojure.spec.alpha :as s]
@@ -14,7 +13,7 @@
 
 
 (>defn clear-button! []
-  [ => vector?]
+  [=> vector?]
   [:> semantic-ui/button
    {:on-click #(dispatch [::events/comparisons-cleared])
     :color    "red"
@@ -24,7 +23,7 @@
 
 (>defn saved-search-button! [group-name compared-group-names]
   [string? set? => vector?]
-  (let [being-compared? (contains? compared-group-names group-name)] ;(some #{group-name} compared-group-names)
+  (let [being-compared? (contains? compared-group-names group-name)]
     [:> semantic-ui/button
      {:color    (if being-compared? "orange" "grey")
       :on-click (if being-compared?
@@ -32,7 +31,6 @@
                   #(dispatch [::events/add-compare-group-name group-name]))
       :style    {:border-radius "30px" :padding "8px"}}
      group-name]))
-
 
 
 (defn saved-search-buttons [saved-groups compared-group-names]
@@ -43,64 +41,56 @@
      2]))
 
 
-(defn table-chart [paintings]
-  (let [n-chartpoints     (subscribe [::subs/show-n-chart-points])
-        concept-certainty (subscribe [::subs/concept-certainty-above])]
-    [graph/frequencies-chart
-     "Table"
-     (graph/paintings->percentage-chart-data paintings @n-chartpoints @concept-certainty)
-     "Concepts' Frequencies"
-     ["Concepts" "Frequencies (%)"]]))
+(>defn similarity-measurement
+  "Progress bar displaying error-rate between two datasets as"
+  [error max-error]
+  [double? double? => vector?]
+  (let [as-percent    (* 100 (/ error max-error))
+        as-similarity (- 100 as-percent)]
+    [:> semantic-ui/progress {:success  "true"
+                              ;:percent  (goog.string/format "%.1f" (* 100 (/ error max-error)))
+                              :percent  (goog.string/format "%.1f" as-similarity)
+                              :progress "percent"}]))
 
 
-(>defn table-with-headers [group]
-  [::specs/group => vector?]
+(>defn error-rate-label [error max-error]
+  [double? double? => vector?]
+  [:> semantic-ui/slist {:relaxed true}
+   [:> semantic-ui/slist-item
+    [rc/label :label "How similar the two groups of paintings are:"]]
+   [:> semantic-ui/slist-item
+    [similarity-measurement error max-error]]])
+
+
+(>defn table-with-header [group-name paintings]
+  [string? ::specs/paintings => vector?]
   [:> semantic-ui/slist-item
-   {:header  (:group-name group)
-    :content (r/as-component ^{:key (:group-name group)} [table-chart (:paintings group)])}])
+   {:header  group-name
+    :content (r/as-component ^{:key group-name} [:p "Chart goes here."])}])
+;:content (r/as-component ^{:key group-name} [chart/table-chart paintings])}])
 
 
-(>defn accordion-tables [groups]
-  [(s/coll-of ::specs/group) => vector?]
-  (let [->accordion-panel
-        (fn [group]
-          {:key     (:group-name group)
-           :title   {:content (:group-name group)}
-           :content {:content (r/as-component [table-chart (:paintings group)])}})]
-    [:> semantic-ui/accordion
-     {:panels (mapv ->accordion-panel groups)}]))
-
-
-(defn error-rate-label [error max-error]
-  (let [formatter #(goog.string/format "%.4f" %)
-        note (fn [s] [rc/p {:style {:color "lightGrey"}} s])
-        label (fn [s] [rc/label :label s])
-        components [[note "Error measures similarity of two groups of paintings."]
-                    [note "Smaller error -> greater similarity"]
-                    [label (str "Error rate: " (formatter error))]
-                    [label (str "Max Error rate: " (formatter max-error))]]]
-    [:> semantic-ui/slist {:relaxed true}
-     (utils/as-semantic-ui-list-items components)
-     [:> semantic-ui/progress {:success  "true"
-                               :percent  (goog.string/format "%.1f" (* 100 (/ error max-error)))
-                               :progress "percent"}]]))
-
-
-(defn mobile-compare-panel [groups]
+(defn desktop-compare-screen [groups]
   (when-not (empty? groups)
-    [accordion-tables groups]))
-
-
-(defn desktop-compare-panel [groups]
-  (when-not (empty? groups)
-    [:> semantic-ui/slist
-     {:horizontal true :relaxed true}
+    [:> semantic-ui/slist {:horizontal true :relaxed true}
      (for [group groups]
        ^{:key (:group-name group)}
-       [table-with-headers group])]))
+       [table-with-header (:group-name group) (:paintings group)])]))
 
 
-(defn compare-panel []
+(defn mobile-compare-screen [groups]
+  (when-not (empty? groups)
+    (let [->accordion-panel
+          (fn [group]
+            {:key     (:group-name group)
+             :title   {:content (:group-name group)}
+             :content {:content (r/as-component [:p "Mobile chart goes here."])}})]
+      ;:content {:content (r/as-component [chart/table-chart (:paintings group)])}})]
+      [:> semantic-ui/accordion
+       {:panels (mapv ->accordion-panel groups)}])))
+
+
+(defn compare-screen []
   (let [error-rate           (subscribe [::subs/error-rate])
         max-error-rate       (subscribe [::subs/max-error-rate])
         groups               (subscribe [::subs/compared-groups])
@@ -111,7 +101,7 @@
      [:> semantic-ui/slist-item [saved-search-buttons @saved-groups @compared-group-names]]
      (when @error-rate
        [:> semantic-ui/slist-item [error-rate-label @error-rate @max-error-rate]])
-     [:> semantic-ui/responsive {:max-width 799}
-      [mobile-compare-panel @groups]]
-     [:> semantic-ui/responsive {:min-width 800}
-      [desktop-compare-panel @groups]]]))
+     [:> semantic-ui/responsive {:max-width 799} [mobile-compare-screen @groups]]
+     [:> semantic-ui/responsive {:min-width 800} [desktop-compare-screen @groups]]]))
+
+(check)

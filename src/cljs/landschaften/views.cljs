@@ -21,7 +21,7 @@
                        {:key      :compare
                         :id       :compare
                         :menuItem "COMPARE"
-                        :render   #(r/as-component [:> semantic-ui/tab-pane [compare/compare-panel]])}]
+                        :render   #(r/as-component [:> semantic-ui/tab-pane [compare/compare-screen]])}]
         ; Semantic UI uses indices; Clojure uses names (keywords)
         id->tab       (fn [id] (first (filter #(= (:id %) id) panes)))
         index->id     (fn [index] (:id (nth panes index)))
@@ -35,7 +35,7 @@
 (defn hello-world []
   (let [current-mode-id (subscribe [::subs/current-mode])]
     [:> semantic-ui/container {:fluid true}
-     [mode-tabs! @current-mode-id]]))
+     [mode-tabs! (or @current-mode-id :explore)]]))
 
 
 (check)

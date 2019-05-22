@@ -3,13 +3,12 @@
             [re-frame.core :refer [subscribe dispatch]]
             [re-com.core :as rc]
             [landschaften.subs :as subs]
-            [landschaften.db :as db]
             [clojure.spec.alpha :as s]
             [landschaften.events :as events]
             [landschaften.specs :as specs]
             [landschaften.views.constraints :as constraints]
             [landschaften.views.utils :as utils]
-            [landschaften.views.chart :as graph]
+            [landschaften.views.chart :as chart]
             [landschaften.semantic-ui :as semantic-ui]
             [ghostwheel.core :as g :refer [check >defn >defn- >fdef => | <- ?]]))
 
@@ -65,6 +64,7 @@
     :on-close #(dispatch [::events/hide-save-group-popover])
     :content  (r/as-component
                 [:> semantic-ui/input {:on-change    #(js/console.log "ON CHANGE")
+                                       :autoFocus true
                                        :placeholder  existing-group-name
                                        :on-key-press (fn [react-synthetic-event]
                                                        (let [enter-pressed? (= "Enter" (aget react-synthetic-event "key"))
@@ -118,27 +118,17 @@
 ;; - 'control center' for exploring paintings
 ;; ------------------------------------------------------
 
-
-(defn barchart []
-  (let [paintings  (subscribe [::subs/paintings])
-        chart-data (graph/paintings->percentage-chart-data @paintings 20 0.94)]
-    (when (> (count @paintings) 0)
-      [graph/frequencies-chart
-       "BarChart"
-       chart-data
-       "Search's most frequent concepts"
-       ["Concepts" "Frequencies (%)"]])))
-
-
 (defn desktop-sidebar []
-  (let [components (list [constraints/constraints]
+  (let [paintings (subscribe [::subs/paintings])
+        components (list [constraints/constraints]
                          [ui-buttons]
                          [:div [constraints/concept-typeahead]
                                [constraints/selected-concepts]]
                          [:div [constraints/artist-typeahead]
                                [constraints/selected-artists]]
-                         [saved-groups-buttons]
-                         [barchart])]
+                         [saved-groups-buttons])]
+                         ;(when (> (count @paintings) 0)
+                         ;  [chart/bar-chart @paintings]))]
     [:> semantic-ui/slist {:relaxed true}
      (utils/as-semantic-ui-list-items components)]))
 

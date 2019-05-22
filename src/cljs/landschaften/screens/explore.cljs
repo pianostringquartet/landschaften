@@ -4,7 +4,7 @@
             [re-com.core :as rc]
             [landschaften.subs :as subs]
             [landschaften.events :as events]
-            [landschaften.views.paintings :as preview]
+            [landschaften.views.paintings :as paintings]
             [landschaften.views.sidebar :as sidebar]
             [landschaften.semantic-ui :as semantic-ui]))
 
@@ -20,7 +20,7 @@
   [current-painting paintings show-max? n-columns]
   (if (empty? paintings)
     [no-paintings-found]
-    [preview/paintings-grid current-painting paintings show-max? n-columns]))
+    [paintings/paintings-grid current-painting paintings show-max? n-columns]))
 
 
 (defn loading-modal [loading?]

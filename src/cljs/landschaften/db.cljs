@@ -40,7 +40,7 @@
    :all-artists             #{}                             ; retrieve from backend
 
    ;; EXPLORE & COMPARE
-   :current-group           example-group                   ; :current-group sample/sample-group
+   :current-group           nil
    :show-group-name-prompt? false
    :saved-groups            {}                              ;{(:group-name french-landscapes) french-landscapes}
    ;                          (:group-name spanish-religious) spanish-religious}
