@@ -90,17 +90,38 @@
        {:panels (mapv ->accordion-panel groups)}])))
 
 
+(def data-1 [0.2 0.4 0.6 0.8 0.10 0.12 0.14 0.16 0.18 0.20 0.81 0.54 0.91 0.85 0.99])
+(def data-2 [0.1 0.3 0.5 0.7 0.7 0.9 0.1 0.3 0.17 0.19 0.91 0.92 0.9 0.9889 0.99])
+(def labels  ["2009" "2010" "2011" "2012" "2013" "2014" "2015" "2016" "2017" "2018" "2019" "2020" "2021" "2022" "2023"])
+
 (defn compare-screen []
   (let [error-rate           (subscribe [::subs/error-rate])
         max-error-rate       (subscribe [::subs/max-error-rate])
         groups               (subscribe [::subs/compared-groups])
         saved-groups         (subscribe [::subs/saved-groups])
-        compared-group-names (subscribe [::subs/compared-group-names])]
+        compared-group-names (subscribe [::subs/compared-group-names])
+        compared-groups (subscribe [::subs/compared-groups])]
     [:> semantic-ui/slist
      [:> semantic-ui/slist-item [clear-button!]]
      [:> semantic-ui/slist-item [saved-search-buttons @saved-groups @compared-group-names]]
      (when @error-rate
        [:> semantic-ui/slist-item [error-rate-label @error-rate @max-error-rate]])
+
+
+     ;; radar chart requires that at least two groups are being compared
+     (when @error-rate
+       ;[chart/radar-chart-component data-1 data-2 labels])
+
+       ; works :)
+       ;[chart/radar-chart-component {:data-1 data-1 :data-2 data-2 :labels labels}]
+
+       [chart/radar-chart-component (chart/compared-groups->radar-chart-data! @compared-groups)])
+
+
+     ;(when @error-rate
+     ; [chart/radar-chart-component]]
+       ;(:paintings (first @compared-groups))
+       ;                            (:paintings (second @compared-groups))])
      [:> semantic-ui/responsive {:max-width 799} [mobile-compare-screen @groups]]
      [:> semantic-ui/responsive {:min-width 800} [desktop-compare-screen @groups]]]))
 

@@ -129,6 +129,7 @@
                          [saved-groups-buttons])]
                          ;(when (> (count @paintings) 0)
                          ;  [chart/bar-chart @paintings]))]
+                         ;[chart/rev-chartjs-component])]
     [:> semantic-ui/slist {:relaxed true}
      (utils/as-semantic-ui-list-items components)]))
 
