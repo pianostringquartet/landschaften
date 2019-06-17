@@ -103,10 +103,7 @@
     (js/Chart. context (clj->js {:type "radar" :data chart-data}))))
 
 
-;(defn ->radar-data [])
-
 (declare paintings->percentage-chart-data)
-
 
 ;; may end up with more labels than data points;
 ;; eg label X might be in dataset 1 but not dataset 2;
@@ -219,15 +216,11 @@
         group-2                    (second compared-groups)
         pts-1                      (:paintings group-1)
         pts-2                      (:paintings group-2)
-        ;; do this logic first still
-        ;freqs-1                    (utils/paintings->concepts-frequencies pts-1 n-many certainty-above)
-        ;freqs-2                    (utils/paintings->concepts-frequencies pts-2 n-many certainty-above)
         freqs-1                    (utils/paintings->concepts-frequencies pts-1 n-many certainty-above)
         freqs-2                    (utils/paintings->concepts-frequencies pts-2 n-many certainty-above)
         all-labels (get-labels freqs-1 freqs-2)
         all-labels-freqs-1 (add-missing-labels freqs-1 all-labels)
         all-labels-freqs-2 (add-missing-labels freqs-2 all-labels)
-
         ;; this gives us vector of vectors i.e [[c f] ...]
         freq-percents-1            (mapv #(concept-frequency->percent % (count pts-1)) all-labels-freqs-1)
         freq-percents-2            (mapv #(concept-frequency->percent % (count pts-2)) all-labels-freqs-2)
@@ -256,18 +249,75 @@
        :labels all-labels})))
 
 
+
+
 ;; vector-float, vector-float, vector-strings
 ;(defn radar-chart-component [data-1 data-2 labels]
+
+;; chart.js effectively requires a mutable array,
+;; and updates to the chart must be updates to that array.
+
+;; so, separate out the array as a reagent atom?
+
+;; contains the mutable arrays as reagent-atoms
+
+;; examples show
+;; have to call chart.update
+
+;; have to retrieve the original chart?
+;; like this?: context (.getContext (.getElementById js/document "rev-chartjs") "2d")
+;;
+
+;; get the comp-did-mount logic + ratom combo correct first
+
+;; presumably, I can't just mutate the ratoms,
+;; because I have to explicitly call chart.update();
+;; ... theoretically, could update the ratoms, then call chart.update()>
+
+;; is there a quicker workaround -- e.g. giving them different keys,
+;; forcing a total redraw of the component?
+;; seems preferable to messing with mutable data etc. here
+
+;(defn radar-chart-component-inner
+;  (let [data-1-ratom (r/atom [])
+;        data-2-ratom (r/atom [])
+;        labels-ratom (r/atom [])
+;        update-component (fn [comp]
+;                           ;;
+;                           (let [{:keys [data-1 data-2 labels]} (r/props comp)
+;                           ;; retrieve the chart
+;                                 charty (js/document.getElementById js/document "rev-chartjs")]
+;                             (do
+;                               (js/console.log "(.data.labels chart): " (.data.labels charty)))))]
+;                             ;(.update charty)))]
+;
+;    (r/create-class
+;      {:reagent-render (fn []
+;                         [:canvas {:id "rev-chartjs" :width "700" :height "380"}])
+;       :display-name "chartjs-component"
+;       :component-did-mount (fn [comp]
+;                              ;; how to actually retrieve the chart created by reagent-render?
+;                              ;; simplest approach: just find it on the dom?
+;                              (let [chart-itself (js/document.getElementById js/document "rev-chartjs")]))})))
+
+
+
+
+
+;; AKA "radar-chart-component-outer"
+;(defn radar-chart-component [{:keys [data-1 data-2 labels]}]
+;(defn radar-chart-component [props]
+;  {:pre [(map? props)]} ;; props must be a map
+;  (fn []
+;    (radar-chart-component-inner props)))
+
+
+;; WORKS, but not good enough for mutable-heavy chart.js approach?
+
 (defn radar-chart-component [{:keys [data-1 data-2 labels]}]
   (r/create-class
     ;{:component-did-mount #(show-radar-chart)
     {:component-did-mount #(show-radar-chart data-1 data-2 labels)
-
-     ;; this redraws the chart, but not with the new data;
-     ;; we have to mutably update that chart's existing data
-     ;;  
-     :component-did-update #(show-radar-chart data-1 data-2 labels) ;; added
-
      :display-name        "chartjs-component"
      :reagent-render      (fn []
                             [:canvas {:id "rev-chartjs" :width "700" :height "380"}])}))

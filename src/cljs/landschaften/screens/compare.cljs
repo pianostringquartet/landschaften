@@ -106,16 +106,11 @@
      [:> semantic-ui/slist-item [saved-search-buttons @saved-groups @compared-group-names]]
      (when @error-rate
        [:> semantic-ui/slist-item [error-rate-label @error-rate @max-error-rate]])
-
-
-     ;; radar chart requires that at least two groups are being compared
      (when @error-rate
-       ;[chart/radar-chart-component data-1 data-2 labels])
-
-       ; works :)
-       ;[chart/radar-chart-component {:data-1 data-1 :data-2 data-2 :labels labels}]
-
-       [chart/radar-chart-component (chart/compared-groups->radar-chart-data! @compared-groups)])
+       ;; Workaround: force Chart.js to rerender without using lifecycle methods etc.
+       ^{:key (rand-int 999)}
+       [chart/radar-chart-component
+          (chart/compared-groups->radar-chart-data! @compared-groups)])
 
 
      ;(when @error-rate
