@@ -45,6 +45,7 @@
                  [gnl/ghostwheel.tracer "0.3.8"]
                  [day8.re-frame/test "0.1.5"]
                  [reagent-material-ui "0.2.5"] ;; library, with incomplete list of mui tags
+                 [cljsjs/chartjs "2.8.0-0"] ;; replacing google charts
                  [cljsjs/semantic-ui-react "0.84.0-0"]]
 
 
@@ -54,6 +55,8 @@
   :resource-paths ["resources" "target/cljsbuild"]
   :target-path "target/%s/"
   :main ^:skip-aot landschaften.core
+  :aliases {"fig" ["trampoline" "run" "-m" "figwheel.main"]
+            "build-dev" ["trampoline" "run" "-m" "figwheel.main" "-b" "dev" "-r"]}
   :plugins [[lein-cljsbuild "1.1.7"]
             [lein-immutant "2.1.0"]]
   :clean-targets ^{:protect false}
