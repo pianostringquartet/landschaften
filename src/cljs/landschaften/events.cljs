@@ -512,14 +512,27 @@
       (log "remove-group!: updated-saved-groups: " updated-saved-groups)
       (assoc db :saved-groups updated-saved-groups))))
 
-(reg-event-db
+
+(reg-event-fx
   ::remove-group
   interceptors
-  (fn remove-group-handler [db [_ group-name]]
-    (remove-compare-group-name
-      (remove-group! db group-name)
-      group-name)))
+  (fn remove-group-handler [cofx [_ group-name]]
+    (let [db (:db cofx)
+          updated-db (remove-compare-group-name
+                       (remove-group! db group-name)
+                       group-name)]
+      {:db updated-db
+       :persist-state updated-db}))) ;;
 
+
+
+;(reg-event-fx
+;  ::query-succeeded
+;  interceptors
+;  (fn query-succeeded [cofx [_ paintings group-name]]
+;    (let [db (on-query-succeeded (:db cofx) paintings group-name)]
+;      {:persist-state db
+;       :db db})))
 
 ;; ------------------------------------------------------
 ;; Examining a single painting
