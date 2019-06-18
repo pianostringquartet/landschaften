@@ -35,7 +35,7 @@
 
 (defn saved-search-buttons [saved-groups compared-group-names]
   (when-not (empty? saved-groups)
-    [utils/table
+    [utils/bubble-table
      (map #(saved-search-button! % (into #{} compared-group-names))
           (keys saved-groups))
      2]))
@@ -48,7 +48,6 @@
   (let [as-percent    (* 100 (/ error max-error))
         as-similarity (- 100 as-percent)]
     [:> semantic-ui/progress {:success  "true"
-                              ;:percent  (goog.string/format "%.1f" (* 100 (/ error max-error)))
                               :percent  (goog.string/format "%.1f" as-similarity)
                               :progress "percent"}]))
 
@@ -62,12 +61,15 @@
     [similarity-measurement error max-error]]])
 
 
-(>defn table-with-header [group-name paintings]
-  [string? ::specs/paintings => vector?]
-  [:> semantic-ui/slist-item
-   {:header  group-name
-    :content (r/as-component ^{:key group-name} [:p "Chart goes here."])}])
-;:content (r/as-component ^{:key group-name} [chart/table-chart paintings])}])
+;(defn concept-frequency-table [paintings n-many certainty-above]
+;  [utils/sem-table (chart/paintings->percentage-chart-data paintings n-many certainty-above)])
+;
+;
+;(>defn table-with-header [header paintings]
+;  [string? ::specs/paintings => vector?]
+;  [:> semantic-ui/slist-item
+;   {:header  header
+;    :content {:content (r/as-component ^{:key header} [concept-frequency-table paintings 15 0.85])}}])
 
 
 (defn desktop-compare-screen [groups]
@@ -75,7 +77,7 @@
     [:> semantic-ui/slist {:horizontal true :relaxed true}
      (for [group groups]
        ^{:key (:group-name group)}
-       [table-with-header (:group-name group) (:paintings group)])]))
+       [utils/table-with-header (:group-name group) (:paintings group)])]))
 
 
 (defn mobile-compare-screen [groups]
@@ -84,15 +86,10 @@
           (fn [group]
             {:key     (:group-name group)
              :title   {:content (:group-name group)}
-             :content {:content (r/as-component [:p "Mobile chart goes here."])}})]
-      ;:content {:content (r/as-component [chart/table-chart (:paintings group)])}})]
+             :content {:content (r/as-component [utils/concept-frequency-table (:paintings group) 15 0.85])}})]
       [:> semantic-ui/accordion
        {:panels (mapv ->accordion-panel groups)}])))
 
-
-(def data-1 [0.2 0.4 0.6 0.8 0.10 0.12 0.14 0.16 0.18 0.20 0.81 0.54 0.91 0.85 0.99])
-(def data-2 [0.1 0.3 0.5 0.7 0.7 0.9 0.1 0.3 0.17 0.19 0.91 0.92 0.9 0.9889 0.99])
-(def labels  ["2009" "2010" "2011" "2012" "2013" "2014" "2015" "2016" "2017" "2018" "2019" "2020" "2021" "2022" "2023"])
 
 (defn compare-screen []
   (let [error-rate           (subscribe [::subs/error-rate])
@@ -107,17 +104,13 @@
      (when @error-rate
        [:> semantic-ui/slist-item [error-rate-label @error-rate @max-error-rate]])
      (when @error-rate
-       ;; Workaround: force Chart.js to rerender without using lifecycle methods etc.
+       ;; Workaround: force Chart.js to re-render, don't use React lifecycle methods
        ^{:key (rand-int 999)}
        [chart/radar-chart-component
-          (chart/compared-groups->radar-chart-data! @compared-groups)])
-
-
-     ;(when @error-rate
-     ; [chart/radar-chart-component]]
-       ;(:paintings (first @compared-groups))
-       ;                            (:paintings (second @compared-groups))])
+          (chart/compared-groups->radar-chart-data! (first @compared-groups) (second @compared-groups) 15 0.85)])
      [:> semantic-ui/responsive {:max-width 799} [mobile-compare-screen @groups]]
      [:> semantic-ui/responsive {:min-width 800} [desktop-compare-screen @groups]]]))
+
+
 
 (check)

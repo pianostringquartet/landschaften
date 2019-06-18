@@ -7,7 +7,7 @@
             [landschaften.specs :as specs]
             [landschaften.helpers :as helpers]
             [cljs.spec.alpha :as s]
-            [landschaften.views.utils :as utils]
+            ;[landschaften.views.utils :as utils]
             [re-frame.core :as rf]
             [cljs.spec.test.alpha :as st]
             [ghostwheel.core
@@ -18,6 +18,7 @@
 ;; Interceptors
 ;; ------------------------------------------------------
 
+(def log js/console.log)
 
 ;; persist via local storage
 ;(def ->local-store (after todos->local-store))
@@ -28,8 +29,8 @@
 (>defn ->localstore! [state]
   [::specs/app-db => nil?]
   (do
-    (utils/log "->localstore! called")
-    (utils/log "(:current-group state): " (:current-group state))
+    (log "->localstore! called")
+    (log "(:current-group state): " (:current-group state))
     (.setItem js/localStorage ls-auth-key state)))
 
 
@@ -78,8 +79,8 @@
   (fn initialize-app [cofx _]
     (let [persisted-db (:user-session cofx)]
       (do
-        (utils/log "(keys (:saved-groups persisted-db): " (keys (:saved-groups persisted-db)))
-        (utils/log ":type-constraints of (:saved-groups persisted-db): " (map #(-> % second :type-constraints) (:saved-groups persisted-db)))
+        (log "(keys (:saved-groups persisted-db): " (keys (:saved-groups persisted-db)))
+        (log ":type-constraints of (:saved-groups persisted-db): " (map #(-> % second :type-constraints) (:saved-groups persisted-db)))
         (if (s/valid? ::specs/app-db persisted-db)
           {:db persisted-db}
           {:db db/default-db})))))
@@ -91,7 +92,7 @@
   (fn mode-changed [db [_ new-mode]]
     {:pre [(s/valid? ::ui-specs/mode new-mode)]}
     (do
-      (utils/log "::mode-changed called")
+      (log "::mode-changed called")
       (assoc db :current-mode new-mode))))
 
 
@@ -123,7 +124,7 @@
 
 ;; not real error handling...
 (defn default-error-handler [response]
-  (utils/log "Encountered unexpected error: " response))
+  (log "Encountered unexpected error: " response))
 
 
 (reg-fx
@@ -204,8 +205,8 @@
   (fn query [cofx [_ group-name]]
     (let [db (:db cofx)]
       (do
-        (utils/log "::query-started called")
-        (utils/log "::query-started constraints: " (->query-constraints db))
+        (log "::query-started called")
+        (log "::query-started constraints: " (->query-constraints db))
         {:db (assoc db :query-loading? true)
          :post-request
           {:uri "/query"
@@ -233,9 +234,9 @@
 ;; WOULD BE FINE.
 
 
-(reg-event-fx
-  ::add-group
-  (fn [db [_ group-name constraints]]))
+;(reg-event-fx
+;  ::add-group
+;  (fn [db [_ group-name constraints]]))
 
 
 (declare toggle-save-group-popover-showing)
@@ -267,7 +268,7 @@
                  (assoc :examining? false))]
 
     (do
-      (utils/log "on-query-succeeded: group-name: " group-name)
+      (log "on-query-succeeded: group-name: " group-name)
       (if group-name
         (-> db-with-query-results
             (toggle-save-group-popover-showing false) ;; hide the popover
@@ -402,23 +403,25 @@
             (assoc-in [:saved-groups group-name] updated-group)
             (assoc :current-group updated-group))]
     (do
-      (utils/log "save-current-group CALLED")
-      (utils/log "(keys (:saved-groups db): " (keys (:saved-groups x)))
-      (utils/log ":type-constraints of (:saved-groups db): " (map #(-> % second :type-constraints) (:saved-groups x)))
+      (log "save-current-group CALLED")
+      (log "(keys (:saved-groups db): " (keys (:saved-groups x)))
+      (log ":type-constraints of (:saved-groups db): " (map #(-> % second :type-constraints) (:saved-groups x)))
       x)))
 
 
+;; if we delete current group, then switch to some other group, what happens?
+;; ah, we just bring in the new group, we don't make any changes etc.
 (defn bring-in-group [db group-name]
   {:pre [(string? group-name)]}
   (let [new-current-group (get (:saved-groups db) group-name)
         new-db (assoc db :current-group new-current-group)]
 
     (do
-     (utils/log "bring-in-group CALLED: " group-name)
-     (utils/log "bring-in-group group-name: " group-name)
-     (utils/log "(keys (:saved-groups db): " (keys (:saved-groups new-db)))
-     (utils/log ":type-constraints of (:saved-groups db): " (map #(-> % second :type-constraints) (:saved-groups new-db)))
-     (utils/log "bring-in-group new-current-group: " new-current-group)
+     (log "bring-in-group CALLED: " group-name)
+     (log "bring-in-group group-name: " group-name)
+     (log "(keys (:saved-groups db): " (keys (:saved-groups new-db)))
+     (log ":type-constraints of (:saved-groups db): " (map #(-> % second :type-constraints) (:saved-groups new-db)))
+     (log "bring-in-group new-current-group: " new-current-group)
      new-db)))
 
 
@@ -444,8 +447,8 @@
         already-full? (boolean (= 2 (count group-names)))]
 
     (do
-      (utils/log "already-comparing?: " already-comparing?)
-      (utils/log "already-full?: " already-full?)
+      (log "already-comparing?: " already-comparing?)
+      (log "already-full?: " already-full?)
       (cond
         already-comparing? group-names
         ;; group-names MUST BE A LIST, not a vector,
@@ -461,23 +464,31 @@
     {:pre [(string? group-name)]}
     (let [group-names (:compared-group-names db)]
       (do
-        (utils/log "add-compare-group-name called")
+        (log "add-compare-group-name called")
         (assoc
           db
           :compared-group-names
           (add-compare-group-name group-names group-name))))))
 
 
+(>defn remove-compare-group-name [db group-name]
+  [::specs/app-db string? => ::specs/app-db]
+  (assoc
+    db
+    :compared-group-names
+    (remove #{group-name} (:compared-group-names db))))
+
 (reg-event-db
   ::remove-compare-group-name
   interceptors
-  (fn remove-compare-group-name [db [_ group-name]]
+  (fn remove-compare-group-name-handler [db [_ group-name]]
     (do
-      (utils/log "remove-compare-group-name called; group-name: " group-name)
-      (assoc
-        db
-        :compared-group-names
-        (remove #{group-name} (:compared-group-names db))))))
+      (log "remove-compare-group-name-handler called; group-name: " group-name)
+      (remove-compare-group-name db group-name))))
+      ;(assoc
+      ;  db
+      ;  :compared-group-names
+      ;  (remove #{group-name} (:compared-group-names db))))))
 
 
 (reg-event-db
@@ -485,6 +496,29 @@
   interceptors
   (fn comparisons-cleared [db _]
      (assoc db :compared-group-names '())))
+
+
+;; given a db and group-name,
+;; returns a db with that group removed
+
+;; also remove it from compared-group-names
+(>defn remove-group! [db group-name]
+  [::specs/app-db string? => ::specs/app-db]
+  (let [old-saved-groups (:saved-groups db)
+        updated-saved-groups (dissoc old-saved-groups group-name)]
+    (do
+      (log "remove-group!: group-name: " group-name)
+      (log "remove-group!: old-saved-groups: " old-saved-groups)
+      (log "remove-group!: updated-saved-groups: " updated-saved-groups)
+      (assoc db :saved-groups updated-saved-groups))))
+
+(reg-event-db
+  ::remove-group
+  interceptors
+  (fn remove-group-handler [db [_ group-name]]
+    (remove-compare-group-name
+      (remove-group! db group-name)
+      group-name)))
 
 
 ;; ------------------------------------------------------
@@ -562,7 +596,7 @@
 ;            next-slide (or (second (drop-while #(not= % current-painting) paintings))
 ;                         (first paintings))]
 ;        (do
-;          (utils/log "next-slide: " next-slide)
+;          (log "next-slide: " next-slide)
 ;          (assoc db :current-painting next-slide)))))
 
 

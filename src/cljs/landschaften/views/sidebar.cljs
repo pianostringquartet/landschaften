@@ -8,7 +8,7 @@
             [landschaften.specs :as specs]
             [landschaften.views.constraints :as constraints]
             [landschaften.views.utils :as utils]
-            [landschaften.views.chart :as chart]
+            ;[landschaften.views.chart :as chart]
             [landschaften.semantic-ui :as semantic-ui]
             [ghostwheel.core :as g :refer [check >defn >defn- >fdef => | <- ?]]))
 
@@ -98,7 +98,9 @@
     :style         {:border-radius "30px" :padding "4px"}   ; curvier
     :on-click      #(dispatch [::events/switch-groups name])}
    [:> semantic-ui/icon {:name     "close"
-                         :on-click #(utils/log "Remove Group: " name)}]
+                         :on-click #(do
+                                      (utils/log "Remove Group: " name)
+                                      (dispatch [::events/remove-group name]))}]
    name])
 
 (defn saved-groups-buttons []
@@ -108,7 +110,7 @@
     (when-not (empty? @saved-groups)
       [:div
        [rc/label :label "Saved searches:"]
-       [utils/table
+       [utils/bubble-table
           (mapv (fn [group-name] [group-button group-name (color group-name)])
                 (keys @saved-groups))
         2]])))
@@ -126,10 +128,9 @@
                                [constraints/selected-concepts]]
                          [:div [constraints/artist-typeahead]
                                [constraints/selected-artists]]
-                         [saved-groups-buttons])]
-                         ;(when (> (count @paintings) 0)
-                         ;  [chart/bar-chart @paintings]))]
-                         ;[chart/rev-chartjs-component])]
+                         [saved-groups-buttons]
+                         (when (> (count @paintings) 0)
+                           [utils/table-with-header "Common concepts in these paintings: " @paintings]))]
     [:> semantic-ui/slist {:relaxed true}
      (utils/as-semantic-ui-list-items components)]))
 

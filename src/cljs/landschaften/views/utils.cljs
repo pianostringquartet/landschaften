@@ -4,6 +4,7 @@
             [landschaften.semantic-ui :as semantic-ui] ; disable when loading repl
             [landschaften.specs :as specs]
             [clojure.spec.alpha :as s]
+            [re-frame.core :refer [subscribe dispatch]]
             [ghostwheel.core :as g :refer [check >defn >defn- >fdef => | <- ?]]))
 
 ;; ------------------------------------------------------
@@ -111,27 +112,40 @@
 ;  sample-paintings 0.80)
 
 ;; returns highest frequency first?
-(defn paintings->concepts-frequencies
-  "Return the n-many concepts' frequencies, where each concept's certainty is above some level."
-  [paintings n-many certainty-above]
-  {:pre [(valid? ::specs/paintings paintings)
-         (int? n-many)
-         (float? certainty-above)]
-   :post [(s/coll-of vector?) %]}
-  (do
-    (js/console.log "paintings->concepts-frequencies will return: " (->> (frequencies-of-concepts-with-certainty-above paintings certainty-above)
-                                                                         (sort-by second)                                     ; meaningless
-                                                                         (reverse)
-                                                                         (take n-many)))
-    (->> (frequencies-of-concepts-with-certainty-above paintings certainty-above)
-         (sort-by second)                                     ; meaningless
-         (reverse)
-         (take n-many))))
+;(defn paintings->concepts-frequencies
+;  "Return the n-many concepts' frequencies, where each concept's certainty is above some level."
+;  [paintings n-many certainty-above]
+;  {:pre [(valid? ::specs/paintings paintings)
+;         (int? n-many)
+;         (float? certainty-above)]
+;   :post [(s/coll-of vector?) %]}
+;  (do
+;    (js/console.log "paintings->concepts-frequencies will return: " (->> (frequencies-of-concepts-with-certainty-above paintings certainty-above)
+;                                                                         (sort-by second)                                     ; meaningless
+;                                                                         (reverse)
+;                                                                         (take n-many)))
+;    (->> (frequencies-of-concepts-with-certainty-above paintings certainty-above)
+;         (sort-by second)                                     ; meaningless
+;         (reverse)
+;         (take n-many))))
 
 
 ;paintings->concepts-frequencies
 
+(defn ->percent [frequency total]
+  (->> (/ frequency total)
+       (double)
+       (* 100)
+       (goog.string/format "%.1f")
+       (js/parseFloat)))
 
+
+(defn paintings->percentage-chart-data [paintings n-many certainty-above]
+  (let [total (count paintings)]
+    (->> (paintings->concepts-frequencies paintings n-many certainty-above)
+         (mapv
+           (fn [[concept frequency]]
+             [concept (->percent frequency total)])))))
 
 
 ;; ------------------------------------------------------
@@ -149,8 +163,13 @@
     ^{:key i} [:> semantic-ui/slist-item component]))
 
 
+;; this table is not a real table -- it's just rows arranged
 ;; Assumes data are React.js components
-(defn table [data n-per-row]
+(defn bubble-table
+  "A table that arranges its data in rows n-length.
+
+  Not a real table, but rather a 'forced arrangement'."
+  [data n-per-row]
   {:pre [(int? n-per-row)]}
   (let [rows (partition-all n-per-row data)]
     ^{:key (str (first data))}
@@ -160,79 +179,27 @@
           [:> semantic-ui/slist {:horizontal true} datum])]))
 
 
-(def sample-paintings
-  #{{:date "c. 1469",
-     :school "Italian",
-     :type "portrait",
-     :title "Portrait of a Young Man",
-     :author "BOTTICELLI, Sandro",
-     :concepts #{{:name "gown (clothing)", :value 0.90708596}
-                 {:name "one", :value 0.986664}
-                 {:name "cape", :value 0.87464726}
-                 {:name "adult", :value 0.98579407}
-                 {:name "side view", :value 0.8062773}
-                 {:name "religion", :value 0.93637943}
-                 {:name "sculpture", :value 0.86673677}
-                 {:name "lid", :value 0.9411217}
-                 {:name "people", :value 0.9946501}
-                 {:name "painting", :value 0.9754119}
-                 {:name "wear", :value 0.95125747}
-                 {:name "portrait", :value 0.9801239}
-                 {:name "facial expression", :value 0.8723508}
-                 {:name "man", :value 0.9584564}
-                 {:name "veil", :value 0.96336377}
-                 {:name "facial hair", :value 0.8060329}
-                 {:name "woman", :value 0.874543}
-                 {:name "illustration", :value 0.8150852}
-                 {:name "art", :value 0.96110016}
-                 {:name "leader", :value 0.8733945}},
-     :id 5623,
-     :timeframe "1451-1500",
-     :form "painting",
-     :jpg "https://www.wga.hu/art/b/botticel/7portrai/01youngm.jpg"}
-    {:date "c. 1483",
-     :school "Italian",
-     :type "portrait",
-     :title "Portrait of a Young Man",
-     :author "BOTTICELLI, Sandro",
-     :concepts #{{:name "one", :value 0.99197435}
-                 {:name "adult", :value 0.98972064}
-                 {:name "side view", :value 0.86024535}
-                 {:name "religion", :value 0.7984845}
-                 {:name "jewelry", :value 0.8666209}
-                 {:name "print", :value 0.8635602}
-                 {:name "lid", :value 0.94501436}
-                 {:name "outerwear", :value 0.9058312}
-                 {:name "necklace", :value 0.92569244}
-                 {:name "people", :value 0.9990963}
-                 {:name "painting", :value 0.94927025}
-                 {:name "wear", :value 0.9762198}
-                 {:name "portrait", :value 0.9976093}
-                 {:name "man", :value 0.94694376}
-                 {:name "veil", :value 0.96435404}
-                 {:name "profile", :value 0.8191407}
-                 {:name "facial hair", :value 0.88426876}
-                 {:name "jacket", :value 0.86635554}
-                 {:name "art", :value 0.9661212}
-                 {:name "leader", :value 0.96634877}},
-     :id 5632,
-     :timeframe "1451-1500",
-     :form "painting",
-     :jpg "https://www.wga.hu/art/b/botticel/7portrai/10youngm.jpg"}})
+(>defn sem-table-row [name value]
+  [string? float? => vector?]
+  ^{:key name}
+  [:> semantic-ui/table-row
+   [:> semantic-ui/table-cell {:on-click #(log "on click called")} name]
+   [:> semantic-ui/table-cell (goog.string/format "%.2f" value)]])
 
-;; should satisfy ::group spec...
-(def sample-group
-  {:group-name "a sample group"
-   :paintings sample-paintings
-   :type-constraints #{}
-   :school-constraints #{}
-   :timeframe-constraints #{}
-   :concept-constraints #{}
-   :artist-constraints #{}})
 
-(def sample-group-2
-  {:group-name "spanish-religious"
-   :paintings sample-paintings
-   :type-constraints #{"religious"}
-   :school-constraints #{"Spanish"}
-   :concept-constraints #{"religion"}})
+(defn sem-table [frequency-data]
+  [:> semantic-ui/table {:selectable true :compact "very" :size "small"}
+   [:> semantic-ui/table-body
+    (for [datum frequency-data]
+      ^{:key (first datum)} (sem-table-row (first datum) (second datum)))]])
+
+
+(defn concept-frequency-table [paintings n-many certainty-above]
+  [sem-table (paintings->percentage-chart-data paintings n-many certainty-above)])
+
+
+(>defn table-with-header [header paintings]
+  [string? ::specs/paintings => vector?]
+  [:> semantic-ui/slist-item
+   {:header  header
+    :content {:content (r/as-component ^{:key header} [concept-frequency-table paintings 15 0.85])}}])

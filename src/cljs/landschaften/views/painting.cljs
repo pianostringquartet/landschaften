@@ -25,11 +25,11 @@
 (>defn image! [jpg]
   [string? => vector?]
   [:> semantic-ui/image
-     {:fluid    true
-      :wrapped  true
-      :src      jpg
-      :style    {:padding "8px"}
-      :on-click #(dispatch [::events/toggle-image-zoomed])}])
+   {:fluid    true
+    :wrapped  true
+    :src      jpg
+    :style    {:padding "8px"}
+    :on-click #(dispatch [::events/toggle-image-zoomed])}])
 
 
 (>defn image-modal! [jpg zoomed?]
@@ -54,15 +54,17 @@
    {:name "caret right" :size "big" :on-click #(dispatch [::events/go-to-next-slide painting])}])
 
 
-;; TODO: highlight in blue instead of green (":positive" param)
+;;; TODO: highlight in blue instead of green (":positive" param)
 (defn concept-table-row [current-concepts {:keys [name value]}]
   {:pre [(string? name) (float? value)]}
+  ^{:key name}
   [:> semantic-ui/table-row {:positive (contains? current-concepts name)}
    [:> semantic-ui/table-cell
     {:on-click #(dispatch [::events/toggle-concept-selection name])}
     name]
    [:> semantic-ui/table-cell
     (goog.string/format "%.2f" value)]])
+
 
 
 (>defn concept-table [painting selected-concepts]
@@ -91,7 +93,6 @@
 
 
 (>defn painting-details
-;(defn painting-details
   "Details about a painting: image, author, concepts etc."
   [painting zoomed? selected-concepts]
   [::specs/painting boolean? ::specs/concept-constraints => vector?]

@@ -142,12 +142,12 @@
 
 (defn selected-concepts []
   (let [selected-concepts (subscribe [::subs/concept-constraints])]
-    [utils/table (map concept-button @selected-concepts) 2]))
+    [utils/bubble-table (map concept-button @selected-concepts) 2]))
 
 
 (defn selected-artists []
   (let [selected-artists (subscribe [::subs/artist-constraints])]
-    [utils/table
+    [utils/bubble-table
      (map artist-button @selected-artists)
      2]))
 
