@@ -91,6 +91,8 @@
 
 
 
+
+
 (defn paintings->concepts-frequencies
   "Return the n-many concepts' frequencies, where each concept's certainty is above some level."
   [paintings n-many certainty-above]
@@ -98,15 +100,10 @@
          (int? n-many)
          (float? certainty-above)]
    :post [(s/coll-of vector?) %]}
-  (do
-    (js/console.log "paintings->concepts-frequencies will return: " (->> (frequencies-of-concepts-with-certainty-above paintings certainty-above)
-                                                                         (sort-by second)                                     ; meaningless
-                                                                         (reverse)
-                                                                         (take n-many)))
-    (->> (frequencies-of-concepts-with-certainty-above paintings certainty-above)
-         (sort-by second)                                     ; meaningless
-         (reverse)
-         (take n-many))))
+  (->> (frequencies-of-concepts-with-certainty-above paintings certainty-above)
+       (sort-by second)                                     ; meaningless
+       (reverse)
+       (take n-many)))
 
 ;(frequencies-of-concepts-with-certainty-above
 ;  sample-paintings 0.80)
@@ -140,7 +137,16 @@
        (js/parseFloat)))
 
 
-(defn paintings->percentage-chart-data [paintings n-many certainty-above]
+;; probably want to reuse this, no?
+;(defn paintings->percentage-chart-data [paintings n-many certainty-above]
+;  (let [total (count paintings)]
+;    (->> (paintings->concepts-frequencies paintings n-many certainty-above)
+;         (mapv
+;           (fn [[concept frequency]]
+;             [concept (->percent frequency total)])))))
+
+(>defn paintings->frequency-percent-data [paintings n-many certainty-above]
+  [::specs/paintings int? float? => (s/coll-of vector?)]
   (let [total (count paintings)]
     (->> (paintings->concepts-frequencies paintings n-many certainty-above)
          (mapv
@@ -195,7 +201,7 @@
 
 
 (defn concept-frequency-table [paintings n-many certainty-above]
-  [sem-table (paintings->percentage-chart-data paintings n-many certainty-above)])
+  [sem-table (paintings->frequency-percent-data paintings n-many certainty-above)])
 
 
 (>defn table-with-header [header paintings]

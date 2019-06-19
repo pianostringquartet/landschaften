@@ -8,7 +8,6 @@
             [landschaften.specs :as specs]
             [landschaften.views.constraints :as constraints]
             [landschaften.views.utils :as utils]
-            ;[landschaften.views.chart :as chart]
             [landschaften.semantic-ui :as semantic-ui]
             [ghostwheel.core :as g :refer [check >defn >defn- >fdef => | <- ?]]))
 

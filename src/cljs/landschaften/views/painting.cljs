@@ -6,8 +6,7 @@
             [landschaften.specs :as specs]
             [landschaften.events :as events]
             [landschaften.semantic-ui :as semantic-ui]
-            [ghostwheel.core :as g :refer [check >defn >defn- >fdef => | <- ?]]
-            [landschaften.views.utils :as utils]))
+            [ghostwheel.core :as g :refer [check >defn >defn- >fdef => | <- ?]]))
 
 
 (>defn info [painting]
@@ -92,7 +91,7 @@
    [concept-table painting selected-concepts]])
 
 
-(>defn painting-details
+(>defn painting-details-desktop
   "Details about a painting: image, author, concepts etc."
   [painting zoomed? selected-concepts]
   [::specs/painting boolean? ::specs/concept-constraints => vector?]
@@ -103,8 +102,24 @@
    [:> semantic-ui/grid-column {:width 1} [next-slide-button! painting]]])
 
 
-(defn painting-modal! [painting show?]
-  ;[::specs/painting boolean? => vector?]
+(>defn painting-details-mobile
+  "Details about a painting: image, author, concepts etc."
+  [painting zoomed? selected-concepts]
+  [::specs/painting boolean? ::specs/concept-constraints => vector?]
+  [:> semantic-ui/grid {:columns 4
+                        :stackable true
+                        :vertical-align "middle"
+                        :centered true}
+   [:> semantic-ui/grid-column {:width 8} [painting-details-image (:jpg painting) zoomed?]]
+   [:> semantic-ui/grid-column {:width 1}
+    [:> semantic-ui/slist
+      [prev-slide-button! painting]
+      [next-slide-button! painting]]]
+   [:> semantic-ui/grid-column {:width 6} [painting-details-info painting selected-concepts]]])
+
+
+
+(defn painting-modal [painting show?]
   (let [zoomed?           (subscribe [::subs/image-zoomed?])
         selected-concepts (subscribe [::subs/concept-constraints])]
     [:> semantic-ui/modal {:open                    show?
@@ -112,10 +127,14 @@
                            :close-icon              true
                            :centered                false
                            :on-close                #(dispatch [::events/toggle-slideshow])}
-     (do
-       (utils/log "@zoomed?: " @zoomed?)
        [:> semantic-ui/modal-content {:image true}
-        [painting-details painting @zoomed? @selected-concepts]])]))
+        [:> semantic-ui/slist
+         [:> semantic-ui/responsive
+          {:max-width 799}
+          [painting-details-mobile painting @zoomed? @selected-concepts]]
+         [:> semantic-ui/responsive
+          {:min-width 800}
+          [painting-details-desktop painting @zoomed? @selected-concepts]]]]]))
 
 
 (check)

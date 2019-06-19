@@ -23,7 +23,7 @@
          (boolean? show-max?)]}
   [:div
    (when show-max?
-     [examine/painting-modal! current-painting show-max?])
+     [examine/painting-modal current-painting show-max?])
    [ui/MuiThemeProvider
     [ui/GridList {:cellHeight 160 :cols n-columns}
      (for [painting paintings] ^{:key (:jpg painting)} [tile! painting])]]])
