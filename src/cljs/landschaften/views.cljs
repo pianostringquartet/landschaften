@@ -32,7 +32,7 @@
       :panes         panes}]))
 
 
-(defn hello-world []
+(defn root-component []
   (let [current-mode-id (subscribe [::subs/current-mode])]
     [:> semantic-ui/container {:fluid true}
      [mode-tabs! (or @current-mode-id :explore)]]))

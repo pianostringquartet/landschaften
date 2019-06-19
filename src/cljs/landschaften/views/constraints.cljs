@@ -5,12 +5,8 @@
             [landschaften.subs :as subs]
             [landschaften.events :as events]
             [landschaften.views.utils :as utils]
-            [landschaften.semantic-ui :as semantic-ui]))
-
-
-;; ------------------------------------------------------
-;; Selecting and deselecting search constraints
-;; ------------------------------------------------------
+            [landschaften.semantic-ui :as semantic-ui]
+            [landschaften.helpers :as helpers]))
 
 
 ;; ------------------------------------------------------
@@ -78,7 +74,7 @@
         (fn [x] (re-find (re-pattern (str "(?i)" input)) x))]
     (into #{}
           (take n-suggestions
-                (for [option options :when (matches-input? (utils/replace-special-chars option))]
+                (for [option options :when (matches-input? (helpers/replace-special-chars option))]
                   {:title option})))))
 
 

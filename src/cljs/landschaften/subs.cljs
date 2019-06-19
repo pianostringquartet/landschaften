@@ -27,11 +27,9 @@
   (fn current-mode [db _]
     (:current-mode db)))
 
-;; whether to show 'search' bar or 'results' paintings
-;; in the mobile version of the explore panel
 (reg-sub
   ::mobile-search?
-  (fn mobile-search? [db]
+  (fn mobile-search? [db] ; show 'search' controls vs 'results' paintings on mobile
     (:mobile-search? db)))
 
 ;; ------------------------------------------------------
@@ -78,9 +76,7 @@
 (reg-sub
   ::save-group-popover-showing?
   (fn save-group-popover-showing? [db _]
-    (do
-      (utils/log "save-group-popover-showing?: " (:show-group-name-prompt? db))
-      (:show-group-name-prompt? db))))
+    (:show-group-name-prompt? db)))
 
 
 (reg-sub
@@ -94,11 +90,7 @@
   ::current-group
   (fn [db _]
     {:post [(s/valid? ::specs/group %)]}
-    (let [g (:current-group db)]
-      (do
-        (js/console.log "reg-sub ::current-group: " g)
-        (js/console.log "(s/valid? ::specs/group g): " (s/explain-str ::specs/group g))
-        g))))
+    (:current-group db)))
 
 
 (reg-sub
@@ -133,9 +125,7 @@
   ::concept-constraints
   (fn concepts [db _]
     {:post [(s/valid? ::specs/concept-constraints %)]}
-    (do
-      (utils/log "(get-in db db/path:concept-constraints db)" (get-in db db/path:concept-constraints db))
-      (get-in db db/path:concept-constraints db))))
+    (get-in db db/path:concept-constraints db)))
 
 
 (reg-sub
@@ -147,7 +137,6 @@
 (reg-sub
   ::paintings
   (fn paintings [db _]
-    ;{:post [(s/valid? ::specs/paintings %)]}
     (helpers/sort-by-author (get-in db db/path:current-paintings))))
 
 
@@ -160,36 +149,21 @@
 ;; Examine
 ;; ------------------------------------------------------
 
-
-;; current painting must be able to be nil
-;; i.e. sometimes we don't have a current painting
 (reg-sub
   ::current-painting
   (fn current-painting [db _]
     {:post [(s/valid? (s/nilable ::specs/painting) %)]}
     (:current-painting db)))
 
-
 (reg-sub
-  ::examining?
-  (fn examining? [db _]
-    (:examining? db)))
-
-;; i.e. show details
-(reg-sub
-  ::show-slideshow?
+  ::show-painting-modal?
   (fn show-slideshow? [db _]
-    (do
-      (utils/log "(:show-slideshow? db): " (:show-slideshow? db))
-      (:show-slideshow? db))))
-
+    (:show-painting-modal? db)))
 
 (reg-sub
   ::image-zoomed?
   (fn image-zoomed? [db _]
-    (do
-      (utils/log "image-zoomed?: " (:image-zoomed? db))
-      (:image-zoomed? db))))
+    (:image-zoomed? db)))
 
 
 ;; ------------------------------------------------------
@@ -221,12 +195,12 @@
 
 
 (reg-sub
-  ::error-rate
+  ::variance
   :<- [::compared-groups]
-  (fn error-rate [groups]
+  (fn variance [groups]
     {:pre [(s/valid? (s/coll-of ::specs/group) groups)]}
     (when (<= 2 (count groups))
-      (stats/error-rate
+      (stats/variance
         (error-ready-data (:paintings (first groups)))
         (error-ready-data (:paintings (second groups)))))))
 
@@ -242,15 +216,14 @@
 
 
 (reg-sub
-  ::max-error-rate
+  ::max-variance
   :<- [::compared-groups]
-  (fn max-error-rate [groups]
+  (fn max-variance [groups]
     {:pre [(s/valid? (s/coll-of ::specs/group) groups)]}
     (when (<= 2 (count groups))
-      (stats/error-rate
+      (stats/variance
         (error-ready-data
-            ;; so that no paintings' concepts will overlap
-            (map scramble-concept-names (:paintings (first groups))))
+            (map scramble-concept-names (:paintings (first groups)))) ; so that no paintings' concepts will overlap
         (error-ready-data (:paintings (second groups)))))))
 
 
@@ -266,4 +239,3 @@
   (fn concept-certainty-above [db _]
     {:post [(float? %)]}
     (:concept-certainty-above db)))
-

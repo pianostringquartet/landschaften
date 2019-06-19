@@ -5,7 +5,6 @@
             [landschaften.subs :as subs]
             [clojure.spec.alpha :as s]
             [landschaften.events :as events]
-            [landschaften.specs :as specs]
             [landschaften.views.constraints :as constraints]
             [landschaften.views.utils :as utils]
             [landschaften.semantic-ui :as semantic-ui]
@@ -45,8 +44,6 @@
           (dispatch [::events/query-started (reset! val %)]))])))
 
 
-;; add logic here for removing a group!
-;; needs to be removed from local storage too
 (defn save-search-button-trigger []
   [:> semantic-ui/button
    {:color    "blue"
@@ -97,9 +94,7 @@
     :style         {:border-radius "30px" :padding "4px"}   ; curvier
     :on-click      #(dispatch [::events/switch-groups name])}
    [:> semantic-ui/icon {:name     "close"
-                         :on-click #(do
-                                      (utils/log "Remove Group: " name)
-                                      (dispatch [::events/remove-group name]))}]
+                         :on-click #(dispatch [::events/remove-group name])}]
    name])
 
 (defn saved-groups-buttons []
@@ -113,6 +108,7 @@
           (mapv (fn [group-name] [group-button group-name (color group-name)])
                 (keys @saved-groups))
         2]])))
+
 
 ;; ------------------------------------------------------
 ;; Sidebar

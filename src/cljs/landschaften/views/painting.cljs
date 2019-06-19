@@ -41,16 +41,16 @@
                          :content                 (r/as-component [image! jpg])}])
 
 
-(>defn prev-slide-button! [painting]
+(>defn prev-painting-button! [painting]
   [::specs/painting => vector?]
   [:> semantic-ui/icon
-   {:name "caret left" :size "big" :on-click #(dispatch [::events/go-to-previous-slide painting])}])
+   {:name "caret left" :size "big" :on-click #(dispatch [::events/go-to-previous-painting painting])}])
 
 
-(>defn next-slide-button! [painting]
+(>defn next-button-button! [painting]
   [::specs/painting => vector?]
   [:> semantic-ui/icon
-   {:name "caret right" :size "big" :on-click #(dispatch [::events/go-to-next-slide painting])}])
+   {:name "caret right" :size "big" :on-click #(dispatch [::events/go-to-next-painting painting])}])
 
 
 ;;; TODO: highlight in blue instead of green (":positive" param)
@@ -96,10 +96,10 @@
   [painting zoomed? selected-concepts]
   [::specs/painting boolean? ::specs/concept-constraints => vector?]
   [:> semantic-ui/grid {:columns 4 :stackable true :vertical-align "middle"}
-   [:> semantic-ui/grid-column {:width 1} [prev-slide-button! painting]]
+   [:> semantic-ui/grid-column {:width 1} [prev-painting-button! painting]]
    [:> semantic-ui/grid-column {:width 8} [painting-details-image (:jpg painting) zoomed?]]
    [:> semantic-ui/grid-column {:width 6} [painting-details-info painting selected-concepts]]
-   [:> semantic-ui/grid-column {:width 1} [next-slide-button! painting]]])
+   [:> semantic-ui/grid-column {:width 1} [next-button-button! painting]]])
 
 
 (>defn painting-details-mobile
@@ -113,20 +113,19 @@
    [:> semantic-ui/grid-column {:width 8} [painting-details-image (:jpg painting) zoomed?]]
    [:> semantic-ui/grid-column {:width 1}
     [:> semantic-ui/slist
-      [prev-slide-button! painting]
-      [next-slide-button! painting]]]
+      [prev-painting-button! painting]
+      [next-button-button! painting]]]
    [:> semantic-ui/grid-column {:width 6} [painting-details-info painting selected-concepts]]])
-
 
 
 (defn painting-modal [painting show?]
   (let [zoomed?           (subscribe [::subs/image-zoomed?])
         selected-concepts (subscribe [::subs/concept-constraints])]
     [:> semantic-ui/modal {:open                    show?
-                           :close-on-document-click true    ; not working?
+                           :close-on-document-click true
                            :close-icon              true
                            :centered                false
-                           :on-close                #(dispatch [::events/toggle-slideshow])}
+                           :on-close                #(dispatch [::events/toggle-painting-modal])}
        [:> semantic-ui/modal-content {:image true}
         [:> semantic-ui/slist
          [:> semantic-ui/responsive

@@ -28,7 +28,8 @@
 
    ;; EXAMINE
    :current-painting        nil
-   :show-slideshow?         false                           ;; i.e. slideshow
+   ;:show-slideshow?         false                           ;; i.e. slideshow
+   :show-painting-modal?    false                           ;; i.e. slideshow
    :image-zoomed?           false
 
    ;; EXPLORE
@@ -42,17 +43,13 @@
    ;; EXPLORE & COMPARE
    :current-group           nil
    :show-group-name-prompt? false
-   :saved-groups            {}                              ;{(:group-name french-landscapes) french-landscapes}
-   ;                          (:group-name spanish-religious) spanish-religious}
-   ;; COMPARE
+   :saved-groups            {}
 
-   ;; set of group-names (strings): the groups that are being compared
+   ;; COMPARE
    :compared-group-names    '()
 
    ;; CHARTS
-   ;; how many data points in a bar chart or table to show
    :show-n-chart-points     20
-   ;; only interested in concepts with certainty above ...
    :concept-certainty-above 0.94})
 
 

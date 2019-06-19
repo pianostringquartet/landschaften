@@ -18,17 +18,17 @@
                 (get data-2 feature 0))]
     (* diff diff)))
 
-(defn error-rate
-  "Get the error-rate (measure of (dis)similarity between two datasets.
+(defn variance
+  "Get the variance (measure of (dis)similarity between two datasets.
 
-  Lower error means higher similarity.
-  Higher error means less similarity.
+  Lower variance means higher similarity.
+  Higher variance means less similarity.
 
   data-1, data-2: map"
   [data-1 data-2]
   {:pre [(every? int? (vals data-1))
          (every? int? (vals data-2))]
-   :post [(<= 0 % 1)]}
+   :post [(<= 0 % 1)]} ; variance falls within 0, 1
   (let [features (into #{} (concat (keys data-1) (keys data-2)))
         normalized-data-1 (normalize data-1)
         normalized-data-2 (normalize data-2)

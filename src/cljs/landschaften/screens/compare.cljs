@@ -92,8 +92,8 @@
 
 
 (defn compare-screen []
-  (let [error-rate           (subscribe [::subs/error-rate])
-        max-error-rate       (subscribe [::subs/max-error-rate])
+  (let [error-rate           (subscribe [::subs/variance])
+        max-error-rate       (subscribe [::subs/max-variance])
         groups               (subscribe [::subs/compared-groups])
         saved-groups         (subscribe [::subs/saved-groups])
         compared-group-names (subscribe [::subs/compared-group-names])

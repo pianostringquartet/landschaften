@@ -31,14 +31,10 @@
 (defn search-or-results [search?]
   (let [toggle #(dispatch [::events/toggle-mobile-search])]
     [:> semantic-ui/button-group
-     [:> semantic-ui/button {:compact true
-                             :positive search?
-                             :on-click toggle}
+     [:> semantic-ui/button {:compact true :positive search? :on-click toggle}
                             "search"]
      [:> semantic-ui/button-or]
-     [:> semantic-ui/button {:compact true
-                             :positive (not search?)
-                             :on-click toggle}
+     [:> semantic-ui/button {:compact true :positive (not search?) :on-click toggle}
                             "paintings"]]))
 
 
@@ -57,16 +53,16 @@
 
 
 (defn explore-panel []
-  (let [paintings       (subscribe [::subs/paintings])
+  (let [paintings        (subscribe [::subs/paintings])
         current-painting (subscribe [::subs/current-painting])
-        show-slideshow? (subscribe [::subs/show-slideshow?])
-        loading?        (subscribe [::subs/query-loading?])
-        mobile-search?  (subscribe [::subs/mobile-search?])]
+        show-painting-modal?  (subscribe [::subs/show-painting-modal?])
+        loading?         (subscribe [::subs/query-loading?])
+        mobile-search?   (subscribe [::subs/mobile-search?])]
     [:> semantic-ui/slist
      [loading-modal @loading?]
      [:> semantic-ui/responsive
       {:max-width 799}
-      [mobile-explore-panel @current-painting @paintings @show-slideshow? @mobile-search?]]
+      [mobile-explore-panel @current-painting @paintings @show-painting-modal? @mobile-search?]]
      [:> semantic-ui/responsive
       {:min-width 800}
-      [desktop-explore-panel @current-painting @paintings @show-slideshow?]]]))
+      [desktop-explore-panel @current-painting @paintings @show-painting-modal?]]]))

@@ -85,17 +85,11 @@
 (defn fetch-docs! []
   (GET "/docs" {:handler #(rf/dispatch [:set-docs %])}))
 
-;; Default Luminus page.
-; (defn mount-components []
-;   (rf/clear-subscription-cache!)
-;   (r/render [#'page] (.getElementById js/document "app")))
 
-;; Your app
 (defn mount-components []
   (rf/clear-subscription-cache!)
-  (r/render [views/hello-world] (.getElementById js/document "app")))
+  (r/render [views/root-component] (.getElementById js/document "app")))
 
-;; called in html file
 (defn init! []
   (rf/dispatch-sync [:navigate (reitit/match-by-name router :home)])
   (load-interceptors!)

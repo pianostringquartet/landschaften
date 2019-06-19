@@ -1,85 +1,72 @@
 (ns landschaften.views.utils
   (:require [reagent.core :as r]
             [re-com.core :as rc]
-            [landschaften.semantic-ui :as semantic-ui] ; disable when loading repl
+            [landschaften.semantic-ui :as semantic-ui]      ; disable when loading repl
             [landschaften.specs :as specs]
             [clojure.spec.alpha :as s]
             [re-frame.core :refer [subscribe dispatch]]
-            [ghostwheel.core :as g :refer [check >defn >defn- >fdef => | <- ?]]))
+            [ghostwheel.core :as g :refer [check >defn >defn- >fdef => | <- ?]]
+            [landschaften.helpers :as helpers]))
 
 ;; ------------------------------------------------------
 ;; Utility functions and components
 ;; ------------------------------------------------------
 
-(def log js/console.log)
+;(def log js/console.log)
 
-(defn valid? [spec data]
-  (or (s/valid? spec data)
-      (s/explain spec data)))
-
-
-;; ------------------------------------------------------
-;; String manipulation
-;; ------------------------------------------------------
-
-(def special-chars
-  (let [lower-case "ąàáäâãåæăćčĉęèéëêĝĥìíïîĵłľńňòóöőôõðøśșşšŝťțţŭùúüűûñÿýçżźž"]
-    (clojure.string/join [lower-case (clojure.string/upper-case lower-case)])))
-
-
-(def normal-chars
-  (let [lower-case "aaaaaaaaaccceeeeeghiiiijllnnoooooooossssstttuuuuuunyyczzz"]
-    (clojure.string/join [lower-case (clojure.string/upper-case lower-case)])))
-
-
-(def special->normal-char
-  (into {}
-    (map
-      (fn [special normal] {(str special) (str normal)})
-      special-chars
-      normal-chars)))
-
-
-(defn replace-special-chars [word]
-  (clojure.string/join
-    (map
-      #(if (clojure.string/includes? special-chars (str %))
-         (get special->normal-char (str %))
-         (str %))
-      word)))
+;;; ------------------------------------------------------
+;;; String manipulation
+;;; ------------------------------------------------------
+;
+;(def special-chars
+;  (let [lower-case "ąàáäâãåæăćčĉęèéëêĝĥìíïîĵłľńňòóöőôõðøśșşšŝťțţŭùúüűûñÿýçżźž"]
+;    (clojure.string/join [lower-case (clojure.string/upper-case lower-case)])))
+;
+;
+;(def normal-chars
+;  (let [lower-case "aaaaaaaaaccceeeeeghiiiijllnnoooooooossssstttuuuuuunyyczzz"]
+;    (clojure.string/join [lower-case (clojure.string/upper-case lower-case)])))
+;
+;
+;(def special->normal-char
+;  (into {}
+;    (map
+;      (fn [special normal] {(str special) (str normal)})
+;      special-chars
+;      normal-chars)))
+;
+;
+;(defn replace-special-chars [word]
+;  (clojure.string/join
+;    (map
+;      #(if (clojure.string/includes? special-chars (str %))
+;         (get special->normal-char (str %))
+;         (str %))
+;      word)))
 
 
-(defn search-suggestions [user-input options suggestion-count]
-  (let [matches? #(some?
-                    (re-find (re-pattern (str "(?i)" user-input)) (replace-special-chars %)))]
-    (->> options
-         (filter matches?)
-         (take suggestion-count)
-         (into []))))
+;(defn search-suggestions [user-input options suggestion-count]
+;  (let [matches? #(some?
+;                    (re-find (re-pattern (str "(?i)" user-input)) (helpers/replace-special-chars %)))]
+;    (->> options
+;         (filter matches?)
+;         (take suggestion-count)
+;         (into []))))
 
 ;; ------------------------------------------------------
 ;; Data massaging
 ;; ------------------------------------------------------
 
 
-; TODO: tests, example data
-
 (defn concepts-above [painting n]
   (filter
     #(> (:value %) n)
     (:concepts painting)))
 
-;(def xs [1 2 3])
-;
-;(map inc xs)
+;; better -- get frequencies of all concepts
+;; then filter by whether given concept has certainty above X
+;; then just grab n-many
 
-
-;; takes paintings, and returns
-;(defn frequencies-of-concepts-with-certainty-above [paintings n]
-
-;; takes paintings,
-;; returns map of {"concept" number-of-times-concept-appears in paintings}
-;; excludes concepts whose certainty was equal to or below n
 (>defn frequencies-of-concepts-with-certainty-above [paintings n]
   [::specs/paintings float? => map?]
   (->> paintings
@@ -87,47 +74,15 @@
        (map :name)
        (frequencies)))
 
-
-
-
-
-
-
-(defn paintings->concepts-frequencies
-  "Return the n-many concepts' frequencies, where each concept's certainty is above some level."
+(>defn paintings->concepts-frequencies
+  "Return the n-many concepts' frequencies,
+  where each concept's certainty is above some level."
   [paintings n-many certainty-above]
-  {:pre [(valid? ::specs/paintings paintings)
-         (int? n-many)
-         (float? certainty-above)]
-   :post [(s/coll-of vector?) %]}
+  [::specs/paintings int? float? => (s/coll-of vector?)]
   (->> (frequencies-of-concepts-with-certainty-above paintings certainty-above)
-       (sort-by second)                                     ; meaningless
+       (sort-by second)
        (reverse)
        (take n-many)))
-
-;(frequencies-of-concepts-with-certainty-above
-;  sample-paintings 0.80)
-
-;; returns highest frequency first?
-;(defn paintings->concepts-frequencies
-;  "Return the n-many concepts' frequencies, where each concept's certainty is above some level."
-;  [paintings n-many certainty-above]
-;  {:pre [(valid? ::specs/paintings paintings)
-;         (int? n-many)
-;         (float? certainty-above)]
-;   :post [(s/coll-of vector?) %]}
-;  (do
-;    (js/console.log "paintings->concepts-frequencies will return: " (->> (frequencies-of-concepts-with-certainty-above paintings certainty-above)
-;                                                                         (sort-by second)                                     ; meaningless
-;                                                                         (reverse)
-;                                                                         (take n-many)))
-;    (->> (frequencies-of-concepts-with-certainty-above paintings certainty-above)
-;         (sort-by second)                                     ; meaningless
-;         (reverse)
-;         (take n-many))))
-
-
-;paintings->concepts-frequencies
 
 (defn ->percent [frequency total]
   (->> (/ frequency total)
@@ -136,14 +91,6 @@
        (goog.string/format "%.1f")
        (js/parseFloat)))
 
-
-;; probably want to reuse this, no?
-;(defn paintings->percentage-chart-data [paintings n-many certainty-above]
-;  (let [total (count paintings)]
-;    (->> (paintings->concepts-frequencies paintings n-many certainty-above)
-;         (mapv
-;           (fn [[concept frequency]]
-;             [concept (->percent frequency total)])))))
 
 (>defn paintings->frequency-percent-data [paintings n-many certainty-above]
   [::specs/paintings int? float? => (s/coll-of vector?)]
@@ -169,12 +116,9 @@
     ^{:key i} [:> semantic-ui/slist-item component]))
 
 
-;; this table is not a real table -- it's just rows arranged
 ;; Assumes data are React.js components
 (defn bubble-table
-  "A table that arranges its data in rows n-length.
-
-  Not a real table, but rather a 'forced arrangement'."
+  "A 'table' that arranges its data in rows n-length."
   [data n-per-row]
   {:pre [(int? n-per-row)]}
   (let [rows (partition-all n-per-row data)]
@@ -189,7 +133,7 @@
   [string? float? => vector?]
   ^{:key name}
   [:> semantic-ui/table-row
-   [:> semantic-ui/table-cell {:on-click #(log "on click called")} name]
+   [:> semantic-ui/table-cell {:on-click #(helpers/log "on click called")} name]
    [:> semantic-ui/table-cell (goog.string/format "%.2f" value)]])
 
 
@@ -209,3 +153,6 @@
   [:> semantic-ui/slist-item
    {:header  header
     :content {:content (r/as-component ^{:key header} [concept-frequency-table paintings 15 0.85])}}])
+
+
+(check)
