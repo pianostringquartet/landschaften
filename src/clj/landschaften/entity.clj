@@ -1,36 +1,26 @@
 (ns landschaften.entity
-  (:require [clojure.spec.alpha :as s]
-            [clojure.spec.test.alpha :as st]
-            [expound.alpha :as exp]
-            [clojure.spec.gen.alpha :as gen]))
+  (:require [clojure.spec.alpha :as s]))
 
 
-;; ----------------------------
-;; SPEC HELPERS
-;; ----------------------------
-
-(defn coerce [some-spec some-data]
-  (let [coerced-data (s/conform some-spec some-data)]
-    (if (= coerced-data :clojure.spec.alpha/invalid)
-      nil
-      coerced-data)))
+;; TODO:
+;; - create versions (e.g. of ::painting) compatible with front-end use cases,
+;;   and reuse via .cljc files
 
 
 ;; ----------------------------
 ;; CONSTRAINT
 ;; ----------------------------
 
+
 (def type-constraint {:column "type" :values ["landscape" "study"]})
 (def timeframe-constraint {:column "timeframe" :values ["1501-1550"]})
 (def concept-name-constraint {:column "name" :values ["no person"]})
-(def malformed-constraint {:column "malformed column" :values ["no person"]})
 
 (def no-constraints #{})
 (def painting-constraints #{type-constraint timeframe-constraint})
 (def concept-constraints #{concept-name-constraint})
 (def painting-and-concept-constraints
   #{type-constraint timeframe-constraint concept-name-constraint})
-(def malformed-constraints #{malformed-constraint})
 
 (def PAINTINGS-COLUMNS
   #{"id" "author" "title" "date" "form" "type" "school" "timeframe" "jpg" "concepts"})
@@ -42,19 +32,16 @@
 (def concept-column? (partial contains? PAINTINGS-CONCEPTS-COLUMNS))
 
 (s/def ::column
- (s/or :painting-constraint painting-column?
-       :concept-constraint  concept-column?))
+  (s/or :painting-constraint painting-column?
+        :concept-constraint concept-column?))
 (s/def ::values (s/* string?))
 (s/def ::constraint (s/keys :req-un [::column ::values]))
 
 
-; (s/explain
-;   (s/coll-of ::constraint)
-;   #{{:column "concepts", :values []} {:column "schools", :values []} {:column "timeframes", :values ["1451-1500" "1501-1550" "1551-1600"]} {:column "types", :values ["religious"]}})
 
-;; ----------------------------
-;; SQLVEC
-;; ----------------------------
+; ----------------------------
+; SQLVEC
+; ----------------------------
 
 (s/def ::sqlvec
   (fn [[query & params]]
@@ -67,25 +54,24 @@
 ;; ----------------------------
 
 (def PAINTING-TYPES
- #{"mythological"
-   "interior"
-   "landscape"
-   "study"
-   "genre"
-   "religious"
-   "other"
-   "still-life"
-   "historical"
-   "portrait"})
+  #{"mythological"
+    "interior"
+    "landscape"
+    "study"
+    "genre"
+    "religious"
+    "other"
+    "still-life"
+    "historical"
+    "portrait"})
 
 (def SCHOOLS
- #{"Italian", "Other", "Dutch", "French", "Spanish", "American", "Flemish", "English", "Netherlandish", "German", "Hungarian", "Swiss", "Bohemian", "Danish", "Austrian", "Belgian"})
+  #{"Italian", "Other", "Dutch", "French", "Spanish", "American", "Flemish", "English", "Netherlandish", "German", "Hungarian", "Swiss", "Bohemian", "Danish", "Austrian", "Belgian"})
 
 (def SAMPLE-JPEGS
   #{"https://www.wga.hu/art/b/bruegel/pieter_e/01/04icarus.jpg", "https://www.wga.hu/art/n/napoleta/navalbat.jpg", "https://www.wga.hu/art/b/bril/paul/staghunt.jpg", "https://www.wga.hu/art/b/bison/milancat.jpg", "https://www.wga.hu/art/v/velde/willem/calm_sea.jpg"})
 
 (s/def ::date string?)
-;; is set okay, or needs to be #(contains? ...) ?
 (s/def ::school #(contains? SCHOOLS %))
 (s/def ::type #(contains? PAINTING-TYPES %))
 (s/def ::title string?)
@@ -93,52 +79,21 @@
 (s/def ::form #{"painting"})
 (s/def ::timeframe string?)
 
-(s/def ::wga-jpg ; Web Gallery of Art jpg url
- (s/with-gen
-  (s/and #(clojure.string/includes? % "https://www.wga.hu/art/")
-         #(clojure.string/includes? % ".jpg"))
-  (s/gen SAMPLE-JPEGS)))
+(s/def ::wga-jpg                                            ; Web Gallery of Art jpg url
+  (s/with-gen
+    (s/and #(clojure.string/includes? % "https://www.wga.hu/art/")
+           #(clojure.string/includes? % ".jpg"))
+    (s/gen SAMPLE-JPEGS)))
 
-;; this is allowed to be null / an empty str in the db
-;; so a valid painting
-(s/def ::jpg ; Cloudinary 'secure [jpg] url'
+(s/def ::jpg                                                ; Cloudinary 'secure [jpg] url'
   (s/nilable
     (s/and
       #(clojure.string/includes? % "https://res.cloudinary.com/")
       #(clojure.string/includes? % "/image/upload/"))))
-
-
 
 (s/def ::name string?)
 (s/def ::value #(<= 0.0 % 1.0))
 (s/def ::concept (s/keys :req-un [::name ::value]))
 (s/def ::concepts (s/coll-of ::concept))
 
-; (s/def ::painting (s/keys :req-un [::date ::school ::type ::title ::form  ::author ::timeframe ::jpg ::concepts]))
-(s/def ::painting (s/keys :req-un [::date ::school ::type ::title ::form  ::author ::timeframe ::wga-jpg ::jpg ::concepts]))
-
-
-
-;; ----------------------------
-;; TESTS
-;; ----------------------------
-
-; ; turn on the spec for the fn in this namespace
-; (st/instrument `paintings-satisfying)
-; ;
-; ; ; should fail:
-; (paintings-satisfying malformed-constraint)
-; (paintings-satisfying [malformed-constraint])
-; ; ;
-; ; ; ;; should succeed:
-; (paintings-satisfying #{type-constraint})
-;
-; (paintings-satisfying #{})
-
-; ;; success, good
-; (exp/expound ::entity/painting
-;   (first (take 3 (retrieve-paintings *db* #{{} {:column "timeframe" :values ["1501-1550", "1551-1600"]}}))))
-
-; ;; fails, good:
-; (exp/expound ::entity/painting
-;   (take 3 (retrieve-paintings *db* #{{} {:column "timeframe" :values ["1501-1550", "1551-1600"]}})))
+(s/def ::painting (s/keys :req-un [::date ::school ::type ::title ::form ::author ::timeframe ::wga-jpg ::jpg ::concepts]))

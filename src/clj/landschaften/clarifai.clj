@@ -2,65 +2,19 @@
   (:require [clj-http.client :as client]
             [clojure.data.json :as json] ; replace with cheshire?
             [clojure.spec.alpha :as s]
-            [expound.alpha :as expound]))
-
-
-;; INTERACT WITH CLARIFAI API VIA RAW REQUESTS`
+            [landschaften.config :refer [env]]))
 
 
 ;; TODO:
-;; - clean this up; only use the minimum specs you need
-;; - store specs elsewhere?
-;; - move your api key out of here and into a private config file
-
-
-;; ---------------------------------------
-;; Schemas for how data should look
-;; ---------------------------------------
-
-(def valid-concept {:name "people" :value 0.9971944})
-
-(def valid-concepts [{:name "people" :value 0.9971944} {:name "adult" :value 0.995689} {:name "nude" :value 0.99504244} {:name "one" :value 0.9882233}])
-
-(def valid-concepts-for-image
- {:url "https://www.wga.hu/art/p/pontormo/1/00leda.jpg"
-  :concepts [{:name "people" :value 0.9971944}
-             {:name "adult" :value 0.995689}]})
-
-(def invalid-concepts-for-image
- {:url "https://www.wga.hu/art/p/pontormo/1/00leda.jpg"
-  :concepts [{:name 6 :value 0.9971944}
-             {:name "adult" :value 1}]})
-
-(s/def ::name string?)
-(s/def ::value double?)
-(s/def ::concept (s/keys :req-un [::name ::value]))
-(s/valid? ::concept valid-concept)
-
-(s/def ::url string?)
-(s/def ::concepts (s/+ ::concept))
-(s/def ::concepts-for-image (s/keys :req-un [::url ::concepts]))
-(s/valid? ::concepts-for-image valid-concepts-for-image)
-
-;; this is succeeding but SHOULD FAIL because its output include unwanted keys
-;; (:id, :app_id) in the concept-map in :concepts
-(s/valid? ::concepts-for-image invalid-concepts-for-image)
-;
-; ;; PASSING :-)
-; (s/conform
-;  ::concepts-for-image (get-concepts-for-image (first outputs)))
-
-; (map
-;   #(expound/expound ::concepts-for-image %)
-;   (map get-concepts-for-image outputs))
+;; - clean this up
 
 
 ;; ---------------------------------------
 ;; Image processing only (no video!; default to page 1)
 ;; ---------------------------------------
 
+(def api-key (:api-key env))
 
-(def api-key "ebc31d071d23414ab7e369c003e3c3bf")
 
 (def models
   {:apparel "e0be3b9d6a454f0493ac3a30784001ff"
@@ -82,23 +36,22 @@
    :focus "c2cf7cecd8a6427da375b9f35fcd2381"
    :textures-patterns "fbefb47f9fdb410e8ce14f24f54b47ff"})
 
-; (defn- api-endpoint [model page-number page-size]
-;   (str "https://api.clarifai.com/v2/models/" (model models/models) "/outputs?" page-number "&per_page=" page-size))
 
 (defn api-endpoint [model]
   (str "https://api.clarifai.com/v2/models/" (model models) "/outputs"))
 
-; (api-endpoint :general)
 
 (defn- request-headers [api-key]
   {:headers {:authorization (str "Key " api-key)
              :content-type "Application/JSON"}})
+
 
 (defn request-body [urls]
   {:body (json/write-str {:inputs
                           (mapv
                             (fn [url] {:data {:image {:url url}}})
                             urls)})})
+
 
 (defn post-request [api-key model urls]
   (client/post
@@ -110,27 +63,14 @@
 (defn- response->json [response]
   (json/read-json (:body response true)))
 
+
 (defn get-concepts-for-image [output]
  {:url (get-in output [:input :data :image :url])
   :concepts (map #(dissoc % :id :app_id) (get-in output [:data :concepts]))})
+
 
 (defn get-concepts-for-images [model urls]
  (->> (post-request api-key model urls)
    (response->json)
    (:outputs)
    (map get-concepts-for-image)))
-
-;(def two-urls
-;  ["https://www.wga.hu/art/p/pontormo/1/00leda.jpg" "https://www.wga.hu/art/p/pontormo/1/01visit.jpg"])
-
-
-; (s/conform
-;  ::concepts-for-image (get-concepts-for-image (first outputs)))
-
-; the first result should conform to ::concepts-for-image
-;(def data (get-concepts-for-images :general two-urls))
-
-; data
-; (expound/expound ::concepts-for-image (first data))
-; (expound/expound (s/+ ::concepts-for-image) data)
-;; ^^^ successes :-)

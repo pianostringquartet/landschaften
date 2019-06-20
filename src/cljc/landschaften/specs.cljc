@@ -1,9 +1,11 @@
 (ns landschaften.specs
   (:require [clojure.spec.alpha :as s]))
 
+
 ;; -------------------------
 ;; PAINTING SPEC
 ;; -------------------------
+
 
 (def PAINTING-TYPES
   #{"mythological"
@@ -53,6 +55,7 @@
                    (fn [x] (<= 0.0 x 1.0))))))
 (s/def ::concept (s/keys :req-un [::name ::value]))
 (s/def ::concepts (s/coll-of ::concept))
+
 (s/def ::painting (s/keys :req-un [::date
                                    ::school
                                    ::type
@@ -65,9 +68,11 @@
 
 
 
+
 ;; -------------------------
 ;; GROUP SPEC
 ;; -------------------------
+
 
 (s/def ::group-name string?)
 (s/def ::paintings (s/coll-of ::painting))
@@ -86,9 +91,11 @@
                                 ::concept-constraints
                                 ::artist-constraints]))
 
+
 ;; -------------------------
 ;; DB SPEC
 ;; -------------------------
+
 
 (s/def ::current-painting (s/nilable ::painting))
 (s/def ::examining? boolean?)
