@@ -151,11 +151,18 @@
      {:column "name" :values (into [] (get-in db db/path:concept-constraints))}}))
 
 
+(>defn on-query-started [db]
+  [::specs/app-db => ::specs/app-db]
+  (-> db
+      (assoc :query-loading? true)
+      (assoc :show-group-name-prompt? false)))
+
+
 (reg-event-fx
   ::query-started
   (fn query [cofx [_ group-name]]
     (let [db (:db cofx)]
-      {:db (assoc db :query-loading? true)
+      {:db (on-query-started db)
        :post-request
         {:uri "/query"
          :params {:constraints (->query-constraints db)}
@@ -282,6 +289,7 @@
 ;; ------------------------------------------------------
 ;; Updating groups
 ;; ------------------------------------------------------
+
 
 (defn toggle-save-group-popover-showing [db showing?]
   (assoc db :show-group-name-prompt? showing?))
