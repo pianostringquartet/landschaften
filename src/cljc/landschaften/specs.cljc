@@ -100,7 +100,6 @@
 (s/def ::all-timeframes (s/coll-of ::timeframe))
 (s/def ::all-concepts (s/coll-of string?))
 (s/def ::all-artists (s/coll-of string?))
-;(s/def ::current-group ::group)
 (s/def ::current-group (s/nilable ::group))
 (s/def ::show-group-name-prompt? boolean?)
 (s/def ::saved-groups map?)
@@ -122,4 +121,3 @@
                    ::show-group-name-prompt?
                    ::saved-groups
                    ::compared-group-names]))
-

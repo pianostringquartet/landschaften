@@ -8,11 +8,9 @@
             [day8.re-frame.test :as rf-test]))
 
 
-(deftest test-love
-  (is (= 2 2)))
-
-
-;; VARIANCE
+;; ------------------------------------------------------
+;; Variance
+;; ------------------------------------------------------
 
 (def colors-dataset-1 {"red" 2 "blue" 3 "black" 1})
 (def colors-dataset-2 {"red" 10 "blue" 30 "white" 50})
@@ -31,22 +29,20 @@
          0.8209876543209877)))
 
 
-;; test that:
-;; - when group removed, it's removed from compared-groups and saved-groups
-;; ignore
+;; ------------------------------------------------------
+;; Re-frame logic: event handlers, subscriptions
+;; ------------------------------------------------------
 
-
-;; karma doesn't refresh the state each time it reloads the tests
-
-;;
+;; TODO: include saved-groups,
+;; to confirm that removed-group also removes relevant saved-group
 (deftest test-update-group
   (rf-test/run-test-sync
     (let [compared-group-names (rf/subscribe [::subs/compared-group-names])
           impressionism        "Impressionism"
           mannerism            "Mannerism"]
 
-      (do
-        (rf/dispatch [::events/initialize-app]))
+      ;; Initialize database
+      (do (rf/dispatch [::events/initialize-app]))
 
       ;; Start without any compared groups
       (is (empty? @compared-group-names))
@@ -60,10 +56,7 @@
       (is (= mannerism (first @compared-group-names)))
 
       ;; Remove a group name
-      ;(doseq [name-to-remove [impressionism]]
-      ;  (rf/dispatch [::events/remove-group name-to-remove]))
-      (do
-        (rf/dispatch [::events/remove-group impressionism]))
+      (do (rf/dispatch [::events/remove-group impressionism]))
 
       ;; Confirm that group name was removed:
       (is (empty? (filter #(= impressionism %) @compared-group-names)))
@@ -71,7 +64,6 @@
       (is (not-empty (filter #(= % mannerism) @compared-group-names)))
 
       ;; Remove last group name
-      ;(doseq [name-to-remove [mannerism]]
       (do (rf/dispatch [::events/remove-group mannerism]))
 
       ;; Confirm last name is removed
