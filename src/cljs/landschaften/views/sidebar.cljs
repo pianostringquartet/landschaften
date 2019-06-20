@@ -59,8 +59,7 @@
     :position "bottom left"                                 ; to avoid re-com selection-list CSS conflict
     :on-close #(dispatch [::events/hide-save-group-popover])
     :content  (r/as-component
-                [:> semantic-ui/input {:on-change    #(js/console.log "ON CHANGE")
-                                       :autoFocus true
+                [:> semantic-ui/input {:autoFocus true
                                        :placeholder  existing-group-name
                                        :on-key-press (fn [react-synthetic-event]
                                                        (let [enter-pressed? (= "Enter" (aget react-synthetic-event "key"))
@@ -91,7 +90,7 @@
    {:color         color
     :icon          true
     :labelPosition "right"
-    :style         {:border-radius "30px" :padding "4px"}   ; curvier
+    :style         {:border-radius "30px" :padding "4px"}
     :on-click      #(dispatch [::events/switch-groups name])}
    [:> semantic-ui/icon {:name     "close"
                          :on-click #(dispatch [::events/remove-group name])}]
@@ -119,13 +118,15 @@
   (let [paintings (subscribe [::subs/paintings])
         components (list [constraints/constraints]
                          [ui-buttons]
-                         [:div [constraints/concept-typeahead]
-                               [constraints/selected-concepts]]
+                         [:div
+                                ;[rc/label :label "Saved searches:"]
+                                [constraints/concept-typeahead]
+                                [constraints/selected-concepts]]
                          [:div [constraints/artist-typeahead]
                                [constraints/selected-artists]]
                          [saved-groups-buttons]
                          (when (> (count @paintings) 0)
-                           [utils/table-with-header "Common concepts in these paintings: " @paintings]))]
+                           [utils/table-with-header "Frequency (%) of concepts in these paintings: " @paintings]))]
     [:> semantic-ui/slist {:relaxed true}
      (utils/as-semantic-ui-list-items components)]))
 

@@ -84,11 +84,14 @@
       (reset! search-val user-input)
       (reset! result-set (suggestions user-input options 6)))))
 
-
 (defn get-result [semantic-ui-object]
   {:post [(string? %)]}
   (get-in (js->clj semantic-ui-object) ["result" "title"]))
 
+(defn on-result-select [text-val-atom dispatch-event]
+  (do
+    (dispatch-event)
+    (reset! text-val-atom "")))
 
 (defn concept-typeahead []
   (let [text-val (r/atom "")
@@ -96,8 +99,10 @@
         concepts (subscribe [::subs/all-concepts])]
     (fn deck-search-typeahead []
       [:> semantic-ui/search
-       {:on-result-select #(dispatch [::events/update-selected-concepts (get-result %2)])
+       {:on-result-select #(on-result-select text-val
+                                             (fn [] (dispatch [::events/update-selected-concepts (get-result %2)])))
         :on-search-change #(on-search-change @concepts text-val results %2)
+        :placeholder      "Search for concepts"
         :results          @results
         :value            @text-val}])))
 
@@ -108,8 +113,10 @@
         artists  (subscribe [::subs/all-artists])]
     (fn artist-search []
       [:> semantic-ui/search
-       {:on-result-select #(dispatch [::events/update-selected-artists (get-result %2)])
+       {:on-result-select #(on-result-select text-val
+                                             (fn [] (dispatch [::events/update-selected-artists (get-result %2)])))
         :on-search-change #(on-search-change @artists text-val results %2)
+        :placeholder      "Search for artists"
         :results          @results
         :value            @text-val}])))
 
