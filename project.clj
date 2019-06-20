@@ -44,19 +44,25 @@
                  [gnl/ghostwheel "0.3.8"]
                  [gnl/ghostwheel.tracer "0.3.8"]
                  [day8.re-frame/test "0.1.5"]
+
+                 [figwheel-sidecar "0.5.18"] ;; added
+                 [org.clojure/core.async "0.4.474"] ; added
+
                  [reagent-material-ui "0.2.5"] ;; library, with incomplete list of mui tags
                  [cljsjs/chartjs "2.8.0-0"] ;; replacing google charts
                  [cljsjs/semantic-ui-react "0.84.0-0"]]
 
 
   :min-lein-version "2.0.0"
-  :source-paths ["src/clj" "src/cljs" "src/cljc"]
+  :source-paths ["src/clj" "src/cljs" "src/cljc" "src/script"] ;; added script for FW
   :test-paths ["test/clj"]
   :resource-paths ["resources" "target/cljsbuild"]
   :target-path "target/%s/"
   :main ^:skip-aot landschaften.core
   :aliases {"fig" ["trampoline" "run" "-m" "figwheel.main"]
             "build-dev" ["trampoline" "run" "-m" "figwheel.main" "-b" "dev" "-r"]}
+
+            ;; needed for FW + cursive
   :plugins [[lein-cljsbuild "1.1.7"]
             [lein-immutant "2.1.0"]]
   :clean-targets ^{:protect false}
@@ -103,7 +109,8 @@
                                  [day8.re-frame/tracing "0.5.1"]]
                   :plugins      [[com.jakemccrary/lein-test-refresh "0.19.0"]
                                  [lein-doo "0.1.10"]
-                                 [lein-figwheel "0.5.16"]
+                                 ;[lein-figwheel "0.5.16"] ;; remove for FW + cursive
+                                 [lein-cljsbuild "1.1.7"] ;; not needed to add?
                                  [org.clojure/clojurescript "1.10.339"]]
                   :cljsbuild
                   {:builds

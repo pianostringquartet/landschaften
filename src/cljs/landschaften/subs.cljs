@@ -204,8 +204,7 @@
         (variance-calculation-ready-data (:paintings (first groups)))
         (variance-calculation-ready-data (:paintings (second groups)))))))
 
-;; scrambling should be part of variance, not paintings
-;; i.e. should not be painting-specific
+
 (defn scramble-concept-names [painting]
   {:post [(s/valid? ::specs/painting %)]}
   (let [scramble (fn [concept-set]

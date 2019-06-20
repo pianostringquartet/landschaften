@@ -1,27 +1,31 @@
 (ns landschaften.variance
-  (:require [clojure.spec.alpha :as s]))
+  (:require [clojure.spec.alpha :as s]
+            [ghostwheel.core :as g :refer [check >defn >defn- >fdef => | <- ?]]))
 
 ; https://www.wikihow.com/Calculate-Variance
+
+(s/def ::dataset
+  (s/map-of string? number?))
 
 (s/def ::variance
   #(<= 0 % 1))
 
-(defn normalize [m]
-  {:pre [(map? m)]
-   :post [(map? %)]}
+(>defn normalize [m]
+  [::dataset => ::dataset]
   (let [total (reduce + (vals m))]
     (->> m
       (map (fn [[k v]] {k (/ (double v) (double total))}))
       (apply merge))))
 
-(defn adjustment
+(>defn adjustment
   "How much to adjust error rate, for given feature."
   [feature data-1 data-2]
+  [string? ::dataset ::dataset => number?]
   (let [diff (- (get data-1 feature 0)
                 (get data-2 feature 0))]
     (* diff diff)))
 
-(defn variance
+(>defn variance
   "Get the variance (measure of (dis)similarity between two datasets.
 
   Lower variance means higher similarity.
@@ -29,9 +33,10 @@
 
   data-1, data-2: map"
   [data-1 data-2]
-  {:pre [(every? int? (vals data-1))
-         (every? int? (vals data-2))]
-   :post [(<= 0 % 1)]} ; variance falls within 0, 1
+  [::dataset ::dataset => ::variance]
+  ;{:pre [(every? int? (vals data-1))
+  ;       (every? int? (vals data-2))]
+  ; :post [(<= 0 % 1)]} ; variance falls within 0, 1
   (let [features (into #{} (concat (keys data-1) (keys data-2)))
         normalized-data-1 (normalize data-1)
         normalized-data-2 (normalize data-2)
@@ -43,12 +48,12 @@
 
 ;;; TESTS
 
-;(def german {"red" 2 "blue" 3 "black" 1})
-;(def french {"red" 10 "blue" 30 "white" 50})
+(def german {"red" 2 "blue" 3 "black" 1})
+(def french {"red" 10 "blue" 30 "white" 50})
 ;; this is exactly what Thiago had :)
-;(= (error-rate french german)
-;   0.4135802469135803)
-;
+(= (variance french german)
+   0.4135802469135803)
+
 ;;; SOME OVERLAP: all features same, but values differ
 ;(def some-overlap-german {"red" 2 "blue" 3 "black" 1})
 ;(def some-overlap-french {"red" 10 "blue" 30 "black" 50})
@@ -78,3 +83,5 @@
 ;;
 ;;(= (normalize french) ;; matches jupyter
 ;;   {"red" 0.1111111111111111, "blue" 0.3333333333333333, "white" 0.5555555555555556})
+
+(check)
