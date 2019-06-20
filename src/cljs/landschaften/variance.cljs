@@ -3,6 +3,9 @@
 
 ; https://www.wikihow.com/Calculate-Variance
 
+(s/def ::variance
+  #(<= 0 % 1))
+
 (defn normalize [m]
   {:pre [(map? m)]
    :post [(map? %)]}
@@ -38,8 +41,8 @@
     (reduce + 0 adjustments)))
 
 
-;;;; TESTS
-;
+;;; TESTS
+
 ;(def german {"red" 2 "blue" 3 "black" 1})
 ;(def french {"red" 10 "blue" 30 "white" 50})
 ;; this is exactly what Thiago had :)

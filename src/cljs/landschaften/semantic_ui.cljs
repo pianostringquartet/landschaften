@@ -2,11 +2,7 @@
   (:require [cljsjs.semantic-ui-react]
             [goog.object]))
 
-;; From cljsjs/semantic-ui-react:
-;; https://github.com/cljsjs/packages/tree/master/semantic-ui-react
-
-;; Top-level extern
-(def semantic-ui js/semanticUIReact)
+(def semantic-ui js/semanticUIReact) ; top-level extern
 
 (defn component
   "Get a component from sematic-ui-react:

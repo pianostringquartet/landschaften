@@ -6,10 +6,15 @@
             [landschaften.events :as events]
             [landschaften.views.chart :as chart]
             [landschaften.views.utils :as utils]
-            [landschaften.specs :as specs]
-            [clojure.spec.alpha :as s]
             [landschaften.semantic-ui :as semantic-ui]
             [ghostwheel.core :as g :refer [check >defn >defn- >fdef => | <- ?]]))
+
+
+;; ------------------------------------------------------
+;; Comparing groups' (dis)similarity
+;; - statistically via variance
+;; - visualization via radar chart
+;; ------------------------------------------------------
 
 
 (>defn clear-button! []
@@ -61,17 +66,6 @@
     [similarity-measurement error max-error]]])
 
 
-;(defn concept-frequency-table [paintings n-many certainty-above]
-;  [utils/sem-table (chart/paintings->percentage-chart-data paintings n-many certainty-above)])
-;
-;
-;(>defn table-with-header [header paintings]
-;  [string? ::specs/paintings => vector?]
-;  [:> semantic-ui/slist-item
-;   {:header  header
-;    :content {:content (r/as-component ^{:key header} [concept-frequency-table paintings 15 0.85])}}])
-
-
 (defn desktop-compare-screen [groups]
   (when-not (empty? groups)
     [:> semantic-ui/slist {:horizontal true :relaxed true}
@@ -92,25 +86,24 @@
 
 
 (defn compare-screen []
-  (let [error-rate           (subscribe [::subs/variance])
-        max-error-rate       (subscribe [::subs/max-variance])
+  (let [variance             (subscribe [::subs/variance])
+        max-variance         (subscribe [::subs/max-variance])
         groups               (subscribe [::subs/compared-groups])
         saved-groups         (subscribe [::subs/saved-groups])
         compared-group-names (subscribe [::subs/compared-group-names])
-        compared-groups (subscribe [::subs/compared-groups])]
+        compared-groups      (subscribe [::subs/compared-groups])]
     [:> semantic-ui/slist
      [:> semantic-ui/slist-item [clear-button!]]
      [:> semantic-ui/slist-item [saved-search-buttons @saved-groups @compared-group-names]]
-     (when @error-rate
-       [:> semantic-ui/slist-item [error-rate-label @error-rate @max-error-rate]])
-     (when @error-rate
+     (when @variance
+       [:> semantic-ui/slist-item [error-rate-label @variance @max-variance]])
+     (when @variance
        ;; Workaround: force Chart.js to re-render, don't use React lifecycle methods
        ^{:key (rand-int 999)}
-       [chart/radar-chart-component
-          (chart/compared-groups->radar-chart-data! (first @compared-groups) (second @compared-groups) 15 0.85)])
+       [chart/radar-chart
+        (chart/compared-groups->radar-chart-data! (first @compared-groups) (second @compared-groups) 15 0.85)])
      [:> semantic-ui/responsive {:max-width 799} [mobile-compare-screen @groups]]
      [:> semantic-ui/responsive {:min-width 800} [desktop-compare-screen @groups]]]))
-
 
 
 (check)

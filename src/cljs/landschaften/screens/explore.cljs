@@ -9,6 +9,11 @@
             [landschaften.semantic-ui :as semantic-ui]))
 
 
+;; ------------------------------------------------------
+;; Explore paintings
+;; - specify constraints and search for paintings
+;; ------------------------------------------------------
+
 (defn no-paintings-found []
   [rc/title
    :label "No paintings matching criteria found."

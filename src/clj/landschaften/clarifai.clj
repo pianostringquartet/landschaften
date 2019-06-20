@@ -10,7 +10,7 @@
 
 ;; TODO:
 ;; - clean this up; only use the minimum specs you need
-;; - maybe store specs elsewhere?
+;; - store specs elsewhere?
 ;; - move your api key out of here and into a private config file
 
 

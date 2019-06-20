@@ -8,75 +8,24 @@
             [ghostwheel.core :as g :refer [check >defn >defn- >fdef => | <- ?]]
             [landschaften.helpers :as helpers]))
 
-;; ------------------------------------------------------
-;; Utility functions and components
-;; ------------------------------------------------------
-
-;(def log js/console.log)
-
-;;; ------------------------------------------------------
-;;; String manipulation
-;;; ------------------------------------------------------
-;
-;(def special-chars
-;  (let [lower-case "ąàáäâãåæăćčĉęèéëêĝĥìíïîĵłľńňòóöőôõðøśșşšŝťțţŭùúüűûñÿýçżźž"]
-;    (clojure.string/join [lower-case (clojure.string/upper-case lower-case)])))
-;
-;
-;(def normal-chars
-;  (let [lower-case "aaaaaaaaaccceeeeeghiiiijllnnoooooooossssstttuuuuuunyyczzz"]
-;    (clojure.string/join [lower-case (clojure.string/upper-case lower-case)])))
-;
-;
-;(def special->normal-char
-;  (into {}
-;    (map
-;      (fn [special normal] {(str special) (str normal)})
-;      special-chars
-;      normal-chars)))
-;
-;
-;(defn replace-special-chars [word]
-;  (clojure.string/join
-;    (map
-;      #(if (clojure.string/includes? special-chars (str %))
-;         (get special->normal-char (str %))
-;         (str %))
-;      word)))
-
-
-;(defn search-suggestions [user-input options suggestion-count]
-;  (let [matches? #(some?
-;                    (re-find (re-pattern (str "(?i)" user-input)) (helpers/replace-special-chars %)))]
-;    (->> options
-;         (filter matches?)
-;         (take suggestion-count)
-;         (into []))))
 
 ;; ------------------------------------------------------
-;; Data massaging
+;; Getting frequencies of concepts
 ;; ------------------------------------------------------
 
-
-(defn concepts-above [painting n]
-  (filter
-    #(> (:value %) n)
-    (:concepts painting)))
-
-;; better -- get frequencies of all concepts
-;; then filter by whether given concept has certainty above X
-;; then just grab n-many
-
-(>defn frequencies-of-concepts-with-certainty-above [paintings n]
+(>defn frequencies-of-concepts-with-certainty-above [paintings certainty-above]
   [::specs/paintings float? => map?]
-  (->> paintings
-       (mapcat #(concepts-above % n))
-       (map :name)
-       (frequencies)))
+  (let [high-certainty-concepts (fn [{:keys [concepts]}]
+                                  (filter #(> (:value %) certainty-above) concepts))]
+    (->> paintings
+         (mapcat high-certainty-concepts)
+         (map :name)
+         (frequencies))))
+
 
 (>defn paintings->concepts-frequencies
   "Return the n-many concepts' frequencies,
-  where each concept's certainty is above some level."
+  where each concept's certainty is above certainty-above."
   [paintings n-many certainty-above]
   [::specs/paintings int? float? => (s/coll-of vector?)]
   (->> (frequencies-of-concepts-with-certainty-above paintings certainty-above)
@@ -84,21 +33,20 @@
        (reverse)
        (take n-many)))
 
-(defn ->percent [frequency total]
-  (->> (/ frequency total)
-       (double)
-       (* 100)
-       (goog.string/format "%.1f")
-       (js/parseFloat)))
+
+(defn count->percent [[concept-name concept-count] total]
+  {:post [vector? (string? (first %))]}
+  [concept-name (->> (/ concept-count total)
+                     (double)
+                     (* 100)
+                     (goog.string/format "%.1f")
+                     (js/parseFloat))])
 
 
 (>defn paintings->frequency-percent-data [paintings n-many certainty-above]
   [::specs/paintings int? float? => (s/coll-of vector?)]
-  (let [total (count paintings)]
-    (->> (paintings->concepts-frequencies paintings n-many certainty-above)
-         (mapv
-           (fn [[concept frequency]]
-             [concept (->percent frequency total)])))))
+  (->> (paintings->concepts-frequencies paintings n-many certainty-above)
+       (mapv #(count->percent % (count paintings)))))
 
 
 ;; ------------------------------------------------------

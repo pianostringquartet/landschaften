@@ -11,8 +11,7 @@
             [reitit.core :as reitit]
             [clojure.string :as string]
             [landschaften.db :as db]
-            ;; For Clojurescript tracing
-            [ghostwheel.tracer])
+            [ghostwheel.tracer]) ; for Clojurescript tracing
 
   (:import goog.History))
 

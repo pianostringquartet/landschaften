@@ -8,6 +8,11 @@
             [ghostwheel.core :as g :refer [check >defn >defn- >fdef => | <- ?]]))
 
 
+;; ------------------------------------------------------
+;; Charts for displaying data
+;; - Chart.js radar charts
+;; ------------------------------------------------------
+
 (s/def ::chart-js-dataset
   (s/and
     (s/coll-of float?)
@@ -18,7 +23,7 @@
     (s/coll-of string?)
     vector?))
 
-(>defn show-radar-chart [data-1 data-1-name data-2 data-2-name labels]
+(>defn chartjs-radar-chart [data-1 data-1-name data-2 data-2-name labels]
   [::chart-js-dataset string? ::chart-js-dataset string? ::chart-js-labelset => any?] ;; returns a js object
   (let [context (.getContext (.getElementById js/document "rev-chartjs") "2d")]
     (js/Chart. context
@@ -30,7 +35,6 @@
                                            {:data            data-2
                                             :label           data-2-name
                                             :backgroundColor "rgba(54, 162, 235, 0.3)"}]}}))))
-
 
 (defn frequency-data? [xs]
   (and (seq? xs)
@@ -44,13 +48,13 @@
                                (map first frequency-data-2)]))))
 
 
-(defn arrange-by-label
+(defn add-missing-labels
   "Given frequency-data and an ordered collection of labels,
     returns frequency-data in same order as labels.
 
   If label not already in frequency-data,
     adds label with default 0.0 value."
-  [frequency-data labels]
+  [labels frequency-data]
   {:pre [(frequency-data? frequency-data) (vector? labels)]}
   [frequency-data? (s/coll-of string?) => frequency-data?]
   (let [get-existing-label (fn [label] (first (filter #(= label (first %)) frequency-data)))]
@@ -63,35 +67,32 @@
   "Returns the two groups' data in a Chart.js Radar-chart-friendly form.
 
   First retrieves the frequencies of concepts with certainty-above.
-
-  Datasets' numbers are returned arranged in same order as labelset.
+  Datasets' numbers will be arranged in same order as labelset.
   "
   [group-1 group-2 n-many certainty-above]
   [::specs/group ::specs/group int? float? => map?]
-  (let [concept-frequency->percent       (fn [[concept frequency] total]
-                                           [concept (utils/->percent frequency total)])
-        frequency-data                   (fn [paintings]
-                                           (utils/paintings->concepts-frequencies paintings n-many certainty-above))
-        group-1-frequencies              (frequency-data (:paintings group-1))
-        group-2-frequencies              (frequency-data (:paintings group-2))
-        labels                           (get-labels group-1-frequencies group-2-frequencies)
-        arranged-frequencies-as-percents (fn [frequency-data paintings-total]
-                                           (mapv #(concept-frequency->percent % paintings-total)
-                                                 (arrange-by-label frequency-data labels)))]
-    {:data-1      (mapv second
-                        (arranged-frequencies-as-percents group-1-frequencies
-                                                          (count (:paintings group-1)))) ;final-data-1
+  (let [as-frequency-data   (fn [paintings]
+                              (utils/paintings->concepts-frequencies paintings n-many certainty-above))
+        group-1-paintings   (:paintings group-1)
+        group-2-paintings   (:paintings group-2)
+        group-1-frequencies (as-frequency-data group-1-paintings)
+        group-2-frequencies (as-frequency-data group-2-paintings)
+        ;; only want labels for concepts with 'certainty-above'
+        labels              (get-labels group-1-frequencies group-2-frequencies)
+        as-dataset          (fn [frequency-data total] (->> frequency-data
+                                                            (add-missing-labels labels)
+                                                            (mapv #(utils/count->percent % total))
+                                                            (mapv second)))]
+    {:data-1      (as-dataset group-1-frequencies (count group-1-paintings))
      :data-1-name (:group-name group-1)
-     :data-2      (mapv second
-                        (arranged-frequencies-as-percents group-2-frequencies
-                                                          (count (:paintings group-2)))) ;final-data-1
+     :data-2      (as-dataset group-2-frequencies (count group-2-paintings))
      :data-2-name (:group-name group-2)
      :labels      labels}))
 
 
-(defn radar-chart-component [{:keys [data-1 data-1-name data-2 data-2-name labels]}]
+(defn radar-chart [{:keys [data-1 data-1-name data-2 data-2-name labels]}]
   (r/create-class
-    {:component-did-mount #(show-radar-chart data-1 data-1-name data-2 data-2-name labels)
+    {:component-did-mount #(chartjs-radar-chart data-1 data-1-name data-2 data-2-name labels)
      :display-name        "chartjs-component"
      :reagent-render      (fn []
                             [:canvas {:id "rev-chartjs" :width "700" :height "380"}])}))

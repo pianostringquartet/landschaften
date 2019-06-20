@@ -7,11 +7,7 @@
             [landschaften.specs :as specs]
             [landschaften.helpers :as helpers]
             [cljs.spec.alpha :as s]
-            [re-frame.core :as rf]
-            [cljs.spec.test.alpha :as st]
-            [ghostwheel.core
-              :as g
-              :refer [check >defn >defn- >fdef => | <- ?]]))
+            [ghostwheel.core :as g :refer [check >defn >defn- >fdef => | <- ?]]))
 
 
 ;; ------------------------------------------------------
@@ -53,7 +49,7 @@
 
 
 ;; ------------------------------------------------------
-;; Requests
+;; HTTP Requests
 ;; ------------------------------------------------------
 
 
@@ -139,8 +135,9 @@
 
 
 ;; ------------------------------------------------------
-;; Communicating with server
+;; Querying server for paintings
 ;; ------------------------------------------------------
+
 
 (defn ->query-constraints
   "Put group's constraints in backend API's expected format."
@@ -152,6 +149,7 @@
      {:column "timeframe" :values (into [] (get-in db db/path:timeframe-constraints))}
      {:column "author" :values (into [] (get-in db db/path:artist-constraints))}
      {:column "name" :values (into [] (get-in db db/path:concept-constraints))}}))
+
 
 (reg-event-fx
   ::query-started
@@ -196,6 +194,7 @@
     (let [db (on-query-succeeded (:db cofx) paintings group-name)]
         {:persist-state db
          :db db})))
+
 
 ;; ------------------------------------------------------
 ;; Updating constraints
@@ -324,9 +323,11 @@
      (bring-in-group destination-group-name))))
 
 
+
 ;; ------------------------------------------------------
 ;; Comparing groups
 ;; ------------------------------------------------------
+
 
 (defn add-compare-group-name [group-names group-name]
   {:pre [(string? group-name)]
@@ -353,11 +354,13 @@
   [::specs/app-db string? => ::specs/app-db]
   (assoc db :compared-group-names (remove #{group-name} (:compared-group-names db))))
 
+
 (reg-event-db
   ::remove-compare-group-name
   interceptors
   (fn remove-compare-group-name-handler [db [_ group-name]]
     (remove-compare-group-name db group-name)))
+
 
 (reg-event-db
   ::comparisons-cleared
@@ -365,11 +368,13 @@
   (fn comparisons-cleared [db _]
      (assoc db :compared-group-names '())))
 
+
 (>defn remove-group [db group-name]
   [::specs/app-db string? => ::specs/app-db]
   (let [old-saved-groups (:saved-groups db)
         updated-saved-groups (dissoc old-saved-groups group-name)]
     (assoc db :saved-groups updated-saved-groups)))
+
 
 (reg-event-fx
   ::remove-group
@@ -383,9 +388,11 @@
        :persist-state updated-db})))
 
 
+
 ;; ------------------------------------------------------
 ;; Examining a single painting
 ;; ------------------------------------------------------
+
 
 (reg-event-db
   ::done-button-clicked
@@ -423,6 +430,7 @@
 ;; Navigating through paintings' details (modals)
 ;; ------------------------------------------------------
 
+
 (>defn previous-painting [db]
   [::specs/app-db => ::specs/app-db]
   (let [paintings (helpers/sort-by-author
@@ -431,6 +439,7 @@
         prev-slide (or (last (take-while #(not= % current-painting) paintings))
                      (last paintings))]
     (assoc db :current-painting prev-slide)))
+
 
 (reg-event-db
   ::go-to-previous-painting
@@ -446,9 +455,11 @@
                      (first paintings))]
     (assoc db :current-painting next-slide)))
 
+
 (reg-event-db
   ::go-to-next-painting
   interceptors
   (fn [db _] (next-painting db)))
+
 
 (check)

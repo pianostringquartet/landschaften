@@ -23,7 +23,6 @@
                   {:name "woman", :value 0.874543}
                   {:name "illustration", :value 0.8150852}
                   {:name "art", :value 0.96110016}
-                  {:name "studio" :valule 0.96}             ;; added
                   {:name "leader", :value 0.8733945}},
      :id        5623,
      :timeframe "1451-1500",
@@ -53,28 +52,14 @@
                   {:name "facial hair", :value 0.88426876}
                   {:name "jacket", :value 0.86635554}
                   {:name "art", :value 0.9661212}
-                  {:name "goddess" :value 0.98}             ;; added
                   {:name "leader", :value 0.96634877}},
      :id        5632,
      :timeframe "1451-1500",
      :form      "painting",
      :jpg       "https://www.wga.hu/art/b/botticel/7portrai/10youngm.jpg"}})
 
-;; in prod should be retrieved dynamically from backend
 
-;(ns landschaften.sample)
-
-;; should satisfy ::group spec...
 (def sample-group
-  {:group-name            "a sample group"
-   :paintings             sample-paintings
-   :type-constraints      #{}
-   :school-constraints    #{}
-   :timeframe-constraints #{}
-   :concept-constraints   #{}
-   :artist-constraints    #{}})
-
-(def sample-group-2
   {:group-name          "spanish-religious"
    :paintings           sample-paintings
    :type-constraints    #{"religious"}

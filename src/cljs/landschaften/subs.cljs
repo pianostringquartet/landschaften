@@ -185,13 +185,13 @@
       (map #(get groups %) names))))
 
 
-(defn paintings->error-data [paintings n-many certainty-above]
+(defn paintings->variance-data [paintings n-many certainty-above]
   (->> (utils/paintings->concepts-frequencies paintings n-many certainty-above)
        (into {})))
 
 
-(defn error-ready-data [paintings]
-  (paintings->error-data paintings 20 0.94))
+(defn variance-calculation-ready-data [paintings]
+  (paintings->variance-data paintings 20 0.94))
 
 
 (reg-sub
@@ -201,10 +201,11 @@
     {:pre [(s/valid? (s/coll-of ::specs/group) groups)]}
     (when (<= 2 (count groups))
       (stats/variance
-        (error-ready-data (:paintings (first groups)))
-        (error-ready-data (:paintings (second groups)))))))
+        (variance-calculation-ready-data (:paintings (first groups)))
+        (variance-calculation-ready-data (:paintings (second groups)))))))
 
-
+;; scrambling should be part of variance, not paintings
+;; i.e. should not be painting-specific
 (defn scramble-concept-names [painting]
   {:post [(s/valid? ::specs/painting %)]}
   (let [scramble (fn [concept-set]
@@ -215,16 +216,21 @@
     (update painting :concepts scramble)))
 
 
+(>defn max-variance [paintings-1 paintings-2]
+  [::specs/paintings ::specs/paintings => ::stats/variance]
+  (stats/variance
+    ;; scramble to ensure that no concepts are shared in common
+    (variance-calculation-ready-data (map scramble-concept-names paintings-1))
+    (variance-calculation-ready-data paintings-2)))
+
+
 (reg-sub
   ::max-variance
   :<- [::compared-groups]
-  (fn max-variance [groups]
+  (fn max-variance-handler [groups]
     {:pre [(s/valid? (s/coll-of ::specs/group) groups)]}
     (when (<= 2 (count groups))
-      (stats/variance
-        (error-ready-data
-            (map scramble-concept-names (:paintings (first groups)))) ; so that no paintings' concepts will overlap
-        (error-ready-data (:paintings (second groups)))))))
+      (max-variance (:paintings (first groups)) (:paintings (second groups))))))
 
 
 (reg-sub

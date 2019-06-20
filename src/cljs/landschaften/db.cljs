@@ -6,10 +6,8 @@
 (def excluded-timeframes
   #{"0801-0850" "1051-1100" "1101-1150" "1151-1200" "1201-1250" "1251-1300" "1301-1350" "1351-1400"})
 
-
 (def excluded-schools
   #{"Russian" "Bohemian" "Catalan" "Finnish" "Greek" "Irish" "Norwegian" "Other" "Polish" "Portuguese" "Swedish" "Hungarian" "Scottish" "Swiss" "Danish" "Austrian"})
-
 
 (def example-group
   {:group-name            "Michelangelo's saints"
@@ -28,8 +26,7 @@
 
    ;; EXAMINE
    :current-painting        nil
-   ;:show-slideshow?         false                           ;; i.e. slideshow
-   :show-painting-modal?    false                           ;; i.e. slideshow
+   :show-painting-modal?    false
    :image-zoomed?           false
 
    ;; EXPLORE
@@ -37,8 +34,8 @@
    :all-types               (disj specs/PAINTING-TYPES "Other")
    :all-schools             (apply disj specs/SCHOOLS excluded-schools)
    :all-timeframes          (apply disj specs/TIMEFRAMES excluded-timeframes)
-   :all-concepts            #{}                             ; retrieve from backend
-   :all-artists             #{}                             ; retrieve from backend
+   :all-concepts            #{}                             ; retrieved from backend during initialization
+   :all-artists             #{}                             ; retrieved from backend during initialization
 
    ;; EXPLORE & COMPARE
    :current-group           nil
