@@ -9,14 +9,14 @@
 (def excluded-schools
   #{"Russian" "Bohemian" "Catalan" "Finnish" "Greek" "Irish" "Norwegian" "Other" "Polish" "Portuguese" "Swedish" "Hungarian" "Scottish" "Swiss" "Danish" "Austrian"})
 
-;(def example-group
-;  {:group-name            "Michelangelo's saints"
-;   :paintings             #{}
-;   :type-constraints      #{}
-;   :school-constraints    #{"Italian"}
-;   :timeframe-constraints #{"1451-1500", "1501-1550", "1551-1600"}
-;   :concept-constraints   #{"saint"}
-;   :artist-constraints    #{"MICHELANGELO Buonarroti"}})
+(def example-group
+  {:group-name            "Michelangelo's saints"
+   :paintings             #{}
+   :type-constraints      #{}
+   :school-constraints    #{"Italian"}
+   :timeframe-constraints #{"1451-1500", "1501-1550", "1551-1600"}
+   :concept-constraints   #{"saint"}
+   :artist-constraints    #{"MICHELANGELO Buonarroti"}})
 
 (def manet-group-name "Manet's people")
 
