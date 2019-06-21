@@ -43,10 +43,10 @@
      {:on-click (if being-compared?
                   #(dispatch [::events/remove-compare-group-name group-name])
                   #(dispatch [::events/add-compare-group-name group-name]))
-      :style    {:border-radius "30px"
-                 :color "#fff"
+      :style    {:color "#fff" ; white
                  :background-color button-color
-                 :padding "8px"}}
+                 :border-radius "30px"
+                 :padding "4px"}}
      group-name]))
 
 
@@ -55,7 +55,7 @@
     [utils/bubble-table
      (map #(compare-group-button! % (into #{} compared-group-names))
           (keys saved-groups))
-     4]))
+     3]))
 
 
 (>defn similarity-measurement
@@ -69,7 +69,7 @@
                               :progress "percent"}]))
 
 
-(>defn variance-label [variance max-variance]
+(>defn labeled-variance [variance max-variance]
   [double? double? => vector?]
   [:> semantic-ui/slist {:relaxed true}
    [:> semantic-ui/slist-item
@@ -92,137 +92,143 @@
 ;       [utils/table-with-header (:group-name group) (:paintings group)])]))
 
 
-(defn mobile-compare-screen [groups]
-  (when-not (empty? groups)
-    (let [->accordion-panel
-          (fn [group]
-            {:key     (:group-name group)
-             :title   {:content (:group-name group)}
-             ;:content {:content (r/as-component [utils/concept-frequency-table (:paintings group) 15 0.85])}})]
-             :content {:content (r/as-component [concept-frequency-table group 15 0.85])}})]
-      [:> semantic-ui/accordion
-       {:panels (mapv ->accordion-panel groups)}])))
+;(defn variance-display-mobile [variance max-variance compared-group-1 compared-group-2 n-many certainty-above]
+;  [labeled-variance])
 
 
-;(defn variance-display [variance max-variance compared-group-1 compared-group-2 n-many certainty-above])
+;(defn mobile-compare-screen [groups]
+;  (when-not (empty? groups)
+;    (let [->accordion-panel
+;          (fn [group]
+;            {:key     (:group-name group)
+;             :title   {:content (:group-name group)}
+;             ;:content {:content (r/as-component [utils/concept-frequency-table (:paintings group) 15 0.85])}})]
+;             :content {:content (r/as-component [concept-frequency-table group 15 0.85])}})]
+;      [:> semantic-ui/accordion
+;       {:panels (mapv ->accordion-panel groups)}])))
 
 
-;(defn compare-screen []
-;  (let [variance             (subscribe [::subs/variance])
-;        max-variance         (subscribe [::subs/max-variance])
-;        groups               (subscribe [::subs/compared-groups])
-;        saved-groups         (subscribe [::subs/saved-groups])
-;        compared-group-names (subscribe [::subs/compared-group-names])
-;        compared-groups      (subscribe [::subs/compared-groups])]
-;    [:> semantic-ui/slist
-;     [:> semantic-ui/slist-item [clear-button!]]
-;     [:> semantic-ui/slist-item [compare-group-buttons @saved-groups @compared-group-names]]
-;     (when @variance
-;       [:> semantic-ui/slist-item [variance-label @variance @max-variance]]
-;       ;; Workaround: force Chart.js to re-render, don't use React lifecycle methods
-;       ^{:key (rand-int 999)}
-;       [chart/radar-chart
-;        (chart/compared-groups->radar-chart-data! (first @compared-groups) (second @compared-groups) 15 0.85)])
-;     [:> semantic-ui/responsive {:max-width 799} [mobile-compare-screen @groups]]
-;     [:> semantic-ui/responsive {:min-width 800} [desktop-compare-screen @groups]]]))
-;
-;
-;(defn desktop-compare-screen [variance max-variance groups]
-; (when-not (empty? groups)
-;   [:> semantic-ui/slist {:horizontal true :relaxed true}
-;    (for [group groups]
-;      ^{:key (:group-name group)}
-;      [utils/table-with-header (:group-name group) (:paintings group)])]))
-;
-;(defn desktop-compare-screen [variance max-variance groups saved-gr]
-;  (let [variance             (subscribe [::subs/variance])
-;        max-variance         (subscribe [::subs/max-variance])
-;        groups               (subscribe [::subs/compared-groups])
-;        saved-groups         (subscribe [::subs/saved-groups])
-;        compared-group-names (subscribe [::subs/compared-group-names])
-;        compared-groups      (subscribe [::subs/compared-groups])]
-;    [:> semantic-ui/slist
-;     [:> semantic-ui/slist-item [clear-button!]]
-;     [:> semantic-ui/slist-item [compare-group-buttons @saved-groups @compared-group-names]]
-;     [:> semantic-ui/grid {:columns 1 :centered true :relaxed true :padded true}
-;      (when @variance
-;        [:> semantic-ui/slist-item [variance-label @variance @max-variance]]
-;
-;        ^{:key (rand-int 999)} ;; Workaround: force Chart.js to re-render, don't use React lifecycle methods
-;        [chart/radar-chart
-;         (chart/compared-groups->radar-chart-data! (first @compared-groups) (second @compared-groups) 15 0.85)])
-;      [:> semantic-ui/responsive {:max-width 799} [mobile-compare-screen @groups]]
-;      [:> semantic-ui/responsive {:min-width 800} [desktop-compare-screen @groups]]]]))
-;
+
 
 
 (>defn compare-screen-buttons [saved-groups compared-groups]
   [map? (s/coll-of ::specs/group) => vector?]
   [:> semantic-ui/slist
-   ;; this buttons should be a table
    [:> semantic-ui/slist-item
     [compare-group-buttons saved-groups (map :group-name compared-groups)]]
    [:> semantic-ui/slist-item [clear-button!]]])
 
 
 ;; was old desktop-compare-screen
-(defn desktop-frequency-charts [groups]
-  (when-not (empty? groups)
-    [:> semantic-ui/slist {:horizontal true :relaxed true}
-     (for [group groups]
-       ^{:key (:group-name group)}
-       [utils/table-with-header (:group-name group) (:paintings group)])]))
+;(defn desktop-frequency-charts [groups]
+;  (when-not (empty? groups)
+;    [:> semantic-ui/slist {:horizontal true :relaxed true}
+;     (for [group groups]
+;       ^{:key (:group-name group)}
+;       [utils/table-with-header (:group-name group) (:paintings group)])]))
+
+
+(defn compare-sidebar [variance max-variance saved-groups compared-groups]
+  [:> semantic-ui/slist
+   [:> semantic-ui/slist-item
+    [compare-screen-buttons saved-groups compared-groups]]
+   [:> semantic-ui/slist-item
+    (when variance
+      [labeled-variance variance max-variance])]])
+
+
+(defn radar-chart [compared-groups]
+   [:> semantic-ui/slist-item
+    ^{:key (rand-int 999)} ;; Workaround: force Chart.js to re-render, don't use React lifecycle methods
+    [chart/radar-chart
+     (chart/compared-groups->radar-chart-data!
+       (first compared-groups) (second compared-groups) 15 0.85)]])
+
+(defn accordion-frequency-tables [groups]
+  ;(when-not (empty? groups)
+    (let [->accordion-panel
+          (fn [group]
+            {:key     (:group-name group)
+             :title   {:content (:group-name group)}
+             :content {:content (r/as-component [concept-frequency-table group 15 0.85])}})]
+      [:> semantic-ui/accordion
+       {:panels (mapv ->accordion-panel groups)}]))
+
+
+;; for mobile, show, in order:
+;;
+;; buttons first,
+(defn mobile-compare-screen [variance max-variance saved-groups compared-groups]
+  ;[:> semantic-ui/grid {:stackable true}
+  ; [:> semantic-ui/grid-column
+  ;[:> semantic-ui/grid {:columns 1 :centered true :relaxed true :padded true}
+   [:> semantic-ui/slist
+     [:> semantic-ui/slist-item
+      [clear-button!]]
+     [:> semantic-ui/slist-item
+      [compare-group-buttons saved-groups (map :group-name compared-groups)]]
+     [:> semantic-ui/slist-item
+      (when variance [radar-chart compared-groups])]
+     [:> semantic-ui/slist-item
+      (when variance [labeled-variance variance max-variance])]
+     [:> semantic-ui/slist-item
+      (if (empty? compared-groups)
+          [rc/label :label "Select some saved searches to start comparing."]
+          [accordion-frequency-tables compared-groups])]])
 
 
 
-(defn compare-sidebar [saved-groups compared-groups]
-  [compare-screen-buttons saved-groups compared-groups])
 
-(defn desktop-compare-screen [saved-groups compared-groups]
-  [:> semantic-ui/grid {:columns 2}
-   [:> semantic-ui/grid-column
-    ;(when-not (empty? compared-groups)
-    (if (empty? compared-groups)
-      [rc/label :label "Select some saved searches to start comparing."]
-      [:> semantic-ui/slist {:horizontal true :relaxed true}
-       (for [group compared-groups]
-         ^{:key (:group-name group)}
-         [utils/table-with-header (:group-name group) (:paintings group)])])]
+(defn desktop-compare-screen [variance max-variance saved-groups compared-groups]
+  [:> semantic-ui/grid {:columns 1 :centered true :relaxed true :padded true}
+   [:> semantic-ui/slist {:relaxed true}
+    [:> semantic-ui/slist-item
+     (when variance
+       [radar-chart compared-groups])]
+    [:> semantic-ui/slist-item
+     [:> semantic-ui/grid {:columns 2}
+      [:> semantic-ui/grid-column
+       (if (empty? compared-groups)
+         [rc/label :label "Select some saved searches to start comparing."]
+         [:> semantic-ui/slist {:horizontal true :relaxed true}
+          (for [group compared-groups]
+            ^{:key (:group-name group)}
+            [utils/table-with-header (:group-name group) (:paintings group)])])]
+      [:> semantic-ui/grid-column
+       [compare-sidebar variance max-variance saved-groups compared-groups]]]]]])
 
 
-   [:> semantic-ui/grid-column
-    [compare-sidebar saved-groups compared-groups]]])
-
-
-
-
-;; three UI states:
-;; - no groups compared: only buttons (names + CLEAR)
-;; - 1 group compared: buttons + group's data
-;; - 2 groups compared buttons + variance bar + radar chart + groups' data
 (defn compare-screen []
   (let [
         variance             (subscribe [::subs/variance])
         max-variance         (subscribe [::subs/max-variance])
 
-        groups               (subscribe [::subs/compared-groups])
+        compared-groups               (subscribe [::subs/compared-groups])
 
         saved-groups         (subscribe [::subs/saved-groups])]
 
-    ;compared-groups      (subscribe [::subs/compared-groups])]
     [:> semantic-ui/slist
-     ;[:> semantic-ui/slist-item
-     ; [compare-screen-buttons @saved-groups @groups]]
-     [:> semantic-ui/grid {:columns 1 :centered true :relaxed true :padded true}
-      (when @variance
-        [:> semantic-ui/slist-item [variance-label @variance @max-variance]]
+      [:> semantic-ui/responsive {:max-width 799}
+       [mobile-compare-screen @variance @max-variance @saved-groups @compared-groups]]
+      [:> semantic-ui/responsive {:min-width 800}
+       [desktop-compare-screen @variance @max-variance @saved-groups @compared-groups]]]))
 
-        ^{:key (rand-int 999)} ;; Workaround: force Chart.js to re-render, don't use React lifecycle methods
-        [chart/radar-chart
-         (chart/compared-groups->radar-chart-data! (first @groups) (second @groups) 15 0.85)])
-      [:> semantic-ui/responsive {:max-width 799} [mobile-compare-screen @groups]]
-      ;[:> semantic-ui/responsive {:min-width 800} [desktop-compare-screen @groups]]]]))
-      [:> semantic-ui/responsive {:min-width 800} [desktop-compare-screen @saved-groups @groups]]]]))
+
+;(defn compare-screen []
+;  (let [
+;        variance             (subscribe [::subs/variance])
+;        max-variance         (subscribe [::subs/max-variance])
+;
+;        groups               (subscribe [::subs/compared-groups])
+;
+;        saved-groups         (subscribe [::subs/saved-groups])]
+;
+;    [:> semantic-ui/slist
+;     [:> semantic-ui/grid {:columns 1 :centered true :relaxed true :padded true}
+;      [:> semantic-ui/responsive {:max-width 799} [mobile-compare-screen @variance @max-variance @saved-groups @groups]]
+;      [:> semantic-ui/responsive {:min-width 800} [desktop-compare-screen @variance @max-variance @saved-groups @groups]]]]))
+
+
 
 
 ;(defn compare-screen []
@@ -246,4 +252,4 @@
 
 
 
-(check)
+;(check)
