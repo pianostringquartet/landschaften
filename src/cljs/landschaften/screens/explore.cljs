@@ -44,11 +44,12 @@
 
 
 (defn mobile-explore-panel [current-painting paintings show-slideshow? search?]
-  [:> semantic-ui/slist
-   [:> semantic-ui/slist-item [search-or-results search?]]
-   (if search?
-     [:> semantic-ui/slist-item [sidebar/mobile-sidebar]]
-     [:> semantic-ui/slist-item [explore current-painting paintings show-slideshow? 2]])])
+  [:> semantic-ui/grid {:columns 1 :centered true}
+   [:> semantic-ui/slist {:relaxed true}
+    [:> semantic-ui/slist-item [search-or-results search?]]
+    (if search?
+      [:> semantic-ui/slist-item [sidebar/mobile-sidebar]]
+      [:> semantic-ui/slist-item [explore current-painting paintings show-slideshow? 2]])]])
 
 
 (defn desktop-explore-panel [current-painting paintings show-slideshow?]

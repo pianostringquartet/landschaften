@@ -6,7 +6,8 @@
             [re-frame.core :as rf :refer [subscribe dispatch]]
             [clojure.spec.alpha :as s]
             [re-com.core :as rc]
-            [ghostwheel.core :as g :refer [check >defn >defn- >fdef => | <- ?]]))
+            [ghostwheel.core :as g :refer [check >defn >defn- >fdef => | <- ?]]
+            [landschaften.semantic-ui :as semantic-ui]))
 
 
 (>defn tile! [painting]
@@ -36,9 +37,10 @@
 
 (>defn paintings-grid [current-painting paintings show-max? n-columns]
   [(s/nilable ::specs/painting) ::specs/paintings boolean? int? => vector?]
-  [:div
-   [rc/title :label (paintings-found (count paintings))]
-   [grid current-painting (take 50 paintings) show-max? n-columns]])
-
+  [:> semantic-ui/slist {:relaxed true}
+   [:> semantic-ui/slist-item
+    [rc/title :label (paintings-found (count paintings))]]
+   [:> semantic-ui/slist-item
+    [grid current-painting (take 50 paintings) show-max? n-columns]]])
 
 ;(check)
