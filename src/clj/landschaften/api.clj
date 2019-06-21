@@ -5,7 +5,8 @@
             [clojure.data.json :as json]
             [landschaften.db.query :as query]
             [landschaften.entity :as entity]
-            [clojure.java.jdbc :as jdbc]))
+            [clojure.java.jdbc :as jdbc]
+            [ghostwheel.core :as g :refer [check >defn >defn- >fdef => | <- ?]]))
 
 
 (defn is? [some-spec some-value]

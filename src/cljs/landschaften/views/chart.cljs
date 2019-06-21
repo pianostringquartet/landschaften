@@ -13,15 +13,22 @@
 ;; - Chart.js radar charts
 ;; ------------------------------------------------------
 
+
 (s/def ::chart-js-dataset
   (s/and
     (s/coll-of float?)
     vector?))
 
+
 (s/def ::chart-js-labelset
   (s/and
     (s/coll-of string?)
     vector?))
+
+
+(def color-1 "rgba(255, 99, 132, 0.3)")
+(def color-2 "rgba(54, 162, 235, 0.3)")
+
 
 (>defn chartjs-radar-chart [data-1 data-1-name data-2 data-2-name labels]
   [::chart-js-dataset string? ::chart-js-dataset string? ::chart-js-labelset => any?] ;; returns a js object
@@ -31,10 +38,10 @@
                          :data {:labels   labels
                                 :datasets [{:data            data-1
                                             :label           data-1-name
-                                            :backgroundColor "rgba(255, 99, 132, 0.3)"}
+                                            :backgroundColor color-1}
                                            {:data            data-2
                                             :label           data-2-name
-                                            :backgroundColor "rgba(54, 162, 235, 0.3)"}]}}))))
+                                            :backgroundColor color-2}]}}))))
 
 (defn frequency-data? [xs]
   (and (seq? xs)

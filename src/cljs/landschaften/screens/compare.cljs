@@ -25,45 +25,55 @@
     :compact  true}
    "CLEAR"])
 
+;; give heavier alpha ('a'), i.e. less transparent
+(def color-1 "rgba(255, 99, 132, 0.7)")
+(def color-2 "rgba(54, 162, 235, 0.7)")
 
-(>defn saved-search-button! [group-name compared-group-names]
+(>defn compare-group-button! [group-name compared-group-names]
   [string? set? => vector?]
-  (let [being-compared? (contains? compared-group-names group-name)]
+  (let [being-compared? (contains? compared-group-names group-name)
+        button-color (if being-compared?
+                       (if (= group-name (first compared-group-names))
+                         color-1
+                         color-2)
+                       "grey")]
     [:> semantic-ui/button
-     {:color    (if being-compared? "orange" "grey")
-      :on-click (if being-compared?
+     {:on-click (if being-compared?
                   #(dispatch [::events/remove-compare-group-name group-name])
                   #(dispatch [::events/add-compare-group-name group-name]))
-      :style    {:border-radius "30px" :padding "8px"}}
+      :style    {:border-radius "30px"
+                 :color "#fff"
+                 :background-color button-color
+                 :padding "8px"}}
      group-name]))
 
 
-(defn saved-search-buttons [saved-groups compared-group-names]
+(defn compare-group-buttons [saved-groups compared-group-names]
   (when-not (empty? saved-groups)
     [utils/bubble-table
-     (map #(saved-search-button! % (into #{} compared-group-names))
+     (map #(compare-group-button! % (into #{} compared-group-names))
           (keys saved-groups))
      2]))
 
 
 (>defn similarity-measurement
   "Progress bar displaying error-rate between two datasets as"
-  [error max-error]
+  [variance max-variance]
   [double? double? => vector?]
-  (let [as-percent    (* 100 (/ error max-error))
+  (let [as-percent    (* 100 (/ variance max-variance))
         as-similarity (- 100 as-percent)]
     [:> semantic-ui/progress {:success  "true"
                               :percent  (goog.string/format "%.1f" as-similarity)
                               :progress "percent"}]))
 
 
-(>defn error-rate-label [error max-error]
+(>defn variance-label [variance max-variance]
   [double? double? => vector?]
   [:> semantic-ui/slist {:relaxed true}
    [:> semantic-ui/slist-item
-    [rc/label :label "How similar the two groups of paintings are:"]]
+    [rc/label :label "How similar these two groups of paintings are:"]]
    [:> semantic-ui/slist-item
-    [similarity-measurement error max-error]]])
+    [similarity-measurement variance max-variance]]])
 
 
 (defn desktop-compare-screen [groups]
@@ -94,9 +104,9 @@
         compared-groups      (subscribe [::subs/compared-groups])]
     [:> semantic-ui/slist
      [:> semantic-ui/slist-item [clear-button!]]
-     [:> semantic-ui/slist-item [saved-search-buttons @saved-groups @compared-group-names]]
+     [:> semantic-ui/slist-item [compare-group-buttons @saved-groups @compared-group-names]]
      (when @variance
-       [:> semantic-ui/slist-item [error-rate-label @variance @max-variance]])
+       [:> semantic-ui/slist-item [variance-label @variance @max-variance]])
      (when @variance
        ;; Workaround: force Chart.js to re-render, don't use React lifecycle methods
        ^{:key (rand-int 999)}
