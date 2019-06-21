@@ -169,14 +169,41 @@
          :handler #(dispatch [::query-succeeded % group-name])}})))
 
 
+;; need to think about how to add a default group, make it a compared group etc.
+;(reg-event-fx
+;  ::add-default-group
+;  (fn add-default-group [cofx [_ default-group]]
+;    (let [db (:db cofx)]
+;      (if-not (:current-group db)
+;       {:db (assoc db :current-group default-group)
+;        :dispatch [::query-started (:group-name default-group)]}
+;       db))))
+
+(declare add-compare-group-name)
+
 (reg-event-fx
-  ::add-default-group?
-  (fn add-default-group? [cofx [_ default-group]]
-    (let [db (:db cofx)]
-      (if-not (:current-group db)
-        {:db (assoc db :current-group default-group)
-         :dispatch [::query-started (:group-name default-group)]}
-        db))))
+  ::add-default-group
+  (fn add-default-group [cofx [_ default-group]]
+    (let [db (:db cofx)
+          update-current-group (fn [x] (if-not (:current-group x)
+                                         (assoc x :current-group default-group)
+                                         x))]
+      ;(if-not (:current-group db)
+        {:db (-> db
+               (update-current-group)
+               (assoc :compared-group-names (add-compare-group-name (:compared-group-names db)
+                                                                    (:group-name default-group))))
+
+         ;; query-started logic always brings in result as new current-group?
+         ;; another issue: query-started is dispatched, but we
+
+         :dispatch [::query-started (:group-name default-group)]})))
+        ;db)))
+
+;; ah, -- maybe?
+;; need to do two searches IN ORDER,
+;; not dispatched at same time;
+;; don't know when server will come back with them?
 
 
 (declare toggle-save-group-popover-showing save-current-group)

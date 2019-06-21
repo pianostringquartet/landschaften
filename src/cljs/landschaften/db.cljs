@@ -9,15 +9,36 @@
 (def excluded-schools
   #{"Russian" "Bohemian" "Catalan" "Finnish" "Greek" "Irish" "Norwegian" "Other" "Polish" "Portuguese" "Swedish" "Hungarian" "Scottish" "Swiss" "Danish" "Austrian"})
 
-(def example-group
-  {:group-name            "Michelangelo's saints"
+;(def example-group
+;  {:group-name            "Michelangelo's saints"
+;   :paintings             #{}
+;   :type-constraints      #{}
+;   :school-constraints    #{"Italian"}
+;   :timeframe-constraints #{"1451-1500", "1501-1550", "1551-1600"}
+;   :concept-constraints   #{"saint"}
+;   :artist-constraints    #{"MICHELANGELO Buonarroti"}})
+
+(def manet-group-name "Manet's people")
+
+(def manet-example-group
+  {:group-name            manet-group-name
    :paintings             #{}
    :type-constraints      #{}
-   :school-constraints    #{"Italian"}
-   :timeframe-constraints #{"1451-1500", "1501-1550", "1551-1600"}
-   :concept-constraints   #{"saint"}
-   :artist-constraints    #{"MICHELANGELO Buonarroti"}})
+   :school-constraints    #{"French"}
+   :timeframe-constraints #{"1801-1850", "1851-1900"}
+   :concept-constraints   #{"people"}
+   :artist-constraints    #{"MANET, Edouard"}})
 
+(def degas-group-name "Degas' people")
+
+(def degas-example-group
+  {:group-name            degas-group-name
+   :paintings             #{}
+   :type-constraints      #{}
+   :school-constraints    #{"French"}
+   :timeframe-constraints #{"1801-1850", "1851-1900"}
+   :concept-constraints   #{"people"}
+   :artist-constraints    #{"DEGAS, Edgar"}})
 
 (def default-db
   {:current-mode            :explore
@@ -44,6 +65,7 @@
 
    ;; COMPARE
    :compared-group-names    '()
+   ;:compared-group-names    (list manet-group-name degas-group-name)
 
    ;; CHARTS
    :show-n-chart-points     20
