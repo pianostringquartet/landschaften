@@ -1,7 +1,7 @@
 (ns landschaften.views.utils
   (:require [reagent.core :as r]
             [re-com.core :as rc]
-            [landschaften.semantic-ui :as semantic-ui]      ; disable when loading repl
+            [landschaften.semantic-ui :as semantic-ui]
             [landschaften.specs :as specs]
             [clojure.spec.alpha :as s]
             [re-frame.core :refer [subscribe dispatch]]

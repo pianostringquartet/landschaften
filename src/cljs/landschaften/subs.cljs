@@ -248,4 +248,3 @@
   (fn concept-certainty-above [db _]
     {:post [(float? %)]}
     (:concept-certainty-above db)))
-s

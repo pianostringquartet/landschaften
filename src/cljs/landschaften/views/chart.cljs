@@ -5,7 +5,7 @@
             [landschaften.specs :as specs]
             [landschaften.views.utils :as utils]
             [cljsjs.chartjs]
-            [ghostwheel.core :as g :refer [check >defn >defn- >fdef => | <- ?]]))
+            [ghostwheel.core :refer [check >defn >defn- >fdef => | <- ?]]))
 
 
 ;; ------------------------------------------------------
@@ -102,5 +102,8 @@
     {:component-did-mount #(chartjs-radar-chart data-1 data-1-name data-2 data-2-name labels)
      :display-name        "chartjs-component"
      :reagent-render      (fn []
-                            [:canvas {:id "rev-chartjs" :width "700" :height "380"}])}))
+                            [:canvas {:id "rev-chartjs"
+                                      :width "500"
+                                      :height "400"}])}))
+
 
