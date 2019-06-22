@@ -44,10 +44,8 @@
                  [gnl/ghostwheel "0.3.8"]
                  [gnl/ghostwheel.tracer "0.3.8"]
                  [day8.re-frame/test "0.1.5"]
-
                  [figwheel-sidecar "0.5.18"] ;; added
                  [org.clojure/core.async "0.4.474"] ; added
-
                  [reagent-material-ui "0.2.5"] ;; library, with incomplete list of mui tags
                  [cljsjs/chartjs "2.8.0-0"] ;; replacing google charts
                  [cljsjs/semantic-ui-react "0.84.0-0"]]
