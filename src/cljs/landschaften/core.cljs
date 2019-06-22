@@ -90,7 +90,7 @@
   (r/render [views/root-component] (.getElementById js/document "app")))
 
 
-(defn init! []
+(defn ^:export init! []
   (rf/dispatch-sync [:navigate (reitit/match-by-name router :home)])
   (load-interceptors!)
   (fetch-docs!)
