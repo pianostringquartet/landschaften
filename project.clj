@@ -30,7 +30,7 @@
                  [ring-webjars "0.2.0"]
                  [ring/ring-core "1.6.3"]
                  [ring/ring-defaults "0.3.2"]
-                 [secretary "1.2.3"] ;; not used anywhere ?
+                 [secretary "1.2.3"]
                  [selmer "1.11.7"]
                  [org.clojure/test.check "0.10.0-alpha3"]
                  [org.clojure/data.json "0.2.6"]
@@ -44,10 +44,10 @@
                  [gnl/ghostwheel "0.3.8"]
                  [gnl/ghostwheel.tracer "0.3.8"]
                  [day8.re-frame/test "0.1.5"]
-                 [figwheel-sidecar "0.5.18"] ;; added
-                 [org.clojure/core.async "0.4.474"] ; added
-                 [reagent-material-ui "0.2.5"] ;; library, with incomplete list of mui tags
-                 [cljsjs/chartjs "2.8.0-0"] ;; replacing google charts
+                 [figwheel-sidecar "0.5.18"]
+                 [org.clojure/core.async "0.4.474"]
+                 [reagent-material-ui "0.2.5"]
+                 [cljsjs/chartjs "2.8.0-0"]
                  [cljsjs/semantic-ui-react "0.84.0-0"]]
 
 
@@ -59,8 +59,6 @@
   :main ^:skip-aot landschaften.core
   :aliases {"fig" ["trampoline" "run" "-m" "figwheel.main"]
             "build-dev" ["trampoline" "run" "-m" "figwheel.main" "-b" "dev" "-r"]}
-
-            ;; needed for FW + cursive
   :plugins [[lein-cljsbuild "1.1.7"]
             [lein-immutant "2.1.0"]]
   :clean-targets ^{:protect false}
@@ -71,7 +69,6 @@
      :nrepl-port 7002
      :css-dirs ["resources/public/css"]
      :nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]}
-  ;; seems correct per heroku article: https://devcenter.heroku.com/articles/deploying-clojure
   :profiles
     {:uberjar {:omit-source true
                :prep-tasks ["compile" ["cljsbuild" "once" "min"]]
@@ -108,8 +105,7 @@
                                    [day8.re-frame/tracing "0.5.1"]]
                     :plugins      [[com.jakemccrary/lein-test-refresh "0.19.0"]
                                    [lein-doo "0.1.10"]
-                                   ;[lein-figwheel "0.5.16"] ;; remove for FW + cursive
-                                   [lein-cljsbuild "1.1.7"] ;; not needed to add?
+                                   [lein-cljsbuild "1.1.7"]
                                    [org.clojure/clojurescript "1.10.339"]]
                     :cljsbuild
                     {:builds

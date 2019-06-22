@@ -1,21 +1,25 @@
-# landschaften
+# landschaften: visual explorer for paintings and their concepts
+ 
+> "Seht nur das Wölkchen, wie es spielt ..."
+>
+> - Goethe, Landschaft 
 
-generated using Luminus version "2.9.12.67"
+Search for and explore paintings from different time periods, genres and artists -- 
+or even by the concepts contained within a painting itself.
 
-FIXME
+Then save your search results and compare different groups of paintings. 
+How similar are the works of Michelangelo and Manet?  
 
-## Prerequisites
+### How
 
-You will need [Leiningen][1] 2.0 or above installed.
+`landschaften` classifies paintings from [Web Gallery of Art's database](https://www.wga.hu/frames-e.html?/html/c/cornelis/index.html)  using [Clarifai's General model](https://www.clarifai.com/models/general-image-recognition-model-aaa03c23b3724a16a56b629203edc62c). 
 
-[1]: https://github.com/technomancy/leiningen
+Web Gallery of Art provides data about the school (Italian, French, etc.), genre (landscape, still life, etc.), time period (1451-1500, 1501-1550 etc.), and artist. 
 
-## Running
+Clarifai's General model identifies concepts within each painting: e.g. "people", "portrait", "adult", "ocean", "commerce", "saint" etc.    
+(Note: we're only interested in concepts the model is pretty certain about.)
 
-To start a web server for the application, run:
 
-    lein run 
-
-## License
+### License
 
 Copyright © 2018 FIXME

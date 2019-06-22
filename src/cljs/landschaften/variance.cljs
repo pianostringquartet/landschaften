@@ -1,6 +1,6 @@
 (ns landschaften.variance
   (:require [clojure.spec.alpha :as s]
-            [ghostwheel.core :as g :refer [check >defn >defn- >fdef => | <- ?]]))
+            [ghostwheel.core :refer [check >defn >defn- >fdef => | <- ?]]))
 
 ; https://www.wikihow.com/Calculate-Variance
 
@@ -42,4 +42,4 @@
                       features)]
     (reduce + 0 adjustments)))
 
-(check)
+;(check)
