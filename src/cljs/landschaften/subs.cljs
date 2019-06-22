@@ -22,15 +22,18 @@
 ;; High level subs
 ;; ------------------------------------------------------
 
+
 (reg-sub
   ::current-mode
   (fn current-mode [db _]
     (:current-mode db)))
 
+
 (reg-sub
   ::mobile-search?
   (fn mobile-search? [db] ; show 'search' controls vs 'results' paintings on mobile
     (:mobile-search? db)))
+
 
 ;; ------------------------------------------------------
 ;; Constraint choices
@@ -133,6 +136,7 @@
   (fn artists [db _]
     {:post [(s/valid? ::specs/artist-constraints %)]}
     (get-in db db/path:artist-constraints db)))
+
 
 (reg-sub
   ::paintings
@@ -244,3 +248,4 @@
   (fn concept-certainty-above [db _]
     {:post [(float? %)]}
     (:concept-certainty-above db)))
+s

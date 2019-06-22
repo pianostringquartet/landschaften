@@ -119,7 +119,6 @@
         components (list [constraints/constraints]
                          [ui-buttons]
                          [:div
-                                ;[rc/label :label "Saved searches:"]
                                 [constraints/concept-typeahead]
                                 [constraints/selected-concepts]]
                          [:div [constraints/artist-typeahead]

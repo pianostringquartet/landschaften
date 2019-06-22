@@ -7,7 +7,7 @@
             [landschaften.specs :as specs]
             [landschaften.helpers :as helpers]
             [cljs.spec.alpha :as s]
-            [ghostwheel.core :as g :refer [check >defn >defn- >fdef => | <- ?]]))
+            [ghostwheel.core :refer [check >defn >defn- >fdef => | <- ?]]))
 
 
 ;; ------------------------------------------------------
@@ -76,6 +76,7 @@
 ;; ------------------------------------------------------
 ;; Initializing the app
 ;; ------------------------------------------------------
+
 
 (reg-event-fx
   ::initialize-app
@@ -169,7 +170,6 @@
          :handler #(dispatch [::query-succeeded % group-name])}})))
 
 
-; need to think about how to add a default group, make it a compared group etc.
 (reg-event-fx
   ::add-default-group
   (fn add-default-group [cofx [_ default-group]]
@@ -179,50 +179,20 @@
         :dispatch [::query-started (:group-name default-group)]}
        db))))
 
-;(declare add-compare-group-name)
-
-
-
-
-;(reg-event-fx
-;  ::add-default-group
-;  (fn add-default-group [cofx [_ default-group]]
-;    (let [db (:db cofx)
-;          update-current-group (fn [x] (if-not (:current-group x)
-;                                         (assoc x :current-group default-group)
-;                                         x))]
-;      ;(if-not (:current-group db)
-;        {:db (-> db
-;               (update-current-group)
-;               (assoc :compared-group-names (add-compare-group-name (:compared-group-names db)
-;                                                                    (:group-name default-group))))
-;
-;         ;; query-started logic always brings in result as new current-group?
-;         ;; another issue: query-started is dispatched, but we
-;
-;         :dispatch [::query-started (:group-name default-group)]})))
-;        ;db)))
-
-;; ah, -- maybe?
-;; need to do two searches IN ORDER,
-;; not dispatched at same time;
-;; don't know when server will come back with them?
-
 
 (declare toggle-save-group-popover-showing save-current-group)
 
 (defn on-query-succeeded [db paintings group-name]
   (let [db-with-query-results
-          (-> db (assoc :query-loading? false)
-                 (assoc-in db/path:current-paintings paintings)
-                 (assoc :mobile-search? false) ; switch back to paintings
-                 (assoc :examining? false))]
+        (-> db (assoc :query-loading? false)
+            (assoc-in db/path:current-paintings paintings)
+            (assoc :mobile-search? false)                   ; switch back to paintings
+            (assoc :examining? false))]
     (if group-name
       (-> db-with-query-results
           (toggle-save-group-popover-showing false)
           (save-current-group group-name))
       db-with-query-results)))
-
 
 (reg-event-fx
   ::query-succeeded
@@ -268,6 +238,7 @@
  interceptors
  (fn [db [_ selected-concept]]
    (update-selected-concepts db selected-concept)))
+
 
 (defn remove-selected-concept [db selected-concept]
   (update-in db db/path:concept-constraints disj selected-concept))

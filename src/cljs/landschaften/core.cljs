@@ -2,12 +2,12 @@
   (:require [reagent.core :as r]
             [re-frame.core :as rf]
             [landschaften.views :as views]
-            [goog.events :as events]
+            [goog.events :as google-events]
             [goog.history.EventType :as HistoryEventType]
             [markdown.core :refer [md->html]]
             [ajax.core :refer [GET POST]]
             [landschaften.ajax :refer [load-interceptors!]]
-            [landschaften.events :as core-events]
+            [landschaften.events :as events]
             [reitit.core :as reitit]
             [clojure.string :as string]
             [landschaften.db :as db]
@@ -71,7 +71,7 @@
 ;; must be called after routes have been defined
 (defn hook-browser-navigation! []
   (doto (History.)
-    (events/listen
+    (google-events/listen
       HistoryEventType/NAVIGATE
       (fn [event]
         (let [uri (or (not-empty (string/replace (.-token event) #"^.*#" "")) "/")]
@@ -89,18 +89,14 @@
   (rf/clear-subscription-cache!)
   (r/render [views/root-component] (.getElementById js/document "app")))
 
+
 (defn init! []
   (rf/dispatch-sync [:navigate (reitit/match-by-name router :home)])
   (load-interceptors!)
   (fetch-docs!)
   (hook-browser-navigation!)
-  (rf/dispatch-sync [::core-events/initialize-app])
-  (rf/dispatch-sync [::core-events/retrieve-artists-names])
-  (rf/dispatch-sync [::core-events/retrieve-concepts])
-  ;(rf/dispatch-sync [::core-events/add-default-group db/example-group])
-  (rf/dispatch-sync [::core-events/add-default-group db/manet-example-group])
-  ;(rf/dispatch-sync [::core-events/add-default-group db/degas-example-group])
+  (rf/dispatch-sync [::events/initialize-app])
+  (rf/dispatch-sync [::events/retrieve-artists-names])
+  (rf/dispatch-sync [::events/retrieve-concepts])
+  (rf/dispatch-sync [::events/add-default-group db/manet-example-group])
   (mount-components))
-
-
-

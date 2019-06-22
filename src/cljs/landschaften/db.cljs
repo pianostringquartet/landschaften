@@ -3,25 +3,19 @@
             [landschaften.specs :as specs]))
 
 
+(def SHOW-N-CHARTPOINTS 15)
+
+(def CONCEPT-CERTAINTY-ABOVE 0.85)
+
 (def excluded-timeframes
   #{"0801-0850" "1051-1100" "1101-1150" "1151-1200" "1201-1250" "1251-1300" "1301-1350" "1351-1400"})
 
 (def excluded-schools
   #{"Russian" "Bohemian" "Catalan" "Finnish" "Greek" "Irish" "Norwegian" "Other" "Polish" "Portuguese" "Swedish" "Hungarian" "Scottish" "Swiss" "Danish" "Austrian"})
 
-(def example-group
-  {:group-name            "Michelangelo's saints"
-   :paintings             #{}
-   :type-constraints      #{}
-   :school-constraints    #{"Italian"}
-   :timeframe-constraints #{"1451-1500", "1501-1550", "1551-1600"}
-   :concept-constraints   #{"saint"}
-   :artist-constraints    #{"MICHELANGELO Buonarroti"}})
-
-(def manet-group-name "Manet's people")
 
 (def manet-example-group
-  {:group-name            manet-group-name
+  {:group-name            "Manet's people"
    :paintings             #{}
    :type-constraints      #{}
    :school-constraints    #{"French"}
@@ -29,16 +23,6 @@
    :concept-constraints   #{"people"}
    :artist-constraints    #{"MANET, Edouard"}})
 
-(def degas-group-name "Degas' people")
-
-(def degas-example-group
-  {:group-name            degas-group-name
-   :paintings             #{}
-   :type-constraints      #{}
-   :school-constraints    #{"French"}
-   :timeframe-constraints #{"1801-1850", "1851-1900"}
-   :concept-constraints   #{"people"}
-   :artist-constraints    #{"DEGAS, Edgar"}})
 
 (def default-db
   {:current-mode            :explore
@@ -65,11 +49,13 @@
 
    ;; COMPARE
    :compared-group-names    '()
-   ;:compared-group-names    (list manet-group-name degas-group-name)
 
    ;; CHARTS
-   :show-n-chart-points     20
-   :concept-certainty-above 0.94})
+   ;:show-n-chart-points     20
+   ;:concept-certainty-above 0.94})
+   :show-n-chart-points     SHOW-N-CHARTPOINTS
+   :concept-certainty-above CONCEPT-CERTAINTY-ABOVE})
+
 
 
 ;; PATHS: abstractions over db-locations
