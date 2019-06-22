@@ -51,8 +51,6 @@
    :compared-group-names    '()
 
    ;; CHARTS
-   ;:show-n-chart-points     20
-   ;:concept-certainty-above 0.94})
    :show-n-chart-points     SHOW-N-CHARTPOINTS
    :concept-certainty-above CONCEPT-CERTAINTY-ABOVE})
 
