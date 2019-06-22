@@ -14,7 +14,7 @@ How similar are the works of Michelangelo and Manet?
 
 Visual encyclopedias like Wikiart are conservative in the information they host: only obvious or traditional classifications are allowed ("art movement", "genre", etc.).
 
-But sometimes we want to go deeper into a painting, or search for an idea that cuts across genres and time periods in unpredictable ways.
+But sometimes we want to go deeper into a painting, search for an idea that cuts across genres and time periods in unpredictable ways, or compare two artists' bodies of work.
 
 `landschaften` is designed to combine the fun, art-first exploration of a visual encyclopedia with a more aggressive insight into the paintings themselves, enabled by machine learning.     
 
@@ -32,4 +32,4 @@ Saved search results are compared statistically by measuring [variance](https://
 
 ### License
 
-MIT.
+MIT

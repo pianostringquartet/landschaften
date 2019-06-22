@@ -53,11 +53,12 @@
    {:name "caret right" :size "big" :on-click #(dispatch [::events/go-to-next-painting painting])}])
 
 
-;;; TODO: highlight in blue instead of green (":positive" param)
 (defn concept-table-row [current-concepts {:keys [name value]}]
   {:pre [(string? name) (float? value)]}
   ^{:key name}
-  [:> semantic-ui/table-row {:positive (contains? current-concepts name)}
+  [:> semantic-ui/table-row
+       {:style (when (contains? current-concepts name)
+                 {:color "#fff" :background-color "teal"})}
    [:> semantic-ui/table-cell
     {:on-click #(dispatch [::events/toggle-concept-selection name])}
     name]
@@ -87,8 +88,9 @@
   [::specs/painting ::specs/concept-constraints => vector?]
   [:div
    [info painting]
-   [rc/label :style {:color "lightGrey"} :label "Click to add as search term:"]
-   [concept-table painting selected-concepts]])
+   [concept-table painting selected-concepts]
+   [rc/label :style {:color "lightGrey"} :label "Click to add as search term"]])
+
 
 
 (>defn painting-details-desktop
@@ -136,4 +138,4 @@
           [painting-details-desktop painting @zoomed? @selected-concepts]]]]]))
 
 
-(check)
+;(check)

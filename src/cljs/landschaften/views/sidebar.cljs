@@ -125,7 +125,8 @@
                                [constraints/selected-artists]]
                          [saved-groups-buttons]
                          (when (> (count @paintings) 0)
-                           [utils/table-with-header "Frequency (%) of concepts in these paintings: " @paintings]))]
+                           [:> semantic-ui/grid {:padded true}
+                            [utils/table-with-header "Frequency (%) of concepts in these paintings: " @paintings]]))]
     [:> semantic-ui/slist {:relaxed true}
      (utils/as-semantic-ui-list-items components)]))
 

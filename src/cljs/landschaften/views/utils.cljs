@@ -103,4 +103,4 @@
     :content {:content (r/as-component ^{:key header} [concept-frequency-table paintings 15 0.85])}}])
 
 
-(check)
+;(check)
