@@ -18,3 +18,4 @@ Clojure REPL
 figwheel_server.log
 *.iml
 landschaften.iml
+.DS_Store

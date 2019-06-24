@@ -10,6 +10,12 @@ or even by the concepts contained within a painting itself.
 Then save your search results and compare different groups of paintings. 
 How similar are the works of Michelangelo and Manet?  
 
+
+![](landschaften_explore.png) 
+
+![](landschaften_compare.png)
+
+
 ### What
 
 Visual encyclopedias like Wikiart are conservative in the information they host: only obvious or traditional classifications are allowed ("art movement", "genre", etc.).
@@ -18,12 +24,13 @@ But sometimes we want to go deeper into a painting, search for an idea that cuts
 
 `landschaften` is designed to combine the fun, art-first exploration of a visual encyclopedia with a more aggressive insight into the paintings themselves, enabled by machine learning.     
 
+[Start exploring now :)](https://landschaften.herokuapp.com/)
 
 ### How
 
 `landschaften` classifies paintings from [Web Gallery of Art's database](https://www.wga.hu/frames-e.html?/html/c/cornelis/index.html)  using [Clarifai's General model](https://www.clarifai.com/models/general-image-recognition-model-aaa03c23b3724a16a56b629203edc62c). 
 
-Web Gallery of Art provides data about the _school_ (Italian, French, etc.), _genre_ (landscape, still life, etc.), _time period_ (1451-1500, 1501-1550 etc.), and _artist_. 
+Web Gallery of Art provides data about the _school_ (Italian, French, etc.), _genre_ (landscape, still life, etc.), _time period_ (1451-1500, 1501-1550 etc.), and _artist_ (Cezanne, Renoir, etc.). 
 
 Clarifai's General model identifies concepts within each painting: e.g. "people", "portrait", "adult", "ocean", "commerce", "saint" etc.    
 
