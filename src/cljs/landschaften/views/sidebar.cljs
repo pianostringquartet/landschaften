@@ -4,7 +4,7 @@
             [re-com.core :as rc]
             [landschaften.subs :as subs]
             [clojure.spec.alpha :as s]
-            [landschaften.events :as events]
+            [landschaften.events.explore-events :as explore-events]
             [landschaften.views.constraints :as constraints]
             [landschaften.views.utils :as utils]
             [landschaften.semantic-ui :as semantic-ui]
@@ -17,16 +17,18 @@
 ;;   save a new group, etc.
 ;; ------------------------------------------------------
 
+;; need a separate event
 (defn search-button []
   [:> semantic-ui/button
-   {:color    "green"
-    :on-click #(dispatch [::events/query-started nil])}
+   {:color "green"
+    :on-click #(dispatch [::explore-events/query-started])}
    "SEARCH"])
 
 
 (defn clear-button []
   [:> semantic-ui/button
-   {:color "red" :on-click #(dispatch [::events/selections-cleared])}
+   {:color "red"
+    :on-click #(dispatch [::explore-events/selections-cleared])}
    "CLEAR"])
 
 
@@ -41,13 +43,13 @@
        :attr {:auto-focus "true"}
        :on-change
        #(when (not (empty? %))
-          (dispatch [::events/query-started (reset! val %)]))])))
+          (dispatch [::explore-events/query-started (reset! val %)]))])))
 
 
 (defn save-search-button-trigger []
   [:> semantic-ui/button
    {:color    "blue"
-    :on-click #(dispatch [::events/show-save-group-popover])}
+    :on-click #(dispatch [::explore-events/show-save-group-popover])}
    "SAVE SEARCH"])
 
 
@@ -56,8 +58,8 @@
    {:trigger  (r/as-component [save-search-button-trigger])
     :open     popover-showing?
     :on       "click"
-    :position "bottom left"                                 ; to avoid re-com selection-list CSS conflict
-    :on-close #(dispatch [::events/hide-save-group-popover])
+    :position "bottom left" ; to avoid re-com selection-list CSS conflict
+    :on-close #(dispatch [::explore-events/hide-save-group-popover])
     :content  (r/as-component
                 [:> semantic-ui/input {:autoFocus true
                                        :placeholder  existing-group-name
@@ -66,9 +68,9 @@
                                                              input          (aget react-synthetic-event "target" "value")]
                                                          (do
                                                            (when (and enter-pressed? (empty? input))
-                                                             (dispatch [::events/hide-save-group-popover]))
+                                                             (dispatch [::explore-events/hide-save-group-popover]))
                                                            (when (and enter-pressed? (not (empty? input)))
-                                                             (dispatch [::events/query-started input])))))}])}])
+                                                             (dispatch [::explore-events/query-started input])))))}])}])
 
 
 (defn ui-buttons []
@@ -85,15 +87,16 @@
 ;; ------------------------------------------------------
 
 
-(defn group-button [name color]
+(>defn group-button! [name color]
+  [string? string? => vector?]
   [:> semantic-ui/button
    {:color         color
     :icon          true
     :labelPosition "right"
     :style         {:border-radius "30px" :padding "4px"}
-    :on-click      #(dispatch [::events/switch-groups name])}
+    :on-click      #(dispatch [::explore-events/switch-groups name])}
    [:> semantic-ui/icon {:name     "close"
-                         :on-click #(dispatch [::events/remove-group name])}]
+                         :on-click #(dispatch [::explore-events/remove-group name])}]
    name])
 
 (defn saved-groups-buttons []
@@ -104,7 +107,7 @@
       [:div
        [rc/label :label "Saved searches:"]
        [utils/bubble-table
-          (mapv (fn [group-name] [group-button group-name (color group-name)])
+          (mapv (fn [group-name] [group-button! group-name (color group-name)])
                 (keys @saved-groups))
         2]])))
 
@@ -114,6 +117,17 @@
 ;; - 'control center' for exploring paintings
 ;; ------------------------------------------------------
 
+
+;; not used yet
+(defn sidebar-components []
+  (list [ui-buttons]
+        [:div [constraints/concept-typeahead]
+              [constraints/selected-concepts]]
+        [:div [constraints/artist-typeahead]
+              [constraints/selected-artists]]
+        [saved-groups-buttons]))
+
+;; these are very similar ...
 (defn desktop-sidebar []
   (let [paintings (subscribe [::subs/paintings])
         components (list [constraints/constraints]

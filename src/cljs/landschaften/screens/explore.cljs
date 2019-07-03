@@ -3,7 +3,7 @@
             [re-frame.core :refer [subscribe dispatch]]
             [re-com.core :as rc]
             [landschaften.subs :as subs]
-            [landschaften.events :as events]
+            [landschaften.events.core-events :as core-events]
             [landschaften.views.paintings :as paintings]
             [landschaften.views.sidebar :as sidebar]
             [landschaften.semantic-ui :as semantic-ui]))
@@ -33,21 +33,21 @@
    [:> semantic-ui/loader {:size "big"} "Loading..."]])
 
 
-(defn search-or-results [search?]
-  (let [toggle #(dispatch [::events/toggle-mobile-search])]
+(defn search-or-results-button [search?]
+  (let [toggle #(dispatch [::core-events/toggle-mobile-search])]
     [:> semantic-ui/button-group
      [:> semantic-ui/button {:compact true :positive search? :on-click toggle}
-                            "search"]
+      "search"]
      [:> semantic-ui/button-or]
      [:> semantic-ui/button {:compact true :positive (not search?) :on-click toggle}
-                            "paintings"]]))
+      "paintings"]]))
 
 
 (defn mobile-explore-panel [current-painting paintings show-slideshow? search?]
   [:> semantic-ui/grid {:columns 1 :centered true :padded true}
    [:> semantic-ui/slist {:relaxed true}
     [:> semantic-ui/slist-item
-      [search-or-results search?]]
+     [search-or-results-button search?]]
     (if search?
       [:> semantic-ui/slist-item [sidebar/mobile-sidebar]]
       [:> semantic-ui/slist-item [explore current-painting paintings show-slideshow? 2]])]])
@@ -60,16 +60,14 @@
 
 
 (defn explore-panel []
-  (let [paintings        (subscribe [::subs/paintings])
-        current-painting (subscribe [::subs/current-painting])
-        show-painting-modal?  (subscribe [::subs/show-painting-modal?])
-        loading?         (subscribe [::subs/query-loading?])
-        mobile-search?   (subscribe [::subs/mobile-search?])]
+  (let [paintings            (subscribe [::subs/paintings])
+        current-painting     (subscribe [::subs/current-painting])
+        show-painting-modal? (subscribe [::subs/show-painting-modal?])
+        loading?             (subscribe [::subs/query-loading?])
+        mobile-search?       (subscribe [::subs/mobile-search?])]
     [:> semantic-ui/slist
      [loading-modal @loading?]
-     [:> semantic-ui/responsive
-      {:max-width 799}
+     [:> semantic-ui/responsive {:max-width 799}
       [mobile-explore-panel @current-painting @paintings @show-painting-modal? @mobile-search?]]
-     [:> semantic-ui/responsive
-      {:min-width 800}
+     [:> semantic-ui/responsive {:min-width 800}
       [desktop-explore-panel @current-painting @paintings @show-painting-modal?]]]))

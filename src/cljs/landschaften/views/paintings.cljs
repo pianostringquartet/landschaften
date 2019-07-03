@@ -1,6 +1,6 @@
 (ns landschaften.views.paintings
   (:require [reagent-material-ui.core :as ui]
-            [landschaften.events :as events]
+            [landschaften.events.explore-events :as explore-events]
             [landschaften.specs :as specs]
             [landschaften.views.painting :as examine]
             [re-frame.core :as rf :refer [subscribe dispatch]]
@@ -15,7 +15,7 @@
   [ui/GridTile
    {:key (:jpg painting)}
    [:img {:src (:jpg painting)
-          :on-click #(dispatch [::events/painting-tile-clicked painting])}]])
+          :on-click #(dispatch [::explore-events/painting-tile-clicked painting])}]])
 
 
 (defn grid [current-painting paintings show-max? n-columns]

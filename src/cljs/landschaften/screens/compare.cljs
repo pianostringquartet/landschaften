@@ -4,7 +4,7 @@
             [re-com.core :as rc]
             [landschaften.subs :as subs]
             [landschaften.specs :as specs]
-            [landschaften.events :as events]
+            [landschaften.events.compare-events :as compare-events]
             [landschaften.views.chart :as chart]
             [landschaften.views.utils :as utils]
             [landschaften.semantic-ui :as semantic-ui]
@@ -19,10 +19,10 @@
 ;; ------------------------------------------------------
 
 
-(>defn clear-button! []
-  [=> vector?]
+(defn clear-button! []
+  {:post [(vector? %)]}
   [:> semantic-ui/button
-   {:on-click #(dispatch [::events/comparisons-cleared])
+   {:on-click #(dispatch [::compare-events/comparisons-cleared])
     :color    "red"
     :compact  true}
    "CLEAR"])
@@ -34,19 +34,19 @@
 (>defn compare-group-button! [group-name compared-group-names]
   [string? set? => vector?]
   (let [being-compared? (contains? compared-group-names group-name)
-        button-color (if being-compared?
-                       (if (= group-name (first compared-group-names))
-                         color-1
-                         color-2)
-                       "grey")]
+        button-color    (if being-compared?
+                          (if (= group-name (first compared-group-names))
+                            color-1
+                            color-2)
+                          "grey")]
     [:> semantic-ui/button
      {:on-click (if being-compared?
-                  #(dispatch [::events/remove-compare-group-name group-name])
-                  #(dispatch [::events/add-compare-group-name group-name]))
-      :style    {:color "#fff" ; white
+                  #(dispatch [::compare-events/remove-compare-group-name group-name])
+                  #(dispatch [::compare-events/add-compare-group-name group-name]))
+      :style    {:color            "#fff"                   ; white
                  :background-color button-color
-                 :border-radius "30px"
-                 :padding "4px"}}
+                 :border-radius    "30px"
+                 :padding          "4px"}}
      group-name]))
 
 
@@ -96,38 +96,39 @@
 
 
 (defn radar-chart [compared-groups]
-   [:> semantic-ui/slist-item
-    ^{:key (rand-int 999)} ;; Workaround: force Chart.js to re-render, don't use React lifecycle methods
-    [chart/radar-chart
-     (chart/compared-groups->radar-chart-data!
-       (first compared-groups) (second compared-groups) 15 0.85)]])
+  [:> semantic-ui/slist-item
+   ;; Workaround: force Chart.js to re-render, don't use React lifecycle methods
+   ^{:key (rand-int 999)}
+   [chart/radar-chart
+    (chart/compared-groups->radar-chart-data!
+      (first compared-groups) (second compared-groups) 15 0.85)]])
 
 (defn accordion-frequency-tables [groups]
-    (let [->accordion-panel
-          (fn [group]
-            {:key     (:group-name group)
-             :title   {:content (:group-name group)}
-             :content {:content (r/as-component [utils/concept-frequency-table (:paintings group)
-                                                                         15
-                                                                         0.85])}})]
-      [:> semantic-ui/accordion
-       {:panels (mapv ->accordion-panel groups)}]))
+  (let [->accordion-panel
+        (fn [group]
+          {:key     (:group-name group)
+           :title   {:content (:group-name group)}
+           :content {:content (r/as-component [utils/concept-frequency-table (:paintings group)
+                                               15
+                                               0.85])}})]
+    [:> semantic-ui/accordion
+     {:panels (mapv ->accordion-panel groups)}]))
 
 
 (defn mobile-compare-screen [variance max-variance saved-groups compared-groups]
-   [:> semantic-ui/slist
-     [:> semantic-ui/slist-item
-      [clear-button!]]
-     [:> semantic-ui/slist-item
-      [compare-group-buttons saved-groups (map :group-name compared-groups)]]
-     [:> semantic-ui/slist-item
-      (when variance [radar-chart compared-groups])]
-     [:> semantic-ui/slist-item
-      (when variance [labeled-variance variance max-variance])]
-     [:> semantic-ui/slist-item
-      (if (empty? compared-groups)
-          [rc/label :label "Select some saved searches to start comparing."]
-          [accordion-frequency-tables compared-groups])]])
+  [:> semantic-ui/slist
+   [:> semantic-ui/slist-item
+    [clear-button!]]
+   [:> semantic-ui/slist-item
+    [compare-group-buttons saved-groups (map :group-name compared-groups)]]
+   [:> semantic-ui/slist-item
+    (when variance [radar-chart compared-groups])]
+   [:> semantic-ui/slist-item
+    (when variance [labeled-variance variance max-variance])]
+   [:> semantic-ui/slist-item
+    (if (empty? compared-groups)
+      [rc/label :label "Select some saved searches to start comparing."]
+      [accordion-frequency-tables compared-groups])]])
 
 
 (defn desktop-compare-screen [variance max-variance saved-groups compared-groups]
@@ -135,26 +136,26 @@
    [:> semantic-ui/grid-column {:width 10}
     (when variance [radar-chart compared-groups])
     (when (empty? compared-groups)
-      [:> semantic-ui/grid {:centered true :padded true :relaxed true  :columns 1}
+      [:> semantic-ui/grid {:centered true :padded true :relaxed true :columns 1}
        [:> semantic-ui/grid-column
         [rc/label :label "Select some saved searches to start comparing."]]])]
    [:> semantic-ui/grid-column {:width 6}
     [compare-sidebar variance max-variance saved-groups compared-groups]
     [:> semantic-ui/slist {:horizontal true}
-       (for [group compared-groups]
-         [utils/table-with-header (:group-name group) (:paintings group)])]]])
+     (for [group compared-groups]
+       [utils/table-with-header (:group-name group) (:paintings group)])]]])
 
 
 (defn compare-screen []
-  (let [variance             (subscribe [::subs/variance])
-        max-variance         (subscribe [::subs/max-variance])
-        compared-groups      (subscribe [::subs/compared-groups])
-        saved-groups         (subscribe [::subs/saved-groups])]
+  (let [variance        (subscribe [::subs/variance])
+        max-variance    (subscribe [::subs/max-variance])
+        compared-groups (subscribe [::subs/compared-groups])
+        saved-groups    (subscribe [::subs/saved-groups])]
     [:> semantic-ui/slist
-      [:> semantic-ui/responsive {:max-width 799}
-       [mobile-compare-screen @variance @max-variance @saved-groups @compared-groups]]
-      [:> semantic-ui/responsive {:min-width 800}
-       [desktop-compare-screen @variance @max-variance @saved-groups @compared-groups]]]))
+     [:> semantic-ui/responsive {:max-width 799}
+      [mobile-compare-screen @variance @max-variance @saved-groups @compared-groups]]
+     [:> semantic-ui/responsive {:min-width 800}
+      [desktop-compare-screen @variance @max-variance @saved-groups @compared-groups]]]))
 
 
 ;(check)

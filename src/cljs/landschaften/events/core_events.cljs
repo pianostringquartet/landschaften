@@ -1,0 +1,134 @@
+(ns landschaften.events.core-events
+  (:require [re-frame.core :refer [reg-cofx inject-cofx after dispatch reg-event-db reg-sub reg-event-fx reg-fx]]
+            [landschaften.db :as db]
+            [ajax.core :refer [POST GET]]
+            [landschaften.ui-specs :as ui-specs]
+            [landschaften.specs :as specs]
+            [landschaften.helpers :as helpers]
+            [cljs.spec.alpha :as s]
+            [ghostwheel.core :refer [check >defn >defn- >fdef => | <- ?]]))
+
+
+;; ------------------------------------------------------
+;; Interceptors
+;; ------------------------------------------------------
+
+(defn check-and-throw
+  "Throws an exception if `db` doesn't match the Spec `a-spec`."
+  [a-spec db]
+  (when-not (s/valid? a-spec db)
+    (throw (ex-info (str "spec check failed: " (s/explain-str a-spec db)) {}))))
+
+(def spec? (after (partial check-and-throw ::specs/app-db)))
+
+(def interceptors [spec?])
+
+
+;; ------------------------------------------------------
+;; Persisting data
+;; ------------------------------------------------------
+
+(def ls-auth-key "landschaften-session-data")
+
+(>defn ->localstore! [state]
+  [::specs/app-db => nil?]
+  (do
+    (.setItem js/localStorage ls-auth-key state)))
+
+(reg-fx
+  :persist-state
+  ->localstore!)
+
+(reg-cofx
+  :user-session
+  (fn user-session [cofx _]
+    (let [data-from-local-storage (cljs.reader/read-string
+                                    (some->> (.getItem js/localStorage ls-auth-key)))]
+      (assoc cofx :user-session data-from-local-storage))))
+
+
+;; ------------------------------------------------------
+;; HTTP Requests
+;; ------------------------------------------------------
+
+
+;; TODO: Handle subset of errors; log rest to external logs
+(defn default-error-handler [response]
+  (helpers/log "Encountered unexpected error: " response))
+
+(reg-fx
+  :post-request
+  (fn post-request-handler
+    [{uri :uri params :params handler :handler error-handler :error-handler
+      :or {error-handler default-error-handler}}]
+    (POST uri {:params params :handler handler :error-handler error-handler})))
+
+
+(reg-fx
+  :get-request
+  (fn get-request-handler
+    [{uri :uri handler :handler error-handler :error-handler
+      :or {error-handler default-error-handler}}]
+    (GET uri {:handler handler :error-handler error-handler})))
+
+
+;; ------------------------------------------------------
+;; Initializing the app
+;; ------------------------------------------------------
+
+
+(reg-event-fx
+  ::initialize-app
+  [(inject-cofx :user-session)] ; an interceptor
+  (fn initialize-app [cofx _]
+    (let [persisted-db (:user-session cofx)]
+      (if (s/valid? ::specs/app-db persisted-db)
+        {:db persisted-db}
+        {:db db/default-db}))))
+
+
+(reg-event-fx
+  ::retrieve-artists-names
+  (fn query [cofx _]
+    {:get-request {:uri "/artists"
+                   :handler #(dispatch [::artists-names-retrieved %])}}))
+
+
+(reg-event-fx
+  ::retrieve-concepts
+  (fn query [cofx _]
+    {:get-request {:uri "/concepts"
+                   :handler #(dispatch [::concepts-retrieved %])}}))
+
+
+(reg-event-db
+  ::concepts-retrieved
+  interceptors
+  (fn concepts-retrieved [db [_ artists]]
+    (assoc db :all-concepts (into #{} artists))))
+
+
+(reg-event-db
+  ::artists-names-retrieved
+  interceptors
+  (fn artists-names-retrieved [db [_ artists]]
+    (assoc db :all-artists (into #{} artists))))
+
+
+;; ------------------------------------------------------
+;; UI-related events
+;; ------------------------------------------------------
+
+(reg-event-db
+  ::mode-changed
+  interceptors
+  (fn mode-changed [db [_ new-mode]]
+    {:pre [(s/valid? ::ui-specs/mode new-mode)]}
+    (assoc db :current-mode new-mode)))
+
+
+(reg-event-db
+  ::toggle-mobile-search
+  interceptors
+  (fn mobile-search-toggled [db]
+    (update db :mobile-search? not)))

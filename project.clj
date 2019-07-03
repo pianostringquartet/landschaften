@@ -89,7 +89,9 @@
                :uberjar-name "landschaften.jar"
                :source-paths ["env/prod/clj"]
                :resource-paths ["env/prod/resources"]}
-     :dev           [:project/dev :profiles/dev]
+     :dev    [:project/dev :profiles/dev]
+
+     ;; Why multiple
      :test          [:project/dev :project/test :profiles/test]
      :project/dev  {:jvm-opts ["-Dconf=dev-config.edn"]
                     :dependencies [[binaryage/devtools "0.9.10"]
@@ -143,6 +145,7 @@
                         {:output-to "target/test.js"
                          :main "landschaften.doo-runner"
                          :optimizations :whitespace
+                         :verbose false
                          :pretty-print true}}}}}
      :profiles/dev {}
      :profiles/test {}})

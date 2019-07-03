@@ -7,7 +7,8 @@
             [markdown.core :refer [md->html]]
             [ajax.core :refer [GET POST]]
             [landschaften.ajax :refer [load-interceptors!]]
-            [landschaften.events :as events]
+            [landschaften.events.core-events :as core-events]
+            [landschaften.events.explore-events :as explore-events]
             [reitit.core :as reitit]
             [clojure.string :as string]
             [landschaften.db :as db]
@@ -95,8 +96,9 @@
   (load-interceptors!)
   (fetch-docs!)
   (hook-browser-navigation!)
-  (rf/dispatch-sync [::events/initialize-app])
-  (rf/dispatch-sync [::events/retrieve-artists-names])
-  (rf/dispatch-sync [::events/retrieve-concepts])
-  (rf/dispatch-sync [::events/add-default-group db/manet-example-group])
+  (rf/dispatch-sync [::core-events/initialize-app])
+  (rf/dispatch-sync [::core-events/retrieve-artists-names])
+  (rf/dispatch-sync [::core-events/retrieve-concepts])
+  ;; should be able to start app without a current group
+  ;(rf/dispatch-sync [::explore-events/add-default-group db/manet-example-group])
   (mount-components))

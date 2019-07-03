@@ -3,7 +3,7 @@
             [re-frame.core :refer [subscribe dispatch]]
             [re-com.core :as rc]
             [landschaften.subs :as subs]
-            [landschaften.events :as events]
+            [landschaften.events.explore-events :as expore-events]
             [landschaften.views.utils :as utils]
             [landschaften.semantic-ui :as semantic-ui]
             [landschaften.helpers :as helpers]))
@@ -36,7 +36,7 @@
     [->selection-list
      (apply sorted-set @genre-choices)
      @genre-selections
-     #(dispatch [::events/update-selected-types %])]))
+     #(dispatch [::expore-events/update-selected-types %])]))
 
 
 (defn school-constraints []
@@ -45,7 +45,7 @@
     [->selection-list
      (apply sorted-set @school-choices)
      @selected-schools
-     #(dispatch [::events/update-selected-schools %])]))
+     #(dispatch [::expore-events/update-selected-schools %])]))
 
 
 (defn timeframe-constraints []
@@ -54,7 +54,7 @@
     [->selection-list
      (apply sorted-set @timeframe-choices)
      @selected-timeframes
-     #(dispatch [::events/update-selected-timeframes %])]))
+     #(dispatch [::expore-events/update-selected-timeframes %])]))
 
 
 (defn constraints []
@@ -100,7 +100,7 @@
     (fn deck-search-typeahead []
       [:> semantic-ui/search
        {:on-result-select #(on-result-select text-val
-                                             (fn [] (dispatch [::events/update-selected-concepts (get-result %2)])))
+                                             (fn [] (dispatch [::expore-events/update-selected-concepts (get-result %2)])))
         :on-search-change #(on-search-change @concepts text-val results %2)
         :placeholder      "Search for concepts"
         :results          @results
@@ -114,7 +114,7 @@
     (fn artist-search []
       [:> semantic-ui/search
        {:on-result-select #(on-result-select text-val
-                                             (fn [] (dispatch [::events/update-selected-artists (get-result %2)])))
+                                             (fn [] (dispatch [::expore-events/update-selected-artists (get-result %2)])))
         :on-search-change #(on-search-change @artists text-val results %2)
         :placeholder      "Search for artists"
         :results          @results
@@ -128,7 +128,7 @@
     :labelPosition "right"
     :style         {:border-radius "30px" :padding "4px"}}
    [:> semantic-ui/icon {:name     "close"
-                         :on-click #(dispatch [::events/remove-selected-concept concept])}]
+                         :on-click #(dispatch [::expore-events/remove-selected-concept concept])}]
    concept])
 
 
@@ -139,7 +139,7 @@
     :labelPosition "right"
     :style         {:border-radius "30px" :padding "8px"}}
    [:> semantic-ui/icon {:name     "close"
-                         :on-click #(dispatch [::events/remove-selected-artist artist])}]
+                         :on-click #(dispatch [::expore-events/remove-selected-artist artist])}]
    artist])
 
 
@@ -150,9 +150,11 @@
 
 (defn selected-artists []
   (let [selected-artists (subscribe [::subs/artist-constraints])]
-    [utils/bubble-table
-     (map artist-button @selected-artists)
-     2]))
+    (do
+      (js/console.log "selected-artists: " @selected-artists)
+      [utils/bubble-table
+       (map artist-button @selected-artists)
+       2])))
 
 
 (defn accordion-constraints []

@@ -4,7 +4,7 @@
             [re-com.core :as rc]
             [landschaften.subs :as subs]
             [landschaften.specs :as specs]
-            [landschaften.events :as events]
+            [landschaften.events.explore-events :as explore-events]
             [landschaften.semantic-ui :as semantic-ui]
             [ghostwheel.core :as g :refer [check >defn >defn- >fdef => | <- ?]]))
 
@@ -28,7 +28,7 @@
     :wrapped  true
     :src      jpg
     :style    {:padding "8px"}
-    :on-click #(dispatch [::events/toggle-image-zoomed])}])
+    :on-click #(dispatch [::explore-events/toggle-image-zoomed])}])
 
 
 (>defn image-modal! [jpg zoomed?]
@@ -36,7 +36,7 @@
   [:> semantic-ui/modal {:open                    zoomed?
                          :close-on-document-click true
                          :centered                false
-                         :on-close                #(dispatch [::events/toggle-image-zoomed])
+                         :on-close                #(dispatch [::explore-events/toggle-image-zoomed])
                          :image                   true
                          :content                 (r/as-component [image! jpg])}])
 
@@ -44,13 +44,13 @@
 (>defn prev-painting-button! [painting]
   [::specs/painting => vector?]
   [:> semantic-ui/icon
-   {:name "caret left" :size "big" :on-click #(dispatch [::events/go-to-previous-painting painting])}])
+   {:name "caret left" :size "big" :on-click #(dispatch [::explore-events/go-to-previous-painting painting])}])
 
 
 (>defn next-button-button! [painting]
   [::specs/painting => vector?]
   [:> semantic-ui/icon
-   {:name "caret right" :size "big" :on-click #(dispatch [::events/go-to-next-painting painting])}])
+   {:name "caret right" :size "big" :on-click #(dispatch [::explore-events/go-to-next-painting painting])}])
 
 
 (defn concept-table-row [current-concepts {:keys [name value]}]
@@ -60,7 +60,7 @@
        {:style (when (contains? current-concepts name)
                  {:color "#fff" :background-color "teal"})}
    [:> semantic-ui/table-cell
-    {:on-click #(dispatch [::events/toggle-concept-selection name])}
+    {:on-click #(dispatch [::explore-events/toggle-concept-selection name])}
     name]
    [:> semantic-ui/table-cell
     (goog.string/format "%.2f" value)]])
@@ -127,7 +127,7 @@
                            :close-on-document-click true
                            :close-icon              true
                            :centered                false
-                           :on-close                #(dispatch [::events/toggle-painting-modal])}
+                           :on-close                #(dispatch [::explore-events/toggle-painting-modal])}
        [:> semantic-ui/modal-content {:image true}
         [:> semantic-ui/slist
          [:> semantic-ui/responsive

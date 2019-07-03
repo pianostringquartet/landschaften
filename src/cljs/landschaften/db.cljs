@@ -29,8 +29,14 @@
    :examining?              false
    :mobile-search?          true
 
+   :constraints-updated-since-search? false
+
    ;; EXAMINE
    :current-painting        nil
+   :paintings #{}
+
+   ::search-result-paintings #{}
+
    :show-painting-modal?    false
    :image-zoomed?           false
 
@@ -41,6 +47,13 @@
    :all-timeframes          (apply disj specs/TIMEFRAMES excluded-timeframes)
    :all-concepts            #{}                             ; retrieved from backend during initialization
    :all-artists             #{}                             ; retrieved from backend during initialization
+
+   :selected-types #{}
+   :selected-schools #{}
+   :selected-timeframes #{}
+   :selected-concepts #{}
+   :selected-artists #{}
+
 
    ;; EXPLORE & COMPARE
    :current-group           nil

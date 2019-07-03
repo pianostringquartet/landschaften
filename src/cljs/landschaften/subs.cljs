@@ -70,6 +70,43 @@
     (:all-artists db)))
 
 
+;; ------------------------------------------------------
+;; Currently selected constraints
+;; ------------------------------------------------------
+
+(reg-sub
+  ::types
+  (fn types [db _]
+    {:post [(s/valid? ::specs/type-constraints %)]}
+    (:selected-types db)))
+
+(reg-sub
+  ::school-constraints
+  (fn schools [db _]
+    {:post [(s/valid? ::specs/school-constraints %)]}
+    (:selected-schools db)))
+
+(reg-sub
+  ::timeframe-constraints
+  (fn timeframes [db _]
+    {:post [(s/valid? ::specs/timeframe-constraints %)]}
+    (:selected-timeframes db)))
+
+
+(reg-sub
+  ::concept-constraints
+  (fn concepts [db _]
+    {:post [(s/valid? ::specs/concept-constraints %)]}
+    (:selected-concepts db)))
+
+(reg-sub
+  ::artist-constraints
+  (fn artists [db _]
+    {:post [(s/valid? ::specs/artist-constraints %)]}
+    (:selected-artists db)))
+
+
+
 
 ;; ------------------------------------------------------
 ;; Groups (selected constraints, retrieved paintings)
@@ -96,58 +133,47 @@
     (:current-group db)))
 
 
+;; can be null
 (reg-sub
   ::group-name
   (fn group-name [db _]
-    {:post [(s/valid? ::specs/group-name %)]}
+    ;{:post [(s/valid? ::specs/group-name %)]}
     (get-in db db/path:current-group-name)))
 
 
-(reg-sub
-  ::types
-  (fn types [db _]
-    {:post [(s/valid? ::specs/type-constraints %)]}
-    (get-in db db/path:type-constraints)))
+;(reg-sub
+;  ::paintings
+;  (fn paintings [db _]
+;    (let [current-paintings (get-in db db/path:current-paintings)]
+;      (if current-paintings
+;        (helpers/sort-by-author current-paintings)
+;        []))))
 
 
-(reg-sub
-  ::school-constraints
-  (fn schools [db _]
-    {:post [(s/valid? ::specs/school-constraints %)]}
-    (get-in db db/path:school-constraints db)))
-
-
-(reg-sub
-  ::timeframe-constraints
-  (fn timeframes [db _]
-    {:post [(s/valid? ::specs/timeframe-constraints %)]}
-    (get-in db db/path:timeframe-constraints db)))
-
-
-(reg-sub
-  ::concept-constraints
-  (fn concepts [db _]
-    {:post [(s/valid? ::specs/concept-constraints %)]}
-    (get-in db db/path:concept-constraints db)))
-
-
-(reg-sub
-  ::artist-constraints
-  (fn artists [db _]
-    {:post [(s/valid? ::specs/artist-constraints %)]}
-    (get-in db db/path:artist-constraints db)))
-
-
+;; call these
 (reg-sub
   ::paintings
   (fn paintings [db _]
-    (helpers/sort-by-author (get-in db db/path:current-paintings))))
+    (let [current-paintings (:paintings db)]
+      (if current-paintings
+        (helpers/sort-by-author current-paintings)
+        []))))
+
+;
+;;; do you want these search result paintings?
+;;; what about when "a new group is brought in"?
+;;;
+;(reg-sub
+;  ::search-result-paintings
+;  (fn search-result-paintings [db _]
+;    (:search-result-paintings db)))
 
 
 (reg-sub
   ::query-loading?
   (fn query-loading? [db _]
     (:query-loading? db)))
+
 
 ;; ------------------------------------------------------
 ;; Examine
