@@ -67,8 +67,6 @@
                                    ::concepts]))
 
 
-
-
 ;; -------------------------
 ;; GROUP SPEC
 ;; -------------------------
@@ -100,8 +98,6 @@
 
 (s/def ::current-painting (s/nilable ::painting))
 
-;(s/def ::search-result-paintings (s/coll-of ::painting))
-
 (s/def ::examining? boolean?)
 (s/def ::show-painting-modal? boolean?)
 (s/def ::image-zoomed? boolean?)
@@ -109,14 +105,12 @@
 
 (s/def ::constraints-updated-since-search? boolean?)
 
-
 (s/def ::all-types (s/coll-of ::type))
 (s/def ::all-schools (s/coll-of ::school))
 (s/def ::all-timeframes (s/coll-of ::timeframe))
 (s/def ::all-concepts (s/coll-of string?))
 (s/def ::all-artists (s/coll-of string?))
 
-;; added:
 (s/def ::selected-types (s/coll-of ::type))
 (s/def ::selected-schools (s/coll-of ::school))
 (s/def ::selected-timeframes (s/coll-of ::timeframe))
@@ -124,6 +118,8 @@
 (s/def ::selected-artists (s/coll-of string?))
 
 (s/def ::current-group (s/nilable ::group))
+
+(s/def ::current-group-name (s/nilable string?))
 
 (s/def ::show-group-name-prompt? boolean?)
 (s/def ::saved-groups map?)
@@ -137,7 +133,6 @@
                    ::image-zoomed?
                    ::query-loading?
                    ::constraints-updated-since-search?
-                   ;::search-result-paintings
                    ::all-types
                    ::all-schools
                    ::all-timeframes

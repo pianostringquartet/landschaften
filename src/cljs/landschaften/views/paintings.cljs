@@ -3,10 +3,10 @@
             [landschaften.events.explore-events :as explore-events]
             [landschaften.specs :as specs]
             [landschaften.views.painting :as examine]
-            [re-frame.core :as rf :refer [subscribe dispatch]]
+            [re-frame.core :refer [subscribe dispatch]]
             [clojure.spec.alpha :as s]
             [re-com.core :as rc]
-            [ghostwheel.core :as g :refer [check >defn >defn- >fdef => | <- ?]]
+            [ghostwheel.core :refer [check >defn >defn- >fdef => | <- ?]]
             [landschaften.semantic-ui :as semantic-ui]))
 
 

@@ -9,8 +9,9 @@
             [ghostwheel.core :refer [check >defn >defn- >fdef => | <- ?]]))
 
 
+
 ;; ------------------------------------------------------
-;; Interceptors
+;; Checking data
 ;; ------------------------------------------------------
 
 (defn check-and-throw
@@ -19,25 +20,18 @@
   (when-not (s/valid? a-spec db)
     (throw (ex-info (str "spec check failed: " (s/explain-str a-spec db)) {}))))
 
-(def spec? (after (partial check-and-throw ::specs/app-db)))
-
-(def interceptors [spec?])
-
-
 ;; ------------------------------------------------------
 ;; Persisting data
 ;; ------------------------------------------------------
 
 (def ls-auth-key "landschaften-session-data")
 
-(>defn ->localstore! [state]
-  [::specs/app-db => nil?]
-  (do
-    (.setItem js/localStorage ls-auth-key state)))
+;; BUG?: When fn used in interceptor chain,
+;; Ghostwheel thinks `state` is [event-id, event-handler's received argument]
+;; -- but printing `state` shows `state` is app-db as expected.
+(defn ->localstore! [state]
+  (.setItem js/localStorage ls-auth-key state))
 
-(reg-fx
-  :persist-state
-  ->localstore!)
 
 (reg-cofx
   :user-session
@@ -48,6 +42,17 @@
 
 
 ;; ------------------------------------------------------
+;; Interceptors
+;; ------------------------------------------------------
+
+(def spec? (after (partial check-and-throw ::specs/app-db)))
+
+(def persist (after ->localstore!))
+
+(def check-and-persist-interceptors [spec? persist])
+
+
+;; ------------------------------------------------------
 ;; HTTP Requests
 ;; ------------------------------------------------------
 
@@ -55,6 +60,7 @@
 ;; TODO: Handle subset of errors; log rest to external logs
 (defn default-error-handler [response]
   (helpers/log "Encountered unexpected error: " response))
+
 
 (reg-fx
   :post-request
@@ -84,8 +90,9 @@
     (let [persisted-db (:user-session cofx)]
       (if (s/valid? ::specs/app-db persisted-db)
         {:db persisted-db}
-        {:db db/default-db}))))
-
+        {:db db/default-db
+         :dispatch-n (list [::retrieve-artists-names]
+                           [::retrieve-concepts])}))))
 
 (reg-event-fx
   ::retrieve-artists-names
@@ -103,14 +110,14 @@
 
 (reg-event-db
   ::concepts-retrieved
-  interceptors
+  check-and-persist-interceptors
   (fn concepts-retrieved [db [_ artists]]
     (assoc db :all-concepts (into #{} artists))))
 
 
 (reg-event-db
   ::artists-names-retrieved
-  interceptors
+  check-and-persist-interceptors
   (fn artists-names-retrieved [db [_ artists]]
     (assoc db :all-artists (into #{} artists))))
 
@@ -121,7 +128,7 @@
 
 (reg-event-db
   ::mode-changed
-  interceptors
+  check-and-persist-interceptors
   (fn mode-changed [db [_ new-mode]]
     {:pre [(s/valid? ::ui-specs/mode new-mode)]}
     (assoc db :current-mode new-mode)))
@@ -129,6 +136,6 @@
 
 (reg-event-db
   ::toggle-mobile-search
-  interceptors
+  check-and-persist-interceptors
   (fn mobile-search-toggled [db]
     (update db :mobile-search? not)))

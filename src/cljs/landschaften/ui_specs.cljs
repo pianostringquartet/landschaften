@@ -3,14 +3,10 @@
 
 ;; UI-Specs:
 ;; - represent UI-related constraints
-;; - do not represent a coherent problem-domain concept
+;; - do not represent a problem-domain concept per se
 
 (def MODES
   #{:explore :compare})
 
 (s/def ::mode #(contains? MODES %))
-
-(s/def ::google-chart-type
-  #(contains? #{"LineChart" "PieChart" "ColumnChart" "AreaChart", "BarChart" "Table"} %))
-
 

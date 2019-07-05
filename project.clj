@@ -90,8 +90,6 @@
                :source-paths ["env/prod/clj"]
                :resource-paths ["env/prod/resources"]}
      :dev    [:project/dev :profiles/dev]
-
-     ;; Why multiple
      :test          [:project/dev :project/test :profiles/test]
      :project/dev  {:jvm-opts ["-Dconf=dev-config.edn"]
                     :dependencies [[binaryage/devtools "0.9.10"]
@@ -122,6 +120,7 @@
                         :source-map true
                         :optimizations :none
                         :pretty-print true
+                        :parallel-build true ;; added
                         :external-config {:ghostwheel {:check     true
                                                        :outstrument true
                                                        :num-tests 10}}

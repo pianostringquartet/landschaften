@@ -53,6 +53,21 @@
    "SAVE SEARCH"])
 
 
+(defn save-search-button-input [existing-group-name]
+  [:> semantic-ui/input
+   {:autoFocus    true
+    :placeholder  existing-group-name
+    :on-key-press (fn [react-synthetic-event]
+                    (let [enter-pressed? (= "Enter" (aget react-synthetic-event "key"))
+                          input          (aget react-synthetic-event "target" "value")]
+                      (do
+                        (when (and enter-pressed? (empty? input))
+                          (dispatch [::explore-events/hide-save-group-popover]))
+                        (when (and enter-pressed? (not (empty? input)))
+                          (dispatch [::explore-events/save-search input])))))}])
+                          ;(dispatch [::explore-events/query-started input])))))}])
+
+
 (defn save-search-button [existing-group-name popover-showing?]
   [:> semantic-ui/popup
    {:trigger  (r/as-component [save-search-button-trigger])
@@ -60,17 +75,7 @@
     :on       "click"
     :position "bottom left" ; to avoid re-com selection-list CSS conflict
     :on-close #(dispatch [::explore-events/hide-save-group-popover])
-    :content  (r/as-component
-                [:> semantic-ui/input {:autoFocus true
-                                       :placeholder  existing-group-name
-                                       :on-key-press (fn [react-synthetic-event]
-                                                       (let [enter-pressed? (= "Enter" (aget react-synthetic-event "key"))
-                                                             input          (aget react-synthetic-event "target" "value")]
-                                                         (do
-                                                           (when (and enter-pressed? (empty? input))
-                                                             (dispatch [::explore-events/hide-save-group-popover]))
-                                                           (when (and enter-pressed? (not (empty? input)))
-                                                             (dispatch [::explore-events/query-started input])))))}])}])
+    :content  (r/as-component [save-search-button-input existing-group-name])}])
 
 
 (defn ui-buttons []
@@ -86,18 +91,20 @@
 ;; Saved groups
 ;; ------------------------------------------------------
 
-
-(>defn group-button! [name color]
+;; BUG: icon click dispatches first remove-group then switch-current-group events
+(>defn group-button! [group-name color]
   [string? string? => vector?]
   [:> semantic-ui/button
    {:color         color
     :icon          true
     :labelPosition "right"
     :style         {:border-radius "30px" :padding "4px"}
-    :on-click      #(dispatch [::explore-events/switch-groups name])}
-   [:> semantic-ui/icon {:name     "close"
-                         :on-click #(dispatch [::explore-events/remove-group name])}]
-   name])
+    :on-click      #(dispatch [::explore-events/switch-current-group group-name])}
+   [:> semantic-ui/icon
+      {:name     "close"
+       :on-click #(dispatch [::explore-events/remove-group group-name])}]
+   group-name])
+
 
 (defn saved-groups-buttons []
   (let [saved-groups       (subscribe [::subs/saved-groups])

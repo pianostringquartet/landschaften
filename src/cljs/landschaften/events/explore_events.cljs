@@ -1,30 +1,52 @@
 (ns landschaften.events.explore-events
   (:require [re-frame.core :refer [reg-cofx inject-cofx after dispatch reg-event-db reg-sub reg-event-fx reg-fx]]
-            [landschaften.db :as db]
             [ajax.core :refer [POST GET]]
             [landschaften.events.core-events :as core-events]
-            [landschaften.ui-specs :as ui-specs]
             [landschaften.specs :as specs]
             [landschaften.helpers :as helpers]
             [cljs.spec.alpha :as s]
             [ghostwheel.core :refer [check >defn >defn- >fdef => | <- ?]]))
 
 
+
+;; ------------------------------------------------------
+;; High level 'app states'
+;; ------------------------------------------------------
+
+
+;; Explore-ready-state:
+;; Put the app into an explore-ready state,
+;; i.e. no prompts, loading modal, paintings examined etc.
+(defn explore-ready-state [db]
+  (-> db
+      (assoc :current-painting nil)
+      (assoc :query-loading? false)
+      (assoc :mobile-search? false)
+      (assoc :examining? false)
+      (assoc :show-group-name-prompt? false)))
+
+;; A query has just succeeded;
+;; i.e. want to set 'constraints updated since search?' false
+;; and put app in explore-ready-state
+(defn query-succeeded-state [db]
+  (-> db
+      (assoc :constraints-updated-since-search? false)
+      (assoc :current-group-name nil) ; i.e. we're no longer looking at any group specifically
+      (explore-ready-state)))
+
+;; We are currently waiting for server's response
+;; i.e. show loading modal but not group name prompt etc.
+(defn waiting-for-server-response-state [db]
+  (-> db
+      (assoc :query-loading? true)
+      (assoc :examining? false)
+      (assoc :show-group-name-prompt? false)))
+
+
+
 ;; ------------------------------------------------------
 ;; Querying server for paintings
 ;; ------------------------------------------------------
-
-
-;(defn ->query-constraints
-;  "Put group's constraints in backend API's expected format."
-;  [db]
-;  (remove
-;    #(empty? (:values %))
-;    #{{:column "type" :values (into [] (get-in db db/path:type-constraints))}
-;      {:column "school" :values (into [] (get-in db db/path:school-constraints))}
-;      {:column "timeframe" :values (into [] (get-in db db/path:timeframe-constraints))}
-;      {:column "author" :values (into [] (get-in db db/path:artist-constraints))}
-;      {:column "name" :values (into [] (get-in db db/path:concept-constraints))}}))
 
 (defn ->query-constraints
   "Put group's constraints in backend API's expected format."
@@ -38,90 +60,28 @@
       {:column "name" :values (into [] (db :selected-concepts))}}))
 
 
-;(>defn on-query-started [db]
-;  [::specs/app-db => ::specs/app-db]
-;  (-> db
-;      (assoc :query-loading? true)
-;      (assoc :show-group-name-prompt? false)))
-
-
-;(reg-event-fx
-;  ::query-started
-;  (fn query [cofx [_ group-name]]
-;    (let [db (:db cofx)]
-;      {:db (on-query-started db)
-;       :post-request
-;           {:uri     "/query"
-;            :params  {:constraints (->query-constraints db)}
-;            :handler #(dispatch [::query-succeeded % group-name])}})))
-
 (reg-event-fx
   ::query-started
   (fn query [cofx _]
     (let [db (:db cofx)]
-      {:db  (assoc db :query-loading? true) ;(on-query-started db)
+      {:db  (waiting-for-server-response-state db) ;(assoc db :query-loading? true) ;(on-query-started db)
        :post-request {:uri     "/query"
                       :params  {:constraints (->query-constraints db)}
                       :handler #(dispatch [::query-succeeded %])}})))
 
 
-
-
-(reg-event-fx
-  ::add-default-group
-  (fn add-default-group [cofx [_ default-group]]
-    (let [db (:db cofx)]
-      (if-not (:current-group db)
-        {:db       (assoc db :current-group default-group)
-         :dispatch [::query-started (:group-name default-group)]}
-        db))))
-
-
-(declare toggle-save-group-popover-showing save-current-group)
-
-
-;(defn on-query-succeeded [db paintings]
 (>defn on-query-succeeded [db paintings]
-  [::specs/app-db ::specs/paintings => ::specs/app-db]
-  (-> db
-      (assoc :paintings paintings)
-      (assoc :query-loading? false)
-      ;(assoc-in db/path:current-paintings paintings)
-      (assoc :constraints-updated-since-search? false)
-      (assoc :mobile-search? false) ; show resulting paintings on mobile
-      (assoc :examining? false)))
-
-;;
-;(defn on-query-succeeded [db paintings]
-;  (let [db-with-query-results
-;        (-> db
-;            (assoc :query-loading? false)
-;            (assoc-in db/path:current-paintings paintings)
-;            (assoc :constraints-updated-since-search? false)
-;            (assoc :mobile-search? false)                   ; switch back to paintings
-;            (assoc :examining? false))]
-;    (if group-name
-;      (-> db-with-query-results
-;          (toggle-save-group-popover-showing false)
-;          (save-current-group group-name))
-;      db-with-query-results)))
-
-;(reg-event-fx
-;  ::query-succeeded
-;  core-events/interceptors
-;  (fn query-succeeded [cofx [_ paintings group-name]]
-;    (let [db (on-query-succeeded (:db cofx) paintings group-name)]
-;      {:persist-state db
-;       :db            db})))
+ [::specs/app-db ::specs/paintings => ::specs/app-db]
+ (-> db
+     (assoc :paintings paintings)
+     (query-succeeded-state)))
 
 
-(reg-event-fx
+(reg-event-db
   ::query-succeeded
-  core-events/interceptors
-  (fn query-succeeded [cofx [_ paintings]]
-    (let [db (on-query-succeeded (:db cofx) paintings)]
-      {:persist-state db
-       :db            db})))
+  core-events/check-and-persist-interceptors
+  (fn query-succeeded [db [_ paintings]]
+    (on-query-succeeded db paintings)))
 
 
 ;; ------------------------------------------------------
@@ -134,21 +94,21 @@
 
 (reg-event-db
   ::update-selected-types
-  core-events/interceptors
+  core-events/check-and-persist-interceptors
   (fn update-selected-types [db [_ selected-types]]
     (constraints-updated-since-search (assoc db :selected-types selected-types))))
 
 
 (reg-event-db
   ::update-selected-schools
-  core-events/interceptors
+  core-events/check-and-persist-interceptors
   (fn update-selected-schools [db [_ selected-schools]]
     (constraints-updated-since-search (assoc db :selected-schools selected-schools))))
 
 
 (reg-event-db
   ::update-selected-timeframes
-  core-events/interceptors
+  core-events/check-and-persist-interceptors
   (fn update-selected-timeframes [db [_ selected-timeframes]]
     (constraints-updated-since-search (assoc db :selected-timeframes selected-timeframes))))
 
@@ -160,7 +120,7 @@
 
 (reg-event-db
   ::update-selected-concepts
-  core-events/interceptors
+  core-events/check-and-persist-interceptors
   (fn [db [_ selected-concept]]
     (constraints-updated-since-search (update-selected-concepts db selected-concept))))
 
@@ -170,14 +130,14 @@
 
 (reg-event-db
   ::remove-selected-concept
-  core-events/interceptors
+  core-events/check-and-persist-interceptors
   (fn [db [_ selected-concept]]
     (constraints-updated-since-search (remove-selected-concept db selected-concept))))
 
 
 (reg-event-db
   ::toggle-concept-selection
-  core-events/interceptors
+  core-events/check-and-persist-interceptors
   (fn toggle-concept-selection [db [_ concept]]
     (constraints-updated-since-search
       (let [currently-selected-concepts (db :selected-concepts)]
@@ -188,21 +148,21 @@
 
 (reg-event-db
   ::update-selected-artists
-  core-events/interceptors
+  core-events/check-and-persist-interceptors
   (fn update-selected-artists [db [_ selected-artist]]
     (constraints-updated-since-search (update db :selected-artists conj selected-artist))))
 
 
 (reg-event-db
   ::remove-selected-artist
-  core-events/interceptors
+  core-events/check-and-persist-interceptors
   (fn remove-selected-artist [db [_ selected-artist]]
     (constraints-updated-since-search (update db :selected-artists disj selected-artist))))
 
 
 (reg-event-db
   ::selections-cleared
-  core-events/interceptors
+  core-events/check-and-persist-interceptors
   (fn selections-cleared [db _]
     (-> db
         (assoc :selected-types #{})
@@ -224,14 +184,14 @@
 
 (reg-event-db
   ::hide-save-group-popover
-  core-events/interceptors
+  core-events/check-and-persist-interceptors
   (fn hide-save-group-popover [db _]
     (toggle-save-group-popover-showing db false)))
 
 
 (reg-event-db
   ::show-save-group-popover
-  core-events/interceptors
+  core-events/check-and-persist-interceptors
   (fn show-save-group-popover [db _]
     (toggle-save-group-popover-showing db true)))
 
@@ -244,18 +204,90 @@
         (assoc-in [:saved-groups group-name] updated-group)
         (assoc :current-group updated-group))))
 
+;; Adds group to :saved-groups
+(>defn save-group [db group]
+  [::specs/app-db ::specs/group => ::specs/app-db]
+  (assoc-in db [:saved-groups (:group-name group)] group))
 
-(>defn bring-in-group [db group-name]
-  [::specs/app-db string? => ::specs/app-db]
-  (let [new-current-group (get (:saved-groups db) group-name)]
-    (assoc db :current-group new-current-group)))
+;; Make a group's constraints the top-level constraints,
+;; its paintings the top-level paintings, etc.
+(>defn set-current-group [db group]
+  [::specs/app-db ::specs/group => ::specs/app-db]
+  (-> db
+      (assoc :paintings (:paintings group))
+      (assoc :selected-types (:type-constraints group))
+      (assoc :selected-schools (:school-constraints group))
+      (assoc :selected-timeframes (:timeframe-constraints group))
+      (assoc :selected-concepts (:concept-constraints group))
+      (assoc :selected-artists (:artist-constraints group))
+      (assoc :current-group-name (:group-name group))))
+
+
+(>defn save-search-no-query-required [db new-group]
+  [::specs/app-db ::specs/group => ::specs/app-db]
+  (-> db
+      (explore-ready-state)
+      (save-group new-group)
+      (set-current-group new-group)))
 
 
 (reg-event-db
-  ::switch-groups
-  core-events/interceptors
-  (fn switch-groups [db [_ destination-group-name]]
-    (bring-in-group db destination-group-name)))
+  ::save-search-query-succeeded
+  core-events/check-and-persist-interceptors
+  (fn save-search-query-succeeded-handler [db [_ new-group]]
+    (-> db
+        (query-succeeded-state)
+        ;; Once we've retrieved paintings from backend for new group,
+        ;; the process is same as if hadn't had to make query.
+        (save-search-no-query-required new-group))))
+
+
+
+(>defn start-save-search! [db new-group-name]
+  [::specs/app-db string? => map?]
+  (let [;; Want selected constraints etc. from time of save-search query's start
+        create-group (fn [paintings] {:group-name new-group-name
+                                      :paintings paintings
+                                      :type-constraints (:selected-types db)
+                                      :school-constraints (:selected-schools db)
+                                      :timeframe-constraints (:selected-timeframes db)
+                                      :concept-constraints (:selected-concepts db)
+                                      :artist-constraints (:selected-artists db)})]
+    (if (:constraints-updated-since-search? db)
+      {:db (waiting-for-server-response-state db)
+       :post-request {:uri "/query"
+                      :params {:constraints (->query-constraints db)}
+                      :handler #(dispatch [::save-search-query-succeeded (create-group %)])}}
+      ;; If don't need to search, then just immediately save group etc.
+      ;; :loading?, :constraints-updated-since-search? etc. should all already be false.
+      {:db (save-search-no-query-required (explore-ready-state db)
+                                          (create-group (:paintings db)))})))
+
+
+
+(reg-event-fx
+  ::save-search
+  (fn start-save-search-handler [cofx [_ new-group-name]]
+   (start-save-search! (:db cofx) new-group-name)))
+
+
+;; Retrieve the group from saved-groups,
+;; then set as current group.
+(>defn switch-group! [db group]
+  [::specs/app-db ::specs/group => ::specs/app-db]
+  (set-current-group db group))
+
+
+(reg-event-db
+  ::switch-current-group
+  core-events/check-and-persist-interceptors
+  (fn switch-groups-handler [db [_ group-name]]
+    (let [group (get-in db [:saved-groups group-name])]
+      ;; Don't switch to the group if group has already been deleted.
+      ;; Workaround for bug where UI dispatches first remove-group, then switch-current-group events.
+      (if (nil? group)
+        db
+        (switch-group! db group)))))
 
 
 (>defn remove-compare-group-name [db group-name]
@@ -263,23 +295,28 @@
   (assoc db :compared-group-names (remove #{group-name} (:compared-group-names db))))
 
 
-(>defn remove-group [db group-name]
+;; Remove the group from the app;
+;; i.e. remove from saved-groups, current-group-name, compared-group-names etc.
+;; Do not modify top-level paintings, constraints etc.
+;; If user deleted the current-group,
+;; then app will be in same state as if had made a search and not yet saved anything.
+(>defn remove-group! [db group-name]
   [::specs/app-db string? => ::specs/app-db]
-  (let [old-saved-groups     (:saved-groups db)
-        updated-saved-groups (dissoc old-saved-groups group-name)]
-    (assoc db :saved-groups updated-saved-groups)))
+  (let [updated-saved-groups (dissoc (:saved-groups db) group-name)
+        maybe-remove-current-group-name (fn [db] (if (= group-name (:current-group-name db))
+                                                   (assoc db :current-group-name nil)
+                                                   db))]
+    (-> db
+        (assoc :saved-groups updated-saved-groups)
+        (remove-compare-group-name group-name)
+        (maybe-remove-current-group-name))))
 
 
-(reg-event-fx
+(reg-event-db
   ::remove-group
-  core-events/interceptors
-  (fn remove-group-handler [cofx [_ group-name]]
-    (let [db         (:db cofx)
-          updated-db (remove-compare-group-name
-                       (remove-group db group-name)
-                       group-name)]
-      {:db            updated-db
-       :persist-state updated-db})))
+  core-events/check-and-persist-interceptors
+  (fn remove-group-handler [db [_ group-name]]
+    (remove-group! db group-name)))
 
 
 ;; ------------------------------------------------------
@@ -289,7 +326,7 @@
 
 (reg-event-db
   ::done-button-clicked
-  core-events/interceptors
+  core-events/check-and-persist-interceptors
   (fn done-button-clicked [db _]
     (-> db
         (assoc :examining? false)
@@ -298,7 +335,7 @@
 
 (reg-event-db
   ::painting-tile-clicked
-  core-events/interceptors
+  core-events/check-and-persist-interceptors
   (fn painting-tile-clicked [db [_ painting]]
     (-> db
         (assoc :current-painting painting)
@@ -307,14 +344,14 @@
 
 (reg-event-db
   ::toggle-painting-modal
-  core-events/interceptors
+  core-events/check-and-persist-interceptors
   (fn toggle-painting-modal [db _]
     (update db :show-painting-modal? not)))
 
 
 (reg-event-db
   ::toggle-image-zoomed
-  core-events/interceptors
+  core-events/check-and-persist-interceptors
   (fn toggle-image-zoomed [db _]
     (update db :image-zoomed? not)))
 
@@ -349,7 +386,7 @@
 
 (reg-event-db
   ::go-to-next-painting
-  core-events/interceptors
+  core-events/check-and-persist-interceptors
   (fn [db _] (next-painting db)))
 
 

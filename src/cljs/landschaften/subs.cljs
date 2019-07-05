@@ -133,24 +133,12 @@
     (:current-group db)))
 
 
-;; can be null
 (reg-sub
   ::group-name
   (fn group-name [db _]
-    ;{:post [(s/valid? ::specs/group-name %)]}
-    (get-in db db/path:current-group-name)))
+    (:current-group-name db)))
 
 
-;(reg-sub
-;  ::paintings
-;  (fn paintings [db _]
-;    (let [current-paintings (get-in db db/path:current-paintings)]
-;      (if current-paintings
-;        (helpers/sort-by-author current-paintings)
-;        []))))
-
-
-;; call these
 (reg-sub
   ::paintings
   (fn paintings [db _]
@@ -158,15 +146,6 @@
       (if current-paintings
         (helpers/sort-by-author current-paintings)
         []))))
-
-;
-;;; do you want these search result paintings?
-;;; what about when "a new group is brought in"?
-;;;
-;(reg-sub
-;  ::search-result-paintings
-;  (fn search-result-paintings [db _]
-;    (:search-result-paintings db)))
 
 
 (reg-sub

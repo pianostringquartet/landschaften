@@ -28,7 +28,7 @@
 
 (reg-event-db
   ::add-compare-group-name
-  core-events/interceptors
+  core-events/check-and-persist-interceptors
   (fn add-compare-group [db [_ group-name]]
     {:pre [(string? group-name)]}
     (let [group-names (:compared-group-names db)]
@@ -37,14 +37,14 @@
 
 (reg-event-db
   ::remove-compare-group-name
-  core-events/interceptors
+  core-events/check-and-persist-interceptors
   (fn remove-compare-group-name-handler [db [_ group-name]]
     (explore-events/remove-compare-group-name db group-name)))
 
 
 (reg-event-db
   ::comparisons-cleared
-  core-events/interceptors
+  core-events/check-and-persist-interceptors
   (fn comparisons-cleared [db _]
     (assoc db :compared-group-names '())))
 
