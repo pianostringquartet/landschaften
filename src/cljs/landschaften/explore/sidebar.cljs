@@ -124,9 +124,7 @@
 ;; - 'control center' for exploring paintings
 ;; ------------------------------------------------------
 
-
-;; not used yet
-(defn sidebar-components []
+(def sidebar-components
   (list [ui-buttons]
         [:div [constraints/concept-typeahead]
               [constraints/selected-concepts]]
@@ -134,31 +132,23 @@
               [constraints/selected-artists]]
         [saved-groups-buttons]))
 
-;; these are very similar ...
-(defn desktop-sidebar []
-  (let [paintings (subscribe [::explore-subs/paintings])
-        components (list [constraints/constraints]
-                         [ui-buttons]
-                         [:div
-                                [constraints/concept-typeahead]
-                                [constraints/selected-concepts]]
-                         [:div [constraints/artist-typeahead]
-                               [constraints/selected-artists]]
-                         [saved-groups-buttons]
-                         (when (> (count @paintings) 0)
-                           [:> semantic-ui/grid {:padded true}
-                            [utils/table-with-header "Frequency (%) of concepts in these paintings: " @paintings]]))]
+
+(defn desktop-sidebar [paintings]
+  (let [concepts-frequencies [:> semantic-ui/grid {:padded true}
+                              [utils/table-with-header "Frequency (%) of concepts in these paintings: " paintings]]
+        components (if (> (count paintings) 0)
+                     (concat sidebar-components
+                             (list concepts-frequencies))
+                     sidebar-components)]
+
     [:> semantic-ui/slist {:relaxed true}
-     (utils/as-semantic-ui-list-items components)]))
+     (utils/as-semantic-ui-list-items (concat (list [constraints/constraints])
+                                              components))]))
 
 
 (defn mobile-sidebar []
-  (let [components (list [constraints/accordion-constraints]
-                         [ui-buttons]
-                         [:div [constraints/concept-typeahead]
-                               [constraints/selected-concepts]]
-                         [:div     [constraints/artist-typeahead]
-                                   [constraints/selected-artists]]
-                         [saved-groups-buttons])]
-    [:> semantic-ui/slist {:relaxed true}
-     (utils/as-semantic-ui-list-items components)]))
+  [:> semantic-ui/slist {:relaxed true}
+   (utils/as-semantic-ui-list-items (concat (list [constraints/accordion-constraints])
+                                            sidebar-components))])
+
+

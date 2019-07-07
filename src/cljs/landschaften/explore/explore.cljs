@@ -55,7 +55,7 @@
 (defn desktop-explore-panel [current-painting paintings show-slideshow?]
   [:> semantic-ui/grid {:columns 2}
    [:> semantic-ui/grid-column [explore current-painting paintings show-slideshow? 3]]
-   [:> semantic-ui/grid-column [sidebar/desktop-sidebar]]])
+   [:> semantic-ui/grid-column [sidebar/desktop-sidebar paintings]]])
 
 
 (defn explore-panel []

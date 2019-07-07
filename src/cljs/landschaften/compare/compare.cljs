@@ -28,9 +28,11 @@
     :compact  true}
    "CLEAR"])
 
+
 ;; give heavier alpha ('a'), i.e. less transparent
 (def color-1 "rgba(255, 99, 132, 0.7)")
 (def color-2 "rgba(54, 162, 235, 0.7)")
+
 
 (>defn compare-group-button! [group-name compared-group-names]
   [string? set? => vector?]
@@ -76,6 +78,7 @@
    [:> semantic-ui/slist-item
     [rc/label :label "How similar these two groups of paintings are:"]]
    [:> semantic-ui/slist-item
+    ;[:> semantic-ui/container {:style {:max-width "50"}}]
     [similarity-measurement variance max-variance]]])
 
 
@@ -103,6 +106,7 @@
    [chart/radar-chart
     (chart/compared-groups->radar-chart-data!
       (first compared-groups) (second compared-groups) 15 0.85)]])
+
 
 (defn accordion-frequency-tables [groups]
   (let [->accordion-panel
@@ -141,10 +145,10 @@
        [:> semantic-ui/grid-column
         [rc/label :label "Select some saved searches to start comparing."]]])]
    [:> semantic-ui/grid-column {:width 6}
-    [compare-sidebar variance max-variance saved-groups compared-groups]
-    [:> semantic-ui/slist {:horizontal true}
-     (for [group compared-groups]
-       [utils/table-with-header (:group-name group) (:paintings group)])]]])
+     [compare-sidebar variance max-variance saved-groups compared-groups]
+     [:> semantic-ui/slist {:horizontal true :relaxed true :padded true}
+      (for [group compared-groups]
+        [utils/table-with-header (:group-name group) (:paintings group)])]]])
 
 
 (defn compare-screen []

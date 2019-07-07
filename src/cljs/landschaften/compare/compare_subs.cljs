@@ -6,6 +6,14 @@
             [landschaften.compare.variance :as stats]
             [ghostwheel.core :refer [check >defn >defn- >fdef => | <- ?]]))
 
+
+;; ------------------------------------------------------
+;; Subscriptions
+;; - node graph for sourcing from db
+;; - should source directly (not change db data etc.)
+;; ------------------------------------------------------
+
+
 ;; ------------------------------------------------------
 ;; Compare
 ;; ------------------------------------------------------

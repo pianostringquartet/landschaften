@@ -119,8 +119,6 @@
 (s/def ::selected-concepts (s/coll-of string?))
 (s/def ::selected-artists (s/coll-of string?))
 
-(s/def ::current-group (s/nilable ::group))
-
 (s/def ::current-group-name (s/nilable string?))
 
 (s/def ::show-group-name-prompt? boolean?)
@@ -140,7 +138,6 @@
                    ::all-timeframes
                    ::all-concepts
                    ::all-artists
-                   ::current-group
                    ::show-group-name-prompt?
                    ::saved-groups
                    ::compared-group-names]))

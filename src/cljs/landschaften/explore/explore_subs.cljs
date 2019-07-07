@@ -88,26 +88,13 @@
 ;;; ------------------------------------------------------
 ;;; Groups (selected constraints, retrieved paintings)
 ;;; ------------------------------------------------------
-;
-;
+
+
 (reg-sub
   ::save-group-popover-showing?
   (fn save-group-popover-showing? [db _]
     (:show-group-name-prompt? db)))
-;
-;
-;(reg-sub
-;  ::saved-groups
-;  (fn saved-groups [db _]
-;    {:post [(s/valid? map? %)]}
-;    (:saved-groups db)))
-;
-;
-(reg-sub
-  ::current-group
-  (fn [db _]
-    {:post [(s/valid? ::specs/group %)]}
-    (:current-group db)))
+
 
 (reg-sub
   ::group-name

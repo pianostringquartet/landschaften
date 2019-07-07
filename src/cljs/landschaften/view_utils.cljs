@@ -8,7 +8,6 @@
             [ghostwheel.core :refer [check >defn >defn- >fdef => | <- ?]]))
 
 
-
 ;; ------------------------------------------------------
 ;; Getting frequencies of concepts
 ;; ------------------------------------------------------
@@ -101,6 +100,5 @@
   [:> semantic-ui/slist-item
    {:header  header
     :content {:content (r/as-component ^{:key header} [concept-frequency-table paintings 15 0.85])}}])
-
 
 ;(check)

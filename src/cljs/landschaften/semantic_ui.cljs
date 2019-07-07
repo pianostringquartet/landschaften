@@ -42,6 +42,7 @@
 (def responsive (component "Responsive"))
 
 (def search (component "Search"))
+(def segment (component "Segment"))
 (def slist (component "List"))
 (def slist-item (component "List" "Item"))
 
