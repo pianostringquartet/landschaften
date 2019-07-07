@@ -3,7 +3,7 @@
             [pjstadig.humane-test-output]
             [landschaften.variance :refer [variance]]
             [re-frame.core :as rf]
-            [landschaften.events.core-events :as core-events]
+            [landschaften.events.events :as core-events]
             [landschaften.events.explore-events :as explore-events]
             [landschaften.events.compare-events :as compare-events]
             [landschaften.subs :as subs]

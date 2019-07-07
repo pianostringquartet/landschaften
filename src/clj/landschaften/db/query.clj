@@ -9,6 +9,7 @@
 ;;    e.g. placement of spaces is overgenerous and meaningless
 ;; - sacrified on scope: e.g. no "concept must have certainty above 0.96"
 ;; - not reusable in another context
+;; - can't currently support "Painting has concepts X AND Y"
 
 
 ;; ----------------------------

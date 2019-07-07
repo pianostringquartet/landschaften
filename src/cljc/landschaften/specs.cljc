@@ -95,6 +95,8 @@
 ;; DB SPEC
 ;; -------------------------
 
+;; TODO: move to frontend-only specs;
+;; App-db is re-frame and therefore front-end specific
 
 (s/def ::current-painting (s/nilable ::painting))
 

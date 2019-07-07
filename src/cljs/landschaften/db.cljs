@@ -4,14 +4,11 @@
             [landschaften.sample.manet :as manet]
             [landschaften.sample.cezanne :as cezanne]))
 
-
-;; BUG?: are not evaluated at compile-time if imported from another namespace,
-;; so spec fails with "manet-people-group-name is not a String";
-;; (similar to cljs `case` requiring compile-time literals?)
+;; BUG: when imported from namespace, not evaluated at compile-time;
+;; spec fails with "manet-people-group-name is not a String";
 ;; TICKET: https://trello.com/c/nNAjcZ4V
 (def manet-people-group-name "Manet's people")
 (def cezanne-people-group-name "Cezanne's people")
-
 
 ;; TODO: use these consistently across the entire app
 ;; TICKET: https://trello.com/c/L6WNYBxd
@@ -31,12 +28,11 @@
   {:current-mode                      :explore
    :examining?                        false
    :mobile-search?                    true
-
    :constraints-updated-since-search? false
 
    ;; EXAMINE
    :current-painting                  nil
-   :paintings                         manet/manet-sample-paintings ; #{}
+   :paintings                         manet/manet-sample-paintings
    ::search-result-paintings          #{}
    :show-painting-modal?              false
    :image-zoomed?                     false
@@ -48,26 +44,19 @@
    :all-timeframes                    (apply disj specs/TIMEFRAMES excluded-timeframes)
    :all-concepts                      #{}                   ; retrieved from backend during initialization
    :all-artists                       #{}                   ; retrieved from backend during initialization
-
    :selected-types                    manet/manet-type-constraints
    :selected-schools                  manet/manet-school-constraints
    :selected-timeframes               manet/manet-timeframe-constraints
    :selected-concepts                 manet/manet-concept-constraints
    :selected-artists                  manet/manet-artist-constraints
 
-
    ;; EXPLORE & COMPARE
    :current-group-name                manet/manet-people-group-name
-
-   ;;; should not need anymore...
-   ;:current-group                     manet/manet-example-group ;nil
    :show-group-name-prompt?           false
    :saved-groups                      {manet-people-group-name   manet/manet-example-group
                                        cezanne-people-group-name cezanne/cezanne-example-group}
-
    ;; COMPARE
    :compared-group-names              [manet-people-group-name cezanne-people-group-name] ; start as vector to avoid compile-time spec issue
-
 
    ;; CHARTS
    :show-n-chart-points               SHOW-N-CHARTPOINTS

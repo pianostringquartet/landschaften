@@ -1,10 +1,9 @@
-(ns landschaften.events.compare-events
-  (:require [landschaften.events.core-events :as core-events]
+(ns landschaften.compare.compare-events
+  (:require [landschaften.events :as core-events]
             [re-frame.core :refer [reg-event-db reg-sub reg-event-fx]]
             [day8.re-frame.tracing :refer-macros [fn-traced]]
             [ajax.core :refer [POST GET]]
-            [landschaften.specs :as specs]
-            [landschaften.events.explore-events :as explore-events]
+            [landschaften.explore.explore-events :as explore-events]
             [cljs.spec.alpha :as s]
             [ghostwheel.core :refer [check >defn >defn- >fdef => | <- ?]]))
 

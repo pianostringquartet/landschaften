@@ -1,9 +1,9 @@
-(ns landschaften.views.chart
+(ns landschaften.compare.chart
   (:require [reagent.core :as r]
             [re-frame.core :refer [subscribe dispatch]]
             [clojure.spec.alpha :as s]
             [landschaften.specs :as specs]
-            [landschaften.views.utils :as utils]
+            [landschaften.view-utils :as utils]
             [cljsjs.chartjs]
             [ghostwheel.core :refer [check >defn >defn- >fdef => | <- ?]]))
 

@@ -1,7 +1,6 @@
 (ns landschaften.db.core
   (:require
     [clj-time.jdbc]
-    [clojure.java.jdbc :as jdbc]
     [clojure.tools.logging :as log]
     [conman.core :as conman]
     [landschaften.config :refer [env]]

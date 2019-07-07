@@ -1,9 +1,9 @@
-(ns landschaften.views.paintings
+(ns landschaften.explore.paintings
   (:require [reagent-material-ui.core :as ui]
-            [landschaften.events.explore-events :as explore-events]
+            [landschaften.explore.explore-events :as explore-events]
             [landschaften.specs :as specs]
-            [landschaften.views.painting :as examine]
-            [re-frame.core :refer [subscribe dispatch]]
+            [landschaften.explore.painting :as examine]
+            [re-frame.core :refer [dispatch]]
             [clojure.spec.alpha :as s]
             [re-com.core :as rc]
             [ghostwheel.core :refer [check >defn >defn- >fdef => | <- ?]]

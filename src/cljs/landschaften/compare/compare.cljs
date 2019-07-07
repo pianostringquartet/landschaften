@@ -1,12 +1,13 @@
-(ns landschaften.screens.compare
+(ns landschaften.compare.compare
   (:require [reagent.core :as r]
             [re-frame.core :refer [subscribe dispatch]]
             [re-com.core :as rc]
             [landschaften.subs :as subs]
+            [landschaften.compare.compare-subs :as compare-subs]
             [landschaften.specs :as specs]
-            [landschaften.events.compare-events :as compare-events]
-            [landschaften.views.chart :as chart]
-            [landschaften.views.utils :as utils]
+            [landschaften.compare.compare-events :as compare-events]
+            [landschaften.compare.chart :as chart]
+            [landschaften.view-utils :as utils]
             [landschaften.semantic-ui :as semantic-ui]
             [ghostwheel.core :refer [check >defn >defn- >fdef => | <- ?]]
             [cljs.spec.alpha :as s]))
@@ -147,9 +148,9 @@
 
 
 (defn compare-screen []
-  (let [variance        (subscribe [::subs/variance])
-        max-variance    (subscribe [::subs/max-variance])
-        compared-groups (subscribe [::subs/compared-groups])
+  (let [variance        (subscribe [::compare-subs/variance])
+        max-variance    (subscribe [::compare-subs/max-variance])
+        compared-groups (subscribe [::compare-subs/compared-groups])
         saved-groups    (subscribe [::subs/saved-groups])]
     [:> semantic-ui/slist
      [:> semantic-ui/responsive {:max-width 799}

@@ -5,8 +5,7 @@
             [clojure.data.json :as json]
             [landschaften.db.query :as query]
             [landschaften.entity :as entity]
-            [clojure.java.jdbc :as jdbc]
-            [ghostwheel.core :as g :refer [check >defn >defn- >fdef => | <- ?]]))
+            [clojure.java.jdbc :as jdbc]))
 
 
 (defn is? [some-spec some-value]
@@ -17,11 +16,9 @@
 ;; API
 ;; ----------------------------
 
-;; get all artist's names
 (defn artists-names [db]
   (jdbc/query db ["select distinct `author` from paintings"]))
 
-;; get all concepts (names only)
 (defn concepts [db]
   (jdbc/query db ["select distinct `name` from paintings_concepts"]))
 

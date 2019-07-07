@@ -1,4 +1,4 @@
-(ns landschaften.variance
+(ns landschaften.compare.variance
   (:require [clojure.spec.alpha :as s]
             [ghostwheel.core :refer [check >defn >defn- >fdef => | <- ?]]))
 

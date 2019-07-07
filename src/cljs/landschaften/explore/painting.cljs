@@ -1,12 +1,12 @@
-(ns landschaften.views.painting
+(ns landschaften.explore.painting
   (:require [reagent.core :as r]
             [re-frame.core :refer [subscribe dispatch]]
             [re-com.core :as rc]
-            [landschaften.subs :as subs]
+            [landschaften.explore.explore-subs :as explore-subs]
             [landschaften.specs :as specs]
-            [landschaften.events.explore-events :as explore-events]
+            [landschaften.explore.explore-events :as explore-events]
             [landschaften.semantic-ui :as semantic-ui]
-            [ghostwheel.core :as g :refer [check >defn >defn- >fdef => | <- ?]]))
+            [ghostwheel.core :refer [check >defn >defn- >fdef => | <- ?]]))
 
 
 (>defn info [painting]
@@ -121,8 +121,8 @@
 
 
 (defn painting-modal [painting show?]
-  (let [zoomed?           (subscribe [::subs/image-zoomed?])
-        selected-concepts (subscribe [::subs/concept-constraints])]
+  (let [zoomed?           (subscribe [::explore-subs/image-zoomed?])
+        selected-concepts (subscribe [::explore-subs/concept-constraints])]
     [:> semantic-ui/modal {:open                    show?
                            :close-on-document-click true
                            :close-icon              true

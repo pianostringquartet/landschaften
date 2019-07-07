@@ -1,5 +1,6 @@
 (ns landschaften.entity
-  (:require [clojure.spec.alpha :as s]))
+  (:require [clojure.spec.alpha :as s]
+            [landschaften.specs :as specs]))
 
 
 ;; TODO:
@@ -8,19 +9,8 @@
 
 
 ;; ----------------------------
-;; CONSTRAINT
+;; CONSTRAINT (DATABASE-VERSIONS)
 ;; ----------------------------
-
-
-(def type-constraint {:column "type" :values ["landscape" "study"]})
-(def timeframe-constraint {:column "timeframe" :values ["1501-1550"]})
-(def concept-name-constraint {:column "name" :values ["no person"]})
-
-(def no-constraints #{})
-(def painting-constraints #{type-constraint timeframe-constraint})
-(def concept-constraints #{concept-name-constraint})
-(def painting-and-concept-constraints
-  #{type-constraint timeframe-constraint concept-name-constraint})
 
 (def PAINTINGS-COLUMNS
   #{"id" "author" "title" "date" "form" "type" "school" "timeframe" "jpg" "concepts"})
@@ -53,27 +43,12 @@
 ;; PAINTING
 ;; ----------------------------
 
-(def PAINTING-TYPES
-  #{"mythological"
-    "interior"
-    "landscape"
-    "study"
-    "genre"
-    "religious"
-    "other"
-    "still-life"
-    "historical"
-    "portrait"})
-
-(def SCHOOLS
-  #{"Italian", "Other", "Dutch", "French", "Spanish", "American", "Flemish", "English", "Netherlandish", "German", "Hungarian", "Swiss", "Bohemian", "Danish", "Austrian", "Belgian"})
-
 (def SAMPLE-JPEGS
   #{"https://www.wga.hu/art/b/bruegel/pieter_e/01/04icarus.jpg", "https://www.wga.hu/art/n/napoleta/navalbat.jpg", "https://www.wga.hu/art/b/bril/paul/staghunt.jpg", "https://www.wga.hu/art/b/bison/milancat.jpg", "https://www.wga.hu/art/v/velde/willem/calm_sea.jpg"})
 
 (s/def ::date string?)
-(s/def ::school #(contains? SCHOOLS %))
-(s/def ::type #(contains? PAINTING-TYPES %))
+(s/def ::school #(contains? specs/SCHOOLS %))
+(s/def ::type #(contains? specs/PAINTING-TYPES %))
 (s/def ::title string?)
 (s/def ::author string?)
 (s/def ::form #{"painting"})

@@ -1,10 +1,10 @@
-(ns landschaften.views.constraints
+(ns landschaften.explore.constraints
   (:require [reagent.core :as r]
             [re-frame.core :refer [subscribe dispatch]]
             [re-com.core :as rc]
-            [landschaften.subs :as subs]
-            [landschaften.events.explore-events :as expore-events]
-            [landschaften.views.utils :as utils]
+            [landschaften.explore.explore-subs :as explore-subs]
+            [landschaften.explore.explore-events :as explore-events]
+            [landschaften.view-utils :as utils]
             [landschaften.semantic-ui :as semantic-ui]
             [landschaften.helpers :as helpers]))
 
@@ -31,30 +31,30 @@
 
 
 (defn genre-constraints []
-  (let [genre-choices    (subscribe [::subs/all-types])
-        genre-selections (subscribe [::subs/types])]
+  (let [genre-choices    (subscribe [::explore-subs/all-types])
+        genre-selections (subscribe [::explore-subs/types])]
     [->selection-list
      (apply sorted-set @genre-choices)
      @genre-selections
-     #(dispatch [::expore-events/update-selected-types %])]))
+     #(dispatch [::explore-events/update-selected-types %])]))
 
 
 (defn school-constraints []
-  (let [school-choices   (subscribe [::subs/all-schools])
-        selected-schools (subscribe [::subs/school-constraints])]
+  (let [school-choices   (subscribe [::explore-subs/all-schools])
+        selected-schools (subscribe [::explore-subs/school-constraints])]
     [->selection-list
      (apply sorted-set @school-choices)
      @selected-schools
-     #(dispatch [::expore-events/update-selected-schools %])]))
+     #(dispatch [::explore-events/update-selected-schools %])]))
 
 
 (defn timeframe-constraints []
-  (let [timeframe-choices   (subscribe [::subs/all-timeframes])
-        selected-timeframes (subscribe [::subs/timeframe-constraints])]
+  (let [timeframe-choices   (subscribe [::explore-subs/all-timeframes])
+        selected-timeframes (subscribe [::explore-subs/timeframe-constraints])]
     [->selection-list
      (apply sorted-set @timeframe-choices)
      @selected-timeframes
-     #(dispatch [::expore-events/update-selected-timeframes %])]))
+     #(dispatch [::explore-events/update-selected-timeframes %])]))
 
 
 (defn constraints []
@@ -96,11 +96,11 @@
 (defn concept-typeahead []
   (let [text-val (r/atom "")
         results  (r/atom #{})                               ; semantic-ui-react expects 'results' as "array of {:title :description}"
-        concepts (subscribe [::subs/all-concepts])]
+        concepts (subscribe [::explore-subs/all-concepts])]
     (fn deck-search-typeahead []
       [:> semantic-ui/search
        {:on-result-select #(on-result-select text-val
-                                             (fn [] (dispatch [::expore-events/update-selected-concepts (get-result %2)])))
+                                             (fn [] (dispatch [::explore-events/update-selected-concepts (get-result %2)])))
         :on-search-change #(on-search-change @concepts text-val results %2)
         :placeholder      "Search for concepts"
         :results          @results
@@ -110,11 +110,11 @@
 (defn artist-typeahead []
   (let [text-val (r/atom "")
         results  (r/atom #{})                               ; semantic-ui-react expects 'results' as "array of {:title :description}"
-        artists  (subscribe [::subs/all-artists])]
+        artists  (subscribe [::explore-subs/all-artists])]
     (fn artist-search []
       [:> semantic-ui/search
        {:on-result-select #(on-result-select text-val
-                                             (fn [] (dispatch [::expore-events/update-selected-artists (get-result %2)])))
+                                             (fn [] (dispatch [::explore-events/update-selected-artists (get-result %2)])))
         :on-search-change #(on-search-change @artists text-val results %2)
         :placeholder      "Search for artists"
         :results          @results
@@ -128,7 +128,7 @@
     :labelPosition "right"
     :style         {:border-radius "30px" :padding "4px"}}
    [:> semantic-ui/icon {:name     "close"
-                         :on-click #(dispatch [::expore-events/remove-selected-concept concept])}]
+                         :on-click #(dispatch [::explore-events/remove-selected-concept concept])}]
    concept])
 
 
@@ -139,17 +139,17 @@
     :labelPosition "right"
     :style         {:border-radius "30px" :padding "8px"}}
    [:> semantic-ui/icon {:name     "close"
-                         :on-click #(dispatch [::expore-events/remove-selected-artist artist])}]
+                         :on-click #(dispatch [::explore-events/remove-selected-artist artist])}]
    artist])
 
 
 (defn selected-concepts []
-  (let [selected-concepts (subscribe [::subs/concept-constraints])]
+  (let [selected-concepts (subscribe [::explore-subs/concept-constraints])]
     [utils/bubble-table (map concept-button @selected-concepts) 2]))
 
 
 (defn selected-artists []
-  (let [selected-artists (subscribe [::subs/artist-constraints])]
+  (let [selected-artists (subscribe [::explore-subs/artist-constraints])]
     (do
       (js/console.log "selected-artists: " @selected-artists)
       [utils/bubble-table

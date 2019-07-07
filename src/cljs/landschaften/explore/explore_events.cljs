@@ -1,7 +1,7 @@
-(ns landschaften.events.explore-events
+(ns landschaften.explore.explore-events
   (:require [re-frame.core :refer [reg-cofx inject-cofx after dispatch reg-event-db reg-sub reg-event-fx reg-fx]]
             [ajax.core :refer [POST GET]]
-            [landschaften.events.core-events :as core-events]
+            [landschaften.events :as core-events]
             [landschaften.specs :as specs]
             [landschaften.helpers :as helpers]
             [cljs.spec.alpha :as s]

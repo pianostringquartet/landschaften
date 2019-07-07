@@ -1,6 +1,5 @@
 (ns landschaften.handler
-  (:require
-            [landschaften.layout :refer [error-page]]
+  (:require [landschaften.layout :refer [error-page]]
             [landschaften.routes.home :refer [home-routes]]
             [reitit.ring :as ring]
             [ring.middleware.content-type :refer [wrap-content-type]]

@@ -1,12 +1,10 @@
 (ns landschaften.clarifai
   (:require [clj-http.client :as client]
-            [clojure.data.json :as json] ; replace with cheshire?
-            [clojure.spec.alpha :as s]
+            [clojure.data.json :as json]
             [landschaften.config :refer [env]]))
 
 
-;; TODO:
-;; - clean this up
+;; TODO: clean this up
 
 
 ;; ---------------------------------------

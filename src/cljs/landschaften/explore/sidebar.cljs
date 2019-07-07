@@ -1,14 +1,14 @@
-(ns landschaften.views.sidebar
+(ns landschaften.explore.sidebar
   (:require [reagent.core :as r]
             [re-frame.core :refer [subscribe dispatch]]
             [re-com.core :as rc]
             [landschaften.subs :as subs]
-            [clojure.spec.alpha :as s]
-            [landschaften.events.explore-events :as explore-events]
-            [landschaften.views.constraints :as constraints]
-            [landschaften.views.utils :as utils]
+            [landschaften.explore.explore-subs :as explore-subs]
+            [landschaften.explore.explore-events :as explore-events]
+            [landschaften.explore.constraints :as constraints]
+            [landschaften.view-utils :as utils]
             [landschaften.semantic-ui :as semantic-ui]
-            [ghostwheel.core :as g :refer [check >defn >defn- >fdef => | <- ?]]))
+            [ghostwheel.core :refer [check >defn >defn- >fdef => | <- ?]]))
 
 
 ;; ------------------------------------------------------
@@ -79,8 +79,8 @@
 
 
 (defn ui-buttons []
-  (let [existing-group-name         (subscribe [::subs/group-name])
-        save-group-popover-showing? (subscribe [::subs/save-group-popover-showing?])]
+  (let [existing-group-name         (subscribe [::explore-subs/group-name])
+        save-group-popover-showing? (subscribe [::explore-subs/save-group-popover-showing?])]
     [:> semantic-ui/slist {:horizontal true :relaxed true}
      [clear-button]
      [search-button]
@@ -108,7 +108,7 @@
 
 (defn saved-groups-buttons []
   (let [saved-groups       (subscribe [::subs/saved-groups])
-        current-group-name (subscribe [::subs/group-name])
+        current-group-name (subscribe [::explore-subs/group-name])
         color              #(if (= % @current-group-name) "orange" "grey")]
     (when-not (empty? @saved-groups)
       [:div
@@ -136,7 +136,7 @@
 
 ;; these are very similar ...
 (defn desktop-sidebar []
-  (let [paintings (subscribe [::subs/paintings])
+  (let [paintings (subscribe [::explore-subs/paintings])
         components (list [constraints/constraints]
                          [ui-buttons]
                          [:div

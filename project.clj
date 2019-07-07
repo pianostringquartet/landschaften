@@ -52,7 +52,7 @@
 
 
   :min-lein-version "2.0.0"
-  :source-paths ["src/clj" "src/cljs" "src/cljc" "src/script"] ;; added script for FW
+  :source-paths ["src/clj" "src/cljs" "src/cljc" "src/script"]
   :test-paths ["test/clj"]
   :resource-paths ["resources" "target/cljsbuild"]
   :target-path "target/%s/"
@@ -121,6 +121,7 @@
                         :optimizations :none
                         :pretty-print true
                         :parallel-build true ;; added
+                        :compiler-stats true
                         :external-config {:ghostwheel {:check     true
                                                        :outstrument true
                                                        :num-tests 10}}

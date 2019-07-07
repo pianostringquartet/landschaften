@@ -1,12 +1,12 @@
-(ns landschaften.views
+(ns landschaften.root-view
   (:require [reagent.core :as r]
             [re-frame.core :refer [subscribe, dispatch]]
             [landschaften.subs :as subs]
-            [landschaften.events.core-events :as core-events]
+            [landschaften.events :as core-events]
             [clojure.spec.alpha :as s]
-            [landschaften.ui-specs :as ui-specs]
-            [landschaften.screens.explore :as explore]
-            [landschaften.screens.compare :as compare]
+            [landschaften.view-specs :as ui-specs]
+            [landschaften.explore.explore :as explore]
+            [landschaften.compare.compare :as compare]
             [landschaften.semantic-ui :as semantic-ui]
             [ghostwheel.core :refer [check >defn >defn- >fdef => | <- ?]]))
 

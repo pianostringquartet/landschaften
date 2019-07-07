@@ -1,12 +1,12 @@
-(ns landschaften.views.utils
+(ns landschaften.view-utils
   (:require [reagent.core :as r]
-            [re-com.core :as rc]
             [landschaften.semantic-ui :as semantic-ui]
             [landschaften.specs :as specs]
             [clojure.spec.alpha :as s]
             [re-frame.core :refer [subscribe dispatch]]
-            [ghostwheel.core :as g :refer [check >defn >defn- >fdef => | <- ?]]
-            [landschaften.helpers :as helpers]))
+            [landschaften.helpers :as helpers]
+            [ghostwheel.core :refer [check >defn >defn- >fdef => | <- ?]]))
+
 
 
 ;; ------------------------------------------------------

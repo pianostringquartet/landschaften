@@ -1,4 +1,4 @@
-(ns landschaften.ui-specs
+(ns landschaften.view-specs
   (:require [cljs.spec.alpha :as s]))
 
 ;; UI-Specs:

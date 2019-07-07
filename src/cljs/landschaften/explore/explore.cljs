@@ -1,11 +1,10 @@
-(ns landschaften.screens.explore
-  (:require [reagent.core :as r]
-            [re-frame.core :refer [subscribe dispatch]]
+(ns landschaften.explore.explore
+  (:require [re-frame.core :refer [subscribe dispatch]]
             [re-com.core :as rc]
-            [landschaften.subs :as subs]
-            [landschaften.events.core-events :as core-events]
-            [landschaften.views.paintings :as paintings]
-            [landschaften.views.sidebar :as sidebar]
+            [landschaften.explore.explore-subs :as explore-subs]
+            [landschaften.events :as core-events]
+            [landschaften.explore.paintings :as paintings]
+            [landschaften.explore.sidebar :as sidebar]
             [landschaften.semantic-ui :as semantic-ui]))
 
 
@@ -60,11 +59,11 @@
 
 
 (defn explore-panel []
-  (let [paintings            (subscribe [::subs/paintings])
-        current-painting     (subscribe [::subs/current-painting])
-        show-painting-modal? (subscribe [::subs/show-painting-modal?])
-        loading?             (subscribe [::subs/query-loading?])
-        mobile-search?       (subscribe [::subs/mobile-search?])]
+  (let [paintings            (subscribe [::explore-subs/paintings])
+        current-painting     (subscribe [::explore-subs/current-painting])
+        show-painting-modal? (subscribe [::explore-subs/show-painting-modal?])
+        loading?             (subscribe [::explore-subs/query-loading?])
+        mobile-search?       (subscribe [::explore-subs/mobile-search?])]
     [:> semantic-ui/slist
      [loading-modal @loading?]
      [:> semantic-ui/responsive {:max-width 799}
