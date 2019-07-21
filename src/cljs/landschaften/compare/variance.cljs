@@ -4,7 +4,6 @@
 
 ; https://www.wikihow.com/Calculate-Variance
 
-
 (s/def ::dataset
   (s/map-of string? number?))
 

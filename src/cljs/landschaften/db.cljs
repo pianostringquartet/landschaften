@@ -4,7 +4,7 @@
             [landschaften.sample.manet :as manet]
             [landschaften.sample.cezanne :as cezanne]))
 
-;; BUG: when imported from namespace, not evaluated at compile-time;
+;; BUG?: when imported from namespace, not evaluated at compile-time;
 ;; spec fails with "manet-people-group-name is not a String";
 ;; TICKET: https://trello.com/c/nNAjcZ4V
 (def manet-people-group-name "Manet's people")

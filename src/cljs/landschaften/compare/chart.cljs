@@ -70,6 +70,7 @@
           labels)))
 
 
+;; TODO: cleanup, simplify into smaller, well-named functions
 (>defn compared-groups->radar-chart-data!
   "Returns the two groups' data in a Chart.js Radar-chart-friendly form.
 

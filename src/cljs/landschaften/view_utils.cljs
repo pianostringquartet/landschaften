@@ -5,7 +5,8 @@
             [clojure.spec.alpha :as s]
             [re-frame.core :refer [subscribe dispatch]]
             [landschaften.helpers :as helpers]
-            [ghostwheel.core :refer [check >defn >defn- >fdef => | <- ?]]))
+            [ghostwheel.core :refer [check >defn >defn- >fdef => | <- ?]]
+            [landschaften.db :as db]))
 
 
 ;; ------------------------------------------------------
@@ -99,6 +100,6 @@
   [string? ::specs/paintings => vector?]
   [:> semantic-ui/slist-item
    {:header  header
-    :content {:content (r/as-component ^{:key header} [concept-frequency-table paintings 15 0.85])}}])
+    :content {:content (r/as-component ^{:key header} [concept-frequency-table paintings db/SHOW-N-CHARTPOINTS db/CONCEPT-CERTAINTY-ABOVE])}}])
 
 ;(check)

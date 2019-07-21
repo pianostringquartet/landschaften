@@ -21,6 +21,7 @@
   (fn current-mode [db _]
     (:current-mode db)))
 
+
 ;; ------------------------------------------------------
 ;; Groups (selected constraints, retrieved paintings)
 ;; ------------------------------------------------------

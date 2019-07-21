@@ -10,6 +10,8 @@
             [landschaften.semantic-ui :as semantic-ui]))
 
 
+(def DISPLAY-MAX-N-PAINTINGS 50)
+
 (>defn tile! [painting]
   [::specs/painting => vector?]
   [ui/GridTile
@@ -41,6 +43,6 @@
    [:> semantic-ui/slist-item
     [rc/title :label (paintings-found (count paintings))]]
    [:> semantic-ui/slist-item
-    [grid current-painting (take 50 paintings) show-max? n-columns]]])
+    [grid current-painting (take DISPLAY-MAX-N-PAINTINGS paintings) show-max? n-columns]]])
 
 ;(check)

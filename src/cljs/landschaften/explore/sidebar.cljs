@@ -65,7 +65,6 @@
                           (dispatch [::explore-events/hide-save-group-popover]))
                         (when (and enter-pressed? (not (empty? input)))
                           (dispatch [::explore-events/save-search input])))))}])
-                          ;(dispatch [::explore-events/query-started input])))))}])
 
 
 (defn save-search-button [existing-group-name popover-showing?]

@@ -10,7 +10,8 @@
             [landschaften.view-utils :as utils]
             [landschaften.semantic-ui :as semantic-ui]
             [ghostwheel.core :refer [check >defn >defn- >fdef => | <- ?]]
-            [cljs.spec.alpha :as s]))
+            [cljs.spec.alpha :as s]
+            [landschaften.db :as db]))
 
 
 ;; ------------------------------------------------------
@@ -105,7 +106,7 @@
    ^{:key (rand-int 999)}
    [chart/radar-chart
     (chart/compared-groups->radar-chart-data!
-      (first compared-groups) (second compared-groups) 15 0.85)]])
+      (first compared-groups) (second compared-groups) db/SHOW-N-CHARTPOINTS db/CONCEPT-CERTAINTY-ABOVE)]])
 
 
 (defn accordion-frequency-tables [groups]
@@ -114,8 +115,7 @@
           {:key     (:group-name group)
            :title   {:content (:group-name group)}
            :content {:content (r/as-component [utils/concept-frequency-table (:paintings group)
-                                               15
-                                               0.85])}})]
+                                               db/SHOW-N-CHARTPOINTS db/CONCEPT-CERTAINTY-ABOVE])}})]
     [:> semantic-ui/accordion
      {:panels (mapv ->accordion-panel groups)}]))
 
