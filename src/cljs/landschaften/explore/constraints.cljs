@@ -6,7 +6,8 @@
             [landschaften.explore.explore-events :as explore-events]
             [landschaften.view-utils :as utils]
             [landschaften.semantic-ui :as semantic-ui]
-            [landschaften.helpers :as helpers]))
+            [landschaften.helpers :as helpers]
+            [ghostwheel.core :refer [check >defn >defn- >fdef => | <- ?]]))
 
 
 ;; ------------------------------------------------------
@@ -150,24 +151,45 @@
 
 (defn selected-artists []
   (let [selected-artists (subscribe [::explore-subs/artist-constraints])]
-    (do
-      (js/console.log "selected-artists: " @selected-artists)
-      [utils/bubble-table
-       (map artist-button @selected-artists)
-       2])))
+    [utils/bubble-table
+     (map artist-button @selected-artists)
+     2]))
+
+
+(defn accordion-constraint [active? title on-title-click component selections]
+  (let [panel {:key title
+               :active active?
+               :title {:content title}
+               :onTitleClick on-title-click
+               :content {:content (r/as-component [component])}}]
+    [:div
+     [:> semantic-ui/accordion {:panels (vector panel)}]
+     (when (not active?)
+       (utils/as-semantic-ui-list-items (for [selection selections]
+                                          ^{:key (str selection "accordion-constraint-key")}
+                                          [:p {:style {:color "red"}} selection])))]))
 
 
 (defn accordion-constraints []
-  (let [->accordion-panel (fn [constraint]
-                            {:key     (:name constraint)
-                             :title   {:content (:name constraint)}
-                             :content {:content (r/as-component [(:component constraint)])}})
-        constraints       [{:name      "genre constraints"
-                            :component genre-constraints}
-                           {:name      "school constraints"
-                            :component school-constraints}
-                           {:name      "timeframe constraints"
-                            :component timeframe-constraints}]]
+  (let [active-accordion-constraint (subscribe [::explore-subs/active-accordion-constraint])]
     (fn []
-      [:> semantic-ui/accordion
-       {:panels (mapv ->accordion-panel constraints)}])))
+      [:div
+       (let [genre-active? (= @active-accordion-constraint "genre constraints")]
+         [accordion-constraint
+            genre-active?
+            "genre constraints"
+            #(dispatch [::explore-events/active-accordion-constraint-updated (when-not genre-active? "genre constraints")])
+            genre-constraints
+            @(subscribe [::explore-subs/types])])
+       (let [timeframe-active? (= @active-accordion-constraint "timeframe constraints")]
+         [accordion-constraint timeframe-active?
+            "timeframe constraints"
+            #(dispatch [::explore-events/active-accordion-constraint-updated (when-not timeframe-active? "timeframe constraints")])
+            timeframe-constraints
+            @(subscribe [::explore-subs/timeframe-constraints])])
+       (let [school-active? (= @active-accordion-constraint "school constraints")]
+         [accordion-constraint school-active?
+            "school constraints"
+            #(dispatch [::explore-events/active-accordion-constraint-updated (when-not school-active? "school constraints")])
+            school-constraints
+            @(subscribe [::explore-subs/school-constraints])])])))

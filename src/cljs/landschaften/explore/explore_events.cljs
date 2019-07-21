@@ -3,6 +3,7 @@
             [ajax.core :refer [POST GET]]
             [landschaften.events :as core-events]
             [landschaften.specs :as specs]
+            [landschaften.view-specs :as view-specs]
             [landschaften.helpers :as helpers]
             [cljs.spec.alpha :as s]
             [ghostwheel.core :refer [check >defn >defn- >fdef => | <- ?]]))
@@ -171,6 +172,18 @@
         (assoc :selected-concepts #{})
         (assoc :selected-artists #{})
         (constraints-updated-since-search))))
+
+
+
+(>defn active-accordion-constraint-updated [db new-active-accordion]
+  [::specs/app-db (s/nilable ::view-specs/accordion-constraints) => ::specs/app-db]
+  (assoc db :active-accordion-constraint new-active-accordion))
+
+(reg-event-db
+  ::active-accordion-constraint-updated
+  (fn active-accordion-constraint-updated-handler [db [_ new-active-accordion]]
+    (active-accordion-constraint-updated db new-active-accordion)))
+
 
 
 ;; ------------------------------------------------------

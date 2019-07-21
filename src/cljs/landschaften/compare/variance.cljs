@@ -4,11 +4,14 @@
 
 ; https://www.wikihow.com/Calculate-Variance
 
+
 (s/def ::dataset
   (s/map-of string? number?))
 
+
 (s/def ::variance
   #(<= 0 % 1))
+
 
 (>defn normalize [m]
   [::dataset => ::dataset]
@@ -16,6 +19,7 @@
     (->> m
       (map (fn [[k v]] {k (/ (double v) (double total))}))
       (apply merge))))
+
 
 (>defn adjustment
   "How much to adjust error rate, for given feature."
@@ -25,8 +29,9 @@
                 (get data-2 feature 0))]
     (* diff diff)))
 
+
 (>defn variance
-  "Get the variance (measure of (dis)similarity between two datasets.
+  "Get the variance (measure of (dis)similarity) between two datasets.
 
   Lower variance means higher similarity.
   Higher variance means less similarity.

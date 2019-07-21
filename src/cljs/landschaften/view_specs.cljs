@@ -10,3 +10,7 @@
 
 (s/def ::mode #(contains? MODES %))
 
+(def ACCORDION-CONSTRAINTS
+  #{"genre constraints" "timeframe constraints" "school constraints"})
+
+(s/def ::accordion-constraints #(contains? ACCORDION-CONSTRAINTS %))

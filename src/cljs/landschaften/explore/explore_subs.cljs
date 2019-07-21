@@ -12,6 +12,11 @@
     (:mobile-search? db)))
 
 
+(reg-sub
+  ::active-accordion-constraint
+  (fn active-accordion-constraint [db]
+    (:active-accordion-constraint db)))
+
 ;; ------------------------------------------------------
 ;; Constraint choices
 ;; ------------------------------------------------------
