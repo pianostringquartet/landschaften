@@ -100,6 +100,7 @@
   [string? ::specs/paintings => vector?]
   [:> semantic-ui/slist-item
    {:header  header
-    :content {:content (r/as-component ^{:key header} [concept-frequency-table paintings db/SHOW-N-CHARTPOINTS db/CONCEPT-CERTAINTY-ABOVE])}}])
+    :content {:content (r/as-component ^{:key header}
+                                       [concept-frequency-table paintings db/SHOW-N-CHARTPOINTS db/CONCEPT-CERTAINTY-ABOVE])}}])
 
 ;(check)

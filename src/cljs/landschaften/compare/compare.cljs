@@ -79,7 +79,6 @@
    [:> semantic-ui/slist-item
     [rc/label :label "How similar these two groups of paintings are:"]]
    [:> semantic-ui/slist-item
-    ;[:> semantic-ui/container {:style {:max-width "50"}}]
     [similarity-measurement variance max-variance]]])
 
 

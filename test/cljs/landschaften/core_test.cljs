@@ -1,12 +1,12 @@
 (ns landschaften.core-test
   (:require [cljs.test :refer-macros [is are deftest testing use-fixtures run-tests]]
             [pjstadig.humane-test-output]
-            [landschaften.variance :refer [variance]]
+            [landschaften.compare.variance :refer [variance]]
             [re-frame.core :as rf]
-            [landschaften.events.events :as core-events]
-            [landschaften.events.explore-events :as explore-events]
-            [landschaften.events.compare-events :as compare-events]
-            [landschaften.subs :as subs]
+            [landschaften.test-utils :as test-utils]
+            [landschaften.explore.explore-events :as explore-events]
+            [landschaften.compare.compare-events :as compare-events]
+            [landschaften.compare.compare-subs :as compare-subs]
             [day8.re-frame.test :as rf-test]))
 
 
@@ -31,7 +31,7 @@
          0.8209876543209877)))
 
 (deftest test-addition
-  (is (= 1 (+ 0 1))))
+  (is (= 0 (+ 0 0))))
 
 
 ;; ------------------------------------------------------
@@ -42,14 +42,14 @@
 ;; to confirm that removed-group also removes relevant saved-group
 (deftest test-update-group
   (rf-test/run-test-sync
-    (let [compared-group-names (rf/subscribe [::subs/compared-group-names])
+    (let [compared-group-names (rf/subscribe [::compare-subs/compared-group-names])
           impressionism        "Impressionism"
           mannerism            "Mannerism"]
 
       ;; Initialize database
-      (do (rf/dispatch [::core-events/initialize-app]))
+      (do (rf/dispatch [::test-utils/initialize-test-db]))
 
-      ;; Start without any compared groups
+      ; Start without any compared groups
       (is (empty? @compared-group-names))
 
       ;; Add compare-group-names

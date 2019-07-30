@@ -90,7 +90,7 @@
     (let [persisted-db (:user-session cofx)]
       (if (s/valid? ::specs/app-db persisted-db)
         {:db persisted-db}
-        {:db db/default-db
+        {:db         db/demo-db
          :dispatch-n (list [::retrieve-artists-names]
                            [::retrieve-concepts])}))))
 
