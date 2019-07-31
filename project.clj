@@ -103,7 +103,7 @@
                                    [ring/ring-devel "1.6.3"]
                                    [ring/ring-mock "0.3.2"]
                                    [day8.re-frame/tracing "0.5.1"]]
-                    :plugins      [[com.jakemccrary/lein-test-refresh "0.19.0"]
+                    :plugins      [[com.jakemccrary/lein-test-refresh "0.24.1"]
                                    [lein-doo "0.1.10"]
                                    [lein-cljsbuild "1.1.7"]
                                    [org.clojure/clojurescript "1.10.339"]]
