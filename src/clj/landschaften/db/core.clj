@@ -4,10 +4,7 @@
     [clojure.tools.logging :as log]
     [conman.core :as conman]
     [landschaften.config :refer [env]]
-    [mount.core :refer [defstate]])
-  (:import [java.sql
-            BatchUpdateException
-            PreparedStatement]))
+    [mount.core :refer [defstate]]))
 
 (defstate ^:dynamic *db*
   :start (if-let [jdbc-url (env :database-url)]
