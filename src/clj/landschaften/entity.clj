@@ -36,10 +36,17 @@
 ;; SQLVec is not SQL,
 ;; but rather a format jdbc turns into SQL.
 ;; SQLVec allows parameter escaping to avoid SQL-injection attacks.
+;(s/def ::sqlvec
+;  (fn [[query & params]]
+;    (let [param-placeholders (count (re-seq #"\?" query))]
+;      (= param-placeholders (count params)))))
+
 (s/def ::sqlvec
-  (fn [[query & params]]
-    (let [param-placeholders (count (re-seq #"\?" query))]
-      (= param-placeholders (count params)))))
+  (fn [x]
+    (when (vector? x)
+      (let [[query & params] x
+            param-placeholders (count (re-seq #"\?" query))]
+        (= param-placeholders (count params))))))
 
 
 ;; ----------------------------

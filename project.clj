@@ -41,6 +41,8 @@
                  [expound "0.7.1"]
                  [re-com "2.4.0"]
                  [day8.re-frame/tracing-stubs "0.5.1"]
+
+                 ;; should only be in dev?
                  [gnl/ghostwheel "0.3.8"]
                  [gnl/ghostwheel.tracer "0.3.8"]
                  [day8.re-frame/test "0.1.5"]
@@ -91,7 +93,8 @@
                :resource-paths ["env/prod/resources"]}
      :dev    [:project/dev :profiles/dev]
      :test          [:project/dev :project/test :profiles/test]
-     :project/dev  {:jvm-opts ["-Dconf=dev-config.edn"]
+     :project/dev  {:jvm-opts ["-Dconf=dev-config.edn"
+                               "-Dghostwheel.enabled=true"]
                     :dependencies [[binaryage/devtools "0.9.10"]
                                    [com.cemerick/piggieback "0.2.2"]
                                    [day8.re-frame/re-frame-10x "0.3.7-react16"]
