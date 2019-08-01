@@ -1,72 +1,52 @@
  (ns landschaften.test.db.core
-   (:require
-    ;[landschaften.test.db.fixtures :as fixtures]
-    [landschaften.db.query :refer [build-query]]
-    [clojure.test :refer [is deftest]]))
-    ;[landschaften.db.wga-concepts :refer :all]
-    ;[landschaften.api :refer :all]))
+   (:require [landschaften.db.query :refer [build-query]]
+             [clojure.test :refer [is deftest testing]]))
 
-
-
- ;; can you use spec?
- ;; i.e. spec the backend fn?
- ;; ... but you don't really have a strong definition of what's valid SQL or not...
 
  ;; ------------------------------------------------
  ;; Constraints -> SQL statements
  ;; ------------------------------------------------
 
- ;; want to test landsch.api/paintings-satisfying
-
- ;; separate out the db dep,
- ;; and want to examine the query that's returned,
- ;; i.e don't want to run the query right away
-
- ;; will also want to just test against the existing
-
-
- ;; TO ALSO LEARN REPL STUFF,
- ;; start prototyping etc. from the console REPl
- ;; then when actually writing test, use the intellij repl
-
- ;; hmm tehnically the front end shouldn't know about :column, :values...
- ;; should just send the data format it knows/comprehends...
-
-
- ;; just want to test "build-query"
-
- ;; REGULAR CONSTRAINTS
-
-
-
-
-(def test-constraints [{:column "school" :values ["Italian"]}])
-;; select * from wga_concepts where school = "Italian"
-
 (deftest test-build-query
- (is
-  (build-query test-constraints)
-  ["select distinct t.* from paintings t where  t.school in (?) " "Italian"]))
+ (testing "building escaped SQL query with one `school` constraint"
+   (is
+    (= (build-query [{:column "school" :values ["Italian"]}])
+       ["select distinct t.* from paintings t where  t.school in (?) " "Italian"])))
 
+ (testing "building escaped SQL query with multiple `school` constraints"
+  (is
+   (= (build-query [{:column "school" :values ["Italian", "German"]}])
+      ["select distinct t.* from paintings t where  t.school in (?, ?) " "Italian" "German"])))
 
-(def test-constraints-2 [{:column "school" :values ["Italian", "German"]}])
+ (testing "building escaped SQL query with multiple `school` and `timeframe` constraints"
+  (is
+   (= (build-query [{:column "school" :values ["Italian", "German"]}
+                    {:column "timeframe" :values ["1501-1550"]}])
+      ["select distinct t.* from paintings t where  t.school in (?, ?)  and  t.timeframe in (?) "
+       "Italian"
+       "German"
+       "1501-1550"])))
 
+ (testing "building escaped SQL query with `name` (concept) constraint"
+   (is
+    (= (build-query [{:column "name" :values ["people"]}])
+     ["select distinct t.* from paintings t, paintings_concepts t2 where t.id = t2.painting_id and  t2.name in (?) "
+      "people"])))
 
-(def test-constraints-3 [{:column "school" :values ["Italian", "German"]}
-                         {:column "timeframe" :values ["1501-1550"]}])
+ (testing "building escaped SQL query with `name` (concept) constraints"
+  (is
+   (= (build-query [{:column "name" :values ["wild" "no person"]}])
+      ["select distinct t.* from paintings t, paintings_concepts t2 where t.id = t2.painting_id and  t2.name in (?, ?) "
+         "wild"
+         "no person"])))
 
- ;; ALSO WITH SPECIFIC CONCEPTS and AUTHORS
-
- ;; concepts alone
-(def test-constraints-4 [{:column "concept" :values []}])
-
- ;; authors alone
-(def test-constraints-5 [
-                         {:column "author" :values ["MANET, Edouard"]}
-                         {:column "concept" :values ["people"]}])
-
-;; concepts and authors
-(def test-constraints-6)
+ (testing "building escaped SQL query with `author` and `name` (concept) constraints"
+   (is
+    (= (build-query [{:column "author" :values ["MANET, Edouard"]}
+                     {:column "name" :values ["people"]}])
+       ["select distinct t.* from paintings t, paintings_concepts t2 where t.id = t2.painting_id and  t2.name in (?)  and  t.author in (?) "
+        "people"
+        "MANET, Edouard"]))))
 
 
 
