@@ -63,21 +63,22 @@
 
 
 (>defn similarity-measurement
-  "Progress bar displaying error-rate between two datasets as"
+  "Progress bar displaying error-rate between two datasets as a percentage."
   [variance max-variance]
   [double? double? => vector?]
   (let [as-percent    (* 100 (/ variance max-variance))
         as-similarity (- 100 as-percent)]
-    [:> semantic-ui/progress {:success  "true"
-                              :percent  (goog.string/format "%.1f" as-similarity)
-                              :progress "percent"}]))
+    [:> semantic-ui/container {:style {:padding-right "35%"}} ; garbage UI hack
+     [:> semantic-ui/progress {:success  "true"
+                               :percent  (goog.string/format "%.1f" as-similarity)
+                               :progress "percent"}]]))
 
 
 (>defn labeled-variance [variance max-variance]
   [double? double? => vector?]
   [:> semantic-ui/slist {:relaxed true}
    [:> semantic-ui/slist-item
-    [rc/label :label "How similar these two groups of paintings are:"]]
+    [rc/label :label "How similar these two groups of paintings are: "]]
    [:> semantic-ui/slist-item
     [similarity-measurement variance max-variance]]])
 

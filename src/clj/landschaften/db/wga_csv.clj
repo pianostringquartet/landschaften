@@ -81,8 +81,6 @@
  Example uses:
   (import-csv \"pontormo.csv\" 5 :separator \\;)
   (import-csv \"wga_catalog.csv\" 500)
-
-  Separator should .
 "
  [filename partition-size separator]
  (with-open [reader (io/reader filename)]
@@ -120,7 +118,8 @@
    (update-wga-csv-row jpg-url author title)
    (update-painting-row jpg-url author title)))
 
-
+;; need to make sure that we do the lazy operation
+;; before the reader closes
 (defn update-csv
  "Import a CSV and use its rows as args to function."
  [filename separator]
