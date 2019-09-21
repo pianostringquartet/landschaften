@@ -6,7 +6,6 @@
 
 ;; TODO: clean this up
 
-
 ;; ---------------------------------------
 ;; Image processing only (no video!; default to page 1)
 ;; ---------------------------------------

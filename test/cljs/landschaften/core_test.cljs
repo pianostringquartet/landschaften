@@ -7,7 +7,10 @@
             [landschaften.explore.explore-events :as explore-events]
             [landschaften.compare.compare-events :as compare-events]
             [landschaften.compare.compare-subs :as compare-subs]
-            [day8.re-frame.test :as rf-test]))
+            [landschaften.explore.explore-subs :as explore-subs]
+            [day8.re-frame.test :as rf-test]
+            [landschaften.db :as db]
+            [landschaften.sample.cezanne :as cezanne]))
 
 
 ;; ------------------------------------------------------
@@ -40,17 +43,16 @@
 
 ;; TODO: include saved-groups,
 ;; to confirm that removed-group also removes relevant saved-group
-(deftest test-update-group
+(deftest test-add-and-remove-compare-groups
   (rf-test/run-test-sync
     (let [compared-group-names (rf/subscribe [::compare-subs/compared-group-names])
           impressionism        "Impressionism"
           mannerism            "Mannerism"]
 
       ;; Initialize database
-      (do (rf/dispatch [::test-utils/initialize-test-db]))
+      (do (rf/dispatch [::test-utils/setup-db db/fresh-db]))
 
-      ; Start without any compared groups
-      (is (empty? @compared-group-names))
+      (is (empty? @compared-group-names)) ; Start without any compared groups
 
       ;; Add compare-group-names
       (doseq [name-to-add [impressionism mannerism]]
@@ -75,7 +77,50 @@
       (is (empty? (filter #(= mannerism %) @compared-group-names))))))
 
 
-;;
-;(deftest test-switch-groups
-;  (rf-test/run-test-sync
-;    (let)))
+(defn cezanne? [paintings types schools timeframes concepts artists]
+  (and
+    (= (into #{} paintings) cezanne/cezanne-sample-paintings)
+    (= types cezanne/cezanne-type-constraints)
+    (= schools cezanne/cezanne-school-constraints)
+    (= timeframes cezanne/cezanne-timeframe-constraints)
+    (= concepts cezanne/cezanne-concept-constraints)
+    (= artists cezanne/cezanne-artist-constraints)))
+
+
+(deftest test-switch-group
+  (rf-test/run-test-sync
+    (let [paintings           (rf/subscribe [::explore-subs/paintings])
+          selected-types      (rf/subscribe [::explore-subs/types])
+          selected-schools    (rf/subscribe [::explore-subs/school-constraints])
+          selected-timeframes (rf/subscribe [::explore-subs/timeframe-constraints])
+          selected-concepts   (rf/subscribe [::explore-subs/concept-constraints])
+          selected-artists    (rf/subscribe [::explore-subs/artist-constraints])]
+
+      ;; demo db contains Manet and Cezanne sample groups; starts with Cezanne
+      (do (rf/dispatch [::test-utils/setup-db db/demo-db]))
+
+      (is (= true (not (cezanne? @paintings
+                                 @selected-types
+                                 @selected-schools
+                                 @selected-timeframes
+                                 @selected-concepts
+                                 @selected-artists))))
+
+      ;; Switch to Cezanne group
+      (do (rf/dispatch [::explore-events/switch-current-group cezanne/cezanne-people-group-name]))
+
+      (is (= true (cezanne? @paintings
+                            @selected-types
+                            @selected-schools
+                            @selected-timeframes
+                            @selected-concepts
+                            @selected-artists))))))
+
+
+(deftest test-save-group)
+
+(deftest test-removing-saved-group)
+
+
+
+

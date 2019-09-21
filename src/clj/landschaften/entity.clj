@@ -36,11 +36,6 @@
 ;; SQLVec is not SQL,
 ;; but rather a format jdbc turns into SQL.
 ;; SQLVec allows parameter escaping to avoid SQL-injection attacks.
-;(s/def ::sqlvec
-;  (fn [[query & params]]
-;    (let [param-placeholders (count (re-seq #"\?" query))]
-;      (= param-placeholders (count params)))))
-
 (s/def ::sqlvec
   (fn [x]
     (when (vector? x)
@@ -70,15 +65,9 @@
            #(clojure.string/includes? % ".jpg"))
     (s/gen SAMPLE-JPEGS)))
 
-(s/def ::jpg                                                ; Cloudinary 'secure [jpg] url'
-  (s/nilable
-    (s/and
-      #(clojure.string/includes? % "https://res.cloudinary.com/")
-      #(clojure.string/includes? % "/image/upload/"))))
-
 (s/def ::name string?)
 (s/def ::value #(<= 0.0 % 1.0))
 (s/def ::concept (s/keys :req-un [::name ::value]))
 (s/def ::concepts (s/coll-of ::concept))
 
-(s/def ::painting (s/keys :req-un [::date ::school ::type ::title ::form ::author ::timeframe ::wga-jpg ::jpg ::concepts]))
+(s/def ::painting (s/keys :req-un [::date ::school ::type ::title ::form ::author ::timeframe ::wga-jpg ::concepts]))

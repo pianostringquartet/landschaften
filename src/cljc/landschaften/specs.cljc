@@ -6,7 +6,6 @@
 ;; PAINTING SPEC
 ;; -------------------------
 
-
 (def PAINTING-TYPES
   #{"mythological"
     "interior"
