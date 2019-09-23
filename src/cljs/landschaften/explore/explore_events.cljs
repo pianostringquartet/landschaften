@@ -154,11 +154,14 @@
     (constraints-updated-since-search (update db :selected-artists conj selected-artist))))
 
 
+(defn remove-selected-artist [db artist]
+  (update db :selected-artists disj artist))
+
 (reg-event-db
   ::remove-selected-artist
   core-events/check-and-persist-interceptors
   (fn remove-selected-artist [db [_ selected-artist]]
-    (constraints-updated-since-search (update db :selected-artists disj selected-artist))))
+    (constraints-updated-since-search (remove-selected-artist db selected-artist))))
 
 
 (reg-event-db

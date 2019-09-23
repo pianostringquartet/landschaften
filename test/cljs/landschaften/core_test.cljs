@@ -67,7 +67,6 @@
       ;; Remove last group name
       (do (rf/dispatch [::explore-events/remove-group mannerism]))
 
-      ;; Confirm last name is removed
       (is (empty? (filter #(= mannerism %) @compared-group-names))))))
 
 
@@ -121,3 +120,31 @@
       ;; Cezanne group should no longer be saved or compared
       (is (nil? (get @saved-groups cezanne/cezanne-people-group-name)))
       (is (empty? (filter #(= cezanne/cezanne-people-group-name %) @compared-group-names))))))
+
+(deftest test-save-group-when-no-query-required
+  (rf-test/run-test-sync
+    (let [saved-groups (rf/subscribe [::subs/saved-groups])
+          new-group-name "French 19th century paintings"
+          new-concepts #{}
+          new-artists #{}
+          app-db (-> db/demo-db
+                     (explore-events/remove-selected-concept "people")
+                     (explore-events/remove-selected-artist "MANET, Edouard")
+                     (assoc :constraints-updated-since-search? false))]
+
+      (do (rf/dispatch [::test-utils/setup-db app-db]))
+
+      ;; Group should not yet be saved
+      (is (nil? (get @saved-groups new-group-name)))
+
+      (do (rf/dispatch [::explore-events/save-search new-group-name]))
+
+      ;; HACK: if constraints (eg. "people"-concept) removed,
+      ;; then more paintings many satisfy remaining constraints,
+      ;; so new query is required.
+      ;; TODO: Get paintings for "French 19th century paintings" constraints,
+      ;; or rewrite test to 'remove a group then save same group':
+      ;; no constraints will have changed in the UI, only the :saved-groups in app-db.
+      (is (some? (get @saved-groups new-group-name)))
+      (is (= new-concepts (:concept-constraints (get @saved-groups new-group-name))))
+      (is (= new-artists (:artist-constraints (get @saved-groups new-group-name)))))))
