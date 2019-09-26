@@ -4,35 +4,37 @@
       <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <title>landschaften: painting explorer</title>
+      <!-- scripts and styles -->
+      {% script "/assets/jquery/jquery.min.js" %}
+      {% script "/assets/font-awesome/svg-with-js/js/fontawesome.min.js" %}
+      {% script "/assets/tether/dist/js/tether.min.js" %}
+      <!-- Google Material-UI fonts -->
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+            rel="stylesheet">
+      <!-- Semantic UI React -->
+      <link rel="stylesheet"
+            href="//cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+      <style type="text/css">
+          html .middle-centered {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            -moz-transform: translateX(-50%) translateY(-50%);
+            -webkit-transform: translateX(-50%) translateY(-50%);
+            transform: translateX(-50%) translateY(-50%);
+          }
+      </style>
   </head>
   <body>
-
     <div id="app">
-      <div class="container-fluid">
-        <div class="card-deck">
-          <div class="card-block">
-            <h3>Welcome to landschaften</h3>
-            <p>Retrieving paintings...</p>
-          </div>
+      <div style="text-align:center" class="container-fluid">
+        <div class="middle-centered">
+          <img src="../img/Olevano_Corot.jpg">
+          <h1>Welcome to landschaften</h1>
+          <h3>Retrieving paintings...</h3>
         </div>
       </div>
     </div>
-
-    <!-- scripts and styles -->
-    {% script "/assets/jquery/jquery.min.js" %}
-    {% script "/assets/font-awesome/svg-with-js/js/fontawesome.min.js" %}
-    {% script "/assets/tether/dist/js/tether.min.js" %}
-
-    <!-- Google Material-UI fonts -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
-          rel="stylesheet">
-
-    <!-- Semantic UI React -->
-    <link
-            rel="stylesheet"
-            href="//cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css"
-    />
-
     <script type="text/javascript">
         var csrfToken = "{{csrf-token}}";
     </script>
