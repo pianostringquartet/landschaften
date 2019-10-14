@@ -33,7 +33,7 @@
     #(contains? SCHOOLS %)
     #(s/gen SCHOOLS)))
 
-(s/def ::type
+(s/def ::genre
   (s/with-gen
     #(contains? PAINTING-TYPES %)
     #(s/gen PAINTING-TYPES)))
@@ -58,11 +58,12 @@
 (s/def ::concept (s/keys :req-un [::name ::value]))
 (s/def ::concepts (s/coll-of ::concept))
 
-(s/def ::painting (s/keys :req-un [::date
+(s/def ::painting (s/keys :req-un [
+                                   ;::date
                                    ::school
-                                   ::type
+                                   ::genre
                                    ::title
-                                   ::form
+                                   ;::form
                                    ::author
                                    ::timeframe
                                    ::jpg
@@ -77,16 +78,15 @@
 (s/def ::group-name string?)
 (s/def ::paintings (s/coll-of ::painting))
 
-(s/def ::type-constraints (s/coll-of ::type))
+(s/def ::genre-constraints (s/coll-of ::genre))
 (s/def ::school-constraints (s/coll-of ::school))
 (s/def ::timeframe-constraints (s/coll-of ::timeframe))
 (s/def ::concept-constraints (s/coll-of string?))
 (s/def ::artist-constraints (s/coll-of string?))
-(s/def ::type-constraints (s/coll-of ::type))
 
 (s/def ::group (s/keys :req-un [::group-name
                                 ::paintings
-                                ::type-constraints
+                                ::genre-constraints
                                 ::school-constraints
                                 ::timeframe-constraints
                                 ::concept-constraints
@@ -109,13 +109,13 @@
 
 (s/def ::constraints-updated-since-search? boolean?)
 
-(s/def ::all-types (s/coll-of ::type))
+(s/def ::all-types (s/coll-of ::genre))
 (s/def ::all-schools (s/coll-of ::school))
 (s/def ::all-timeframes (s/coll-of ::timeframe))
 (s/def ::all-concepts (s/coll-of string?))
 (s/def ::all-artists (s/coll-of string?))
 
-(s/def ::selected-types (s/coll-of ::type))
+(s/def ::selected-types (s/coll-of ::genre))
 (s/def ::selected-schools (s/coll-of ::school))
 (s/def ::selected-timeframes (s/coll-of ::timeframe))
 (s/def ::selected-concepts (s/coll-of string?))

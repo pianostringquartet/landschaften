@@ -6,6 +6,7 @@
             [landschaften.view-specs :as view-specs]
             [landschaften.helpers :as helpers]
             [cljs.spec.alpha :as s]
+            [clojure.walk :refer [keywordize-keys]]
             [ghostwheel.core :refer [check >defn >defn- >fdef => | <- ?]]))
 
 
@@ -61,28 +62,67 @@
       {:column "name" :values (into [] (db :selected-concepts))}}))
 
 
+
+(defn pull [json]
+  (:paintings
+    (js->clj
+      (.parse js/JSON json)
+      :keywordize-keys true)))
+
+
+
+
 (reg-event-fx
   ::query-started
   (fn query [cofx _]
     (let [db (:db cofx)]
-      {:db  (waiting-for-server-response-state db) ;(assoc db :query-loading? true) ;(on-query-started db)
-       :post-request {:uri     "/query"
-                      :params  {:constraints (->query-constraints db)}
-                      :handler #(dispatch [::query-succeeded %])}})))
+      (do
+        (js/console.log "query-started DISPATCHED!")
+        { :db  (waiting-for-server-response-state db) ;(assoc db :query-loading? true) ;(on-query-started db)
+         ;:get-request {:uri "http://localhost:8080/artists" ; "/artists"
+         ;              :handler #(do ;; probably need to json/read-str now:
+         ;                          (js/console.log "received artists endpoint: "  %)
+         ;                          (js/console.log "received some artists: " (count (get (js->clj % :keywordize-keys true) "artists"))))}}))))
+
+                                       ;:handler #(dispatch [::artists-names-retrieved %])}}))
+         :post-request {:uri     "http://localhost:8080/query" ;; "http://landschaften-service.herokuapp.com/query" ; "https://landschaften-service.herokuapp.com/query" ; "/query"
+                        ;:params  {:constraints (->query-constraints db)}
+
+                        ;; don't seem to be sending proper concept constraints?
+                        :params  (.stringify js/JSON (clj->js {:constraints (->query-constraints db)}))
+                        :handler #(do
+                                    (let [r (:paintings (keywordize-keys %))]
+                                      (js/console.log "received from query endpoint, keywordize-keys: " r)
+                                      (js/console.log "received from query endpoint, keywordize-keys: " (str r))
+                                      (dispatch [::query-succeeded r])))}})))) ; (get (js->clj % :keywordize-keys true) "paintings")]))}}))));:handler #(dispatch [::query-succeeded (:paintings %)])}}))))
+                        ;:handler #(dispatch [::query-succeeded %])}}))))
 
 
-(>defn on-query-succeeded [db paintings]
- [::specs/app-db ::specs/paintings => ::specs/app-db]
- (-> db
-     (assoc :paintings paintings)
-     (query-succeeded-state)))
+;(>defn on-query-succeeded [db paintings]
+; [::specs/app-db ::specs/paintings => ::specs/app-db]
+; (-> db
+;     (assoc :paintings paintings)
+;     (query-succeeded-state)))
+
+(>defn on-query-succeeded! [db paintings]
+  [::specs/app-db any? => ::specs/app-db]
+  (let [x (-> db
+              (assoc :paintings paintings)
+              (query-succeeded-state))]
+    (do
+      (js/console.log "x: " x)
+      x)))
+
 
 
 (reg-event-db
   ::query-succeeded
   core-events/check-and-persist-interceptors
   (fn query-succeeded [db [_ paintings]]
-    (on-query-succeeded db paintings)))
+      (do
+        (js/console.log "about to call on-query-succeeded")
+        (js/console.log (s/explain ::specs/paintings paintings))
+        (on-query-succeeded! db paintings))))
 
 
 ;; ------------------------------------------------------
@@ -160,7 +200,7 @@
 (reg-event-db
   ::remove-selected-artist
   core-events/check-and-persist-interceptors
-  (fn remove-selected-artist [db [_ selected-artist]]
+  (fn remove-selected-artist-handler [db [_ selected-artist]]
     (constraints-updated-since-search (remove-selected-artist db selected-artist))))
 
 
@@ -175,7 +215,6 @@
         (assoc :selected-concepts #{})
         (assoc :selected-artists #{})
         (constraints-updated-since-search))))
-
 
 
 (>defn active-accordion-constraint-updated [db new-active-accordion]
@@ -270,15 +309,21 @@
                                       :concept-constraints (:selected-concepts db)
                                       :artist-constraints (:selected-artists db)})]
     (if (:constraints-updated-since-search? db)
-      {:db (waiting-for-server-response-state db)
-       :post-request {:uri "/query"
-                      :params {:constraints (->query-constraints db)}
-                      :handler #(dispatch [::save-search-query-succeeded (create-group %)])}}
+      (do
+        (js/console.log "constraints updated since search")
+        {:db (waiting-for-server-response-state db)
+         ;:post-request {:uri "/query"
+         :post-request {:uri "https://landschaften-service.herokuapp.com/query"
+                        :params {:constraints (->query-constraints db)}
+                        ;; need to pull out the paintings
+                        :handler #(dispatch [::save-search-query-succeeded (create-group (:paintings %))])}})
+                        ;:handler #(dispatch [::save-search-query-succeeded (create-group %)])}})
       ;; If don't need to search, then just immediately save group etc.
       ;; :loading?, :constraints-updated-since-search? etc. should all already be false.
-      {:db (save-search-no-query-required (explore-ready-state db)
-                                          (create-group (:paintings db)))})))
-
+      (do
+        (js/console.log "constraints not updated since search")
+        {:db (save-search-no-query-required (explore-ready-state db)
+                                            (create-group (:paintings db)))}))))
 
 
 (reg-event-fx

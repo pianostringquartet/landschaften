@@ -59,8 +59,8 @@
 (reg-sub
   ::types
   (fn types [db _]
-    {:post [(s/valid? ::specs/type-constraints %)]}
-    (:selected-types db)))
+      {:post [(s/valid? ::specs/genre-constraints %)]}
+      (:selected-types db)))
 
 (reg-sub
   ::school-constraints

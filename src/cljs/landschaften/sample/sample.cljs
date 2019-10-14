@@ -1,7 +1,7 @@
 (def sample-paintings
   #{{:date      "c. 1469",
      :school    "Italian",
-     :type      "portrait",
+     :genre      "portrait",
      :title     "Portrait of a Young Man",
      :author    "BOTTICELLI, Sandro",
      :concepts  #{{:name "gown (clothing)", :value 0.90708596}
@@ -30,7 +30,7 @@
      :jpg       "https://www.wga.hu/art/b/botticel/7portrai/01youngm.jpg"}
     {:date      "c. 1483",
      :school    "Italian",
-     :type      "portrait",
+     :genre      "portrait",
      :title     "Portrait of a Young Man",
      :author    "BOTTICELLI, Sandro",
      :concepts  #{{:name "one", :value 0.99197435}
@@ -62,6 +62,6 @@
 (def sample-group
   {:group-name          "spanish-religious"
    :paintings           sample-paintings
-   :type-constraints    #{"religious"}
+   :genre-constraints    #{"religious"}
    :school-constraints  #{"Spanish"}
    :concept-constraints #{"religion"}})

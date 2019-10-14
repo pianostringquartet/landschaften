@@ -23,14 +23,19 @@
   (fn compared-group-names [db _]
     (:compared-group-names db)))
 
+
 ;; should only allow two at a time
+(>defn compared-groups-sub! [db]
+  [any? => (s/coll-of ::specs/group)]
+  (let [names (:compared-group-names db)
+        groups (:saved-groups db)]
+      (map #(get groups %) names)))
+
+
 (reg-sub
   ::compared-groups
   (fn current-painting [db _]
-    {:post [(s/valid? (s/coll-of ::specs/group) %)]}
-    (let [names (:compared-group-names db)
-          groups (:saved-groups db)]
-      (map #(get groups %) names))))
+      (compared-groups-sub! db)))
 
 
 (defn paintings->variance-data [paintings n-many certainty-above]

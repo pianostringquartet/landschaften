@@ -12,7 +12,7 @@
 (def manet-sample-paintings
   #{{:date "1862",
      :school "French",
-     :type "other",
+     :genre "other",
      :wga_jpg "https://www.wga.hu/art/m/manet/1/2spanis1.jpg",
      :title "Spanish Ballet",
      :author "MANET, Edouard",
@@ -45,7 +45,7 @@
      "https://res.cloudinary.com/dgpqnl8ul/image/upload/v1546472422/vqutvlotsmipx7xkmxun.jpg"}
     {:date "1862",
      :school "French",
-     :type "portrait",
+     :genre "portrait",
      :wga_jpg "https://www.wga.hu/art/m/manet/1/2spanis8.jpg",
      :title "The Old Musician",
      :author "MANET, Edouard",
@@ -78,7 +78,7 @@
      "https://res.cloudinary.com/dgpqnl8ul/image/upload/v1546472423/m3vwue4ql8zmyw10jw3k.jpg"}
     {:date "1862",
      :school "French",
-     :type "other",
+     :genre "other",
      :wga_jpg "https://www.wga.hu/art/m/manet/1/3early2.jpg",
      :title "Music in the Tuileries Gardens (detail)",
      :author "MANET, Edouard",
@@ -111,7 +111,7 @@
      "https://res.cloudinary.com/dgpqnl8ul/image/upload/v1546472425/l6e4punrvp3etn74zun8.jpg"}
     {:date "1865-66",
      :school "French",
-     :type "other",
+     :genre "other",
      :wga_jpg "https://www.wga.hu/art/m/manet/2/2manet01.jpg",
      :title "Bullfight",
      :author "MANET, Edouard",
@@ -144,7 +144,7 @@
      "https://res.cloudinary.com/dgpqnl8ul/image/upload/v1546472429/lbs4bp3rbbrjft5zf6vq.jpg"}
     {:date "1866",
      :school "French",
-     :type "portrait",
+     :genre "portrait",
      :wga_jpg "https://www.wga.hu/art/m/manet/2/2manet04.jpg",
      :title "Young Lady (Woman with a Parrot)",
      :author "MANET, Edouard",
@@ -176,7 +176,7 @@
      "https://res.cloudinary.com/dgpqnl8ul/image/upload/v1546472430/bas4fxrp6hh37j9iszak.jpg"}
     {:date "1867",
      :school "French",
-     :type "genre",
+     :genre "genre",
      :wga_jpg "https://www.wga.hu/art/m/manet/2/2manet11.jpg",
      :title "The Guitar Player",
      :author "MANET, Edouard",
@@ -208,7 +208,7 @@
      "https://res.cloudinary.com/dgpqnl8ul/image/upload/v1546472432/ixevnvrrhfsvl2btqule.jpg"}
     {:date "1868",
      :school "French",
-     :type "genre",
+     :genre "genre",
      :wga_jpg "https://www.wga.hu/art/m/manet/2/2manet13.jpg",
      :title "The Luncheon in the Studio",
      :author "MANET, Edouard",
@@ -240,7 +240,7 @@
      "https://res.cloudinary.com/dgpqnl8ul/image/upload/v1546472433/rwywykjuns6crcgtrx1z.jpg"}
     {:date "1868",
      :school "French",
-     :type "genre",
+     :genre "genre",
      :wga_jpg "https://www.wga.hu/art/m/manet/2/2manet15.jpg",
      :title "The Reading",
      :author "MANET, Edouard",
@@ -272,7 +272,7 @@
      "https://res.cloudinary.com/dgpqnl8ul/image/upload/v1546472435/oj8aefh3d7pfmffpusht.jpg"}
     {:date "1874",
      :school "French",
-     :type "landscape",
+     :genre "landscape",
      :wga_jpg "https://www.wga.hu/art/m/manet/3/3manet13.jpg",
      :title "Claude Monet Painting on His Boat-Studio in Argenteuil",
      :author "MANET, Edouard",
@@ -305,7 +305,7 @@
      "https://res.cloudinary.com/dgpqnl8ul/image/upload/v1546472436/swsvuokxf891evo93p1b.jpg"}
     {:date "1878-80",
      :school "French",
-     :type "genre",
+     :genre "genre",
      :wga_jpg "https://www.wga.hu/art/m/manet/4/4manet07.jpg",
      :title "Corner of a Café-Concert",
      :author "MANET, Edouard",
@@ -338,7 +338,7 @@
      "https://res.cloudinary.com/dgpqnl8ul/image/upload/v1546472438/vxaqini8v50k8eazpzuq.jpg"}
     {:date "1878",
      :school "French",
-     :type "genre",
+     :genre "genre",
      :wga_jpg "https://www.wga.hu/art/m/manet/4/4manet10.jpg",
      :title "Two Women Drinking Bocks",
      :author "MANET, Edouard",
@@ -370,7 +370,7 @@
      "https://res.cloudinary.com/dgpqnl8ul/image/upload/v1546472440/o3ijavwwa4ojkpqaw4sz.jpg"}
     {:date "1878",
      :school "French",
-     :type "portrait",
+     :genre "portrait",
      :wga_jpg "https://www.wga.hu/art/m/manet/4/4manet12.jpg",
      :title "Man in a Round Hat (Alphonse Maureau)",
      :author "MANET, Edouard",
@@ -402,7 +402,7 @@
      "https://res.cloudinary.com/dgpqnl8ul/image/upload/v1546472441/jrom433z3ebwnqerjnjh.jpg"}
     {:date "1879",
      :school "French",
-     :type "genre",
+     :genre "genre",
      :wga_jpg "https://www.wga.hu/art/m/manet/4/4manet16.jpg",
      :title "In the Winter Garden",
      :author "MANET, Edouard",
@@ -434,7 +434,7 @@
      "https://res.cloudinary.com/dgpqnl8ul/image/upload/v1546472443/gqwvv3nmczfqaqf3c7l1.jpg"}
     {:date "1881",
      :school "French",
-     :type "historical",
+     :genre "historical",
      :wga_jpg "https://www.wga.hu/art/m/manet/5/5late07.jpg",
      :title "The Escape of Henri Rochefort",
      :author "MANET, Edouard",
@@ -467,7 +467,7 @@
      "https://res.cloudinary.com/dgpqnl8ul/image/upload/v1546472446/x8crdusi0cqdu3rywwv8.jpg"}
     {:date "1881",
      :school "French",
-     :type "portrait",
+     :genre "portrait",
      :wga_jpg "https://www.wga.hu/art/m/manet/5/5late08.jpg",
      :title "Portrait of Henri Rochefort",
      :author "MANET, Edouard",
@@ -499,7 +499,7 @@
      "https://res.cloudinary.com/dgpqnl8ul/image/upload/v1546472448/xxaoqvs6ad2av4t2aduh.jpg"}
     {:date "1881-82",
      :school "French",
-     :type "genre",
+     :genre "genre",
      :wga_jpg "https://www.wga.hu/art/m/manet/5/5late10.jpg",
      :title "A Bar at the Folies-Bergère (detail)",
      :author "MANET, Edouard",
@@ -532,7 +532,7 @@
      "https://res.cloudinary.com/dgpqnl8ul/image/upload/v1546472449/k3jixe3wrjb4qcuuvo3h.jpg"}
     {:date "1881",
      :school "French",
-     :type "portrait",
+     :genre "portrait",
      :wga_jpg "https://www.wga.hu/art/m/manet/5/5late11.jpg",
      :title "Study of a Model",
      :author "MANET, Edouard",
@@ -566,7 +566,7 @@
 (def manet-example-group
   {:group-name            manet-people-group-name
    :paintings             manet-sample-paintings
-   :type-constraints      manet-type-constraints
+   :genre-constraints      manet-type-constraints
    :school-constraints    manet-school-constraints
    :timeframe-constraints manet-timeframe-constraints
    :concept-constraints   manet-concept-constraints

@@ -16,7 +16,7 @@
                          :author    "artist"
                          :date      "date"
                          :timeframe "timeframe"
-                         :type      "genre"
+                         :genre      "genre"
                          :school    "school"}]
     [rc/v-box :children (mapv ->ui-label info-categories)]))
 

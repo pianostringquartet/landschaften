@@ -36,7 +36,7 @@
     {:snippet (snippet:column-in "t" column (count values))
      :params  values}))
 
-
+;; concept snippets need to be MUTUALLY EXCLUSIVE
 (defn ->concept-snippet [{:keys [column values]}]
   (when (entity/concept-column? column)
     {:snippet (snippet:column-in "t2" column (count values))
@@ -48,6 +48,10 @@
         params (mapcat :params snippets)]
     (into [(str base query)] params)))
 
+
+;; at a high level, just saying:
+;; "case: concept-constraints vs. paintings-constraints only vs. no constraints at all"
+;; then adding the snippets
 
 (defn base [constraints]
   (let [column?               (fn [pred] (some #(pred (:column %)) constraints))

@@ -109,6 +109,7 @@
                     :plugins      [[com.jakemccrary/lein-test-refresh "0.24.1"]
                                    [lein-doo "0.1.10"]
                                    [lein-cljsbuild "1.1.7"]
+                                   [lein-figwheel "0.5.19"] ;; added back
                                    [org.clojure/clojurescript "1.10.339"]]
                     :cljsbuild
                     {:builds

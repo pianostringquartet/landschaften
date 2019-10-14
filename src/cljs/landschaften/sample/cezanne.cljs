@@ -11,7 +11,7 @@
 (def cezanne-sample-paintings
   #{{:date "1860-62",
      :school "French",
-     :type "mythological",
+     :genre "mythological",
      :wga_jpg "https://www.wga.hu/art/c/cezanne/1/01early.jpg",
      :title "Spring, Summer, Winter, Autumn",
      :author "CÉZANNE, Paul",
@@ -44,7 +44,7 @@
      "https://res.cloudinary.com/dgpqnl8ul/image/upload/v1546391402/ijx2gt9qay1c4kl7ms5x.jpg"}
     {:date "1866",
      :school "French",
-     :type "portrait",
+     :genre "portrait",
      :wga_jpg "https://www.wga.hu/art/c/cezanne/1/02early.jpg",
      :title
      "Louis-Auguste Cézanne, the Artist's Father, Reading the \"L'Événement\"",
@@ -77,7 +77,7 @@
      "https://res.cloudinary.com/dgpqnl8ul/image/upload/v1546391404/bx7zlfkrjasffdevzvyt.jpg"}
     {:date "c. 1869",
      :school "French",
-     :type "genre",
+     :genre "genre",
      :wga_jpg "https://www.wga.hu/art/c/cezanne/1/07early1.jpg",
      :title "Girl at the Piano (The Tannhäuser Overture)",
      :author "CÉZANNE, Paul",
@@ -109,7 +109,7 @@
      "https://res.cloudinary.com/dgpqnl8ul/image/upload/v1546391406/iupdhkm8d5xzefdcqvmd.jpg"}
     {:date "1870",
      :school "French",
-     :type "mythological",
+     :genre "mythological",
      :wga_jpg "https://www.wga.hu/art/c/cezanne/1/11early.jpg",
      :title "Pastorale (Idyll)",
      :author "CÉZANNE, Paul",
@@ -142,7 +142,7 @@
      "https://res.cloudinary.com/dgpqnl8ul/image/upload/v1546391407/m0gfwfwioeoromrxcmkr.jpg"}
     {:date "1871",
      :school "French",
-     :type "still-life",
+     :genre "still-life",
      :wga_jpg "https://www.wga.hu/art/c/cezanne/1/14early.jpg",
      :title "Still-Life",
      :author "CÉZANNE, Paul",
@@ -174,7 +174,7 @@
      "https://res.cloudinary.com/dgpqnl8ul/image/upload/v1546391409/vv66p0lqnsm9ughnjytp.jpg"}
     {:date "1874-75",
      :school "French",
-     :type "other",
+     :genre "other",
      :wga_jpg "https://www.wga.hu/art/c/cezanne/2/2nudes4.jpg",
      :title "Three Bathers",
      :author "CÉZANNE, Paul",
@@ -206,7 +206,7 @@
      "https://res.cloudinary.com/dgpqnl8ul/image/upload/v1546391411/vqijpgqvqrzuo8nxwkow.jpg"}
     {:date "1877",
      :school "French",
-     :type "portrait",
+     :genre "portrait",
      :wga_jpg "https://www.wga.hu/art/c/cezanne/2/4portra1.jpg",
      :title "Madame Cézanne in a Red Armchair",
      :author "CÉZANNE, Paul",
@@ -238,7 +238,7 @@
      "https://res.cloudinary.com/dgpqnl8ul/image/upload/v1546391417/gaa6ael3af8zzt220sqy.jpg"}
     {:date "1888",
      :school "French",
-     :type "other",
+     :genre "other",
      :wga_jpg "https://www.wga.hu/art/c/cezanne/3/3figure4.jpg",
      :title "Mardi Gras",
      :author "CÉZANNE, Paul",
@@ -271,7 +271,7 @@
      "https://res.cloudinary.com/dgpqnl8ul/image/upload/v1546391422/dwbexus1rz2k0qctyp7p.jpg"}
     {:date "1892-94",
      :school "French",
-     :type "other",
+     :genre "other",
      :wga_jpg "https://www.wga.hu/art/c/cezanne/4/1bather2.jpg",
      :title "Bathers",
      :author "CÉZANNE, Paul",
@@ -304,7 +304,7 @@
      "https://res.cloudinary.com/dgpqnl8ul/image/upload/v1546391423/mj5ubggpljja0r42z4pt.jpg"}
     {:date "1892-93",
      :school "French",
-     :type "genre",
+     :genre "genre",
      :wga_jpg "https://www.wga.hu/art/c/cezanne/4/2figure2.jpg",
      :title "Card Players",
      :author "CÉZANNE, Paul",
@@ -337,7 +337,7 @@
      "https://res.cloudinary.com/dgpqnl8ul/image/upload/v1546391425/qerqqrca7g5dxbrqmeos.jpg"}
     {:date "1890-94",
      :school "French",
-     :type "still-life",
+     :genre "still-life",
      :wga_jpg "https://www.wga.hu/art/c/cezanne/4/4still1.jpg",
      :title "Still-Life",
      :author "CÉZANNE, Paul",
@@ -370,7 +370,7 @@
      "https://res.cloudinary.com/dgpqnl8ul/image/upload/v1546391427/fmmte3oasy6jci8uzmvj.jpg"}
     {:date "1894",
      :school "French",
-     :type "still-life",
+     :genre "still-life",
      :wga_jpg "https://www.wga.hu/art/c/cezanne/4/4still2.jpg",
      :title "Still-Life with Plaster Cupid",
      :author "CÉZANNE, Paul",
@@ -402,7 +402,7 @@
      "https://res.cloudinary.com/dgpqnl8ul/image/upload/v1546391428/qdkiwtv14u6oqloy2ere.jpg"}
     {:date "1895-1900",
      :school "French",
-     :type "still-life",
+     :genre "still-life",
      :wga_jpg "https://www.wga.hu/art/c/cezanne/4/4still7.jpg",
      :title "Still-Life with Onions",
      :author "CÉZANNE, Paul",
@@ -434,7 +434,7 @@
      "https://res.cloudinary.com/dgpqnl8ul/image/upload/v1546391430/ao29xzfghsqshhungb3v.jpg"}
     {:date "May-00",
      :school "French",
-     :type "other",
+     :genre "other",
      :wga_jpg "https://www.wga.hu/art/c/cezanne/5/4bather2.jpg",
      :title "The Large Bathers",
      :author "CÉZANNE, Paul",
@@ -467,7 +467,7 @@
      "https://res.cloudinary.com/dgpqnl8ul/image/upload/v1546391432/ane0vjjthzft1aas6gcy.jpg"}
     {:date "1898-1905",
      :school "French",
-     :type "other",
+     :genre "other",
      :wga_jpg "https://www.wga.hu/art/c/cezanne/5/4bather3.jpg",
      :title "The Large Bathers",
      :author "CÉZANNE, Paul",
@@ -503,7 +503,7 @@
 (def cezanne-example-group
   {:group-name            cezanne-people-group-name
    :paintings             cezanne-sample-paintings
-   :type-constraints      cezanne-type-constraints
+   :genre-constraints      cezanne-type-constraints
    :school-constraints    cezanne-school-constraints
    :timeframe-constraints cezanne-timeframe-constraints
    :concept-constraints   cezanne-concept-constraints
