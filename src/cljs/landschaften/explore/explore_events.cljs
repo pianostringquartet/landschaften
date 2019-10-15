@@ -7,9 +7,12 @@
             [landschaften.helpers :as helpers]
             [cljs.spec.alpha :as s]
             [clojure.walk :refer [keywordize-keys]]
-            [ghostwheel.core :refer [check >defn >defn- >fdef => | <- ?]]))
+            [ghostwheel.core :refer [check >defn >defn- >fdef => | <- ?]]
+            [landschaften.config :refer [service-url]]))
 
 
+;(def env (load-config :merge [(source/from-system-props)
+;                              (source/from-env)]))
 
 ;; ------------------------------------------------------
 ;; High level 'app states'
@@ -71,21 +74,25 @@
 
 
 
-
 (reg-event-fx
   ::query-started
   (fn query [cofx _]
-    (let [db (:db cofx)]
+    (let [db (:db cofx)
+          ;url (str (env :service-url) "/query")]
+          url (str service-url "/query")]
+          ;url (str (System/getenv "SERVICE_URL") "/query")]
+          ;url (str ("") "/query")]
       (do
         (js/console.log "query-started DISPATCHED!")
-        { :db  (waiting-for-server-response-state db) ;(assoc db :query-loading? true) ;(on-query-started db)
+        (js/console.log "query-started url: " url)
+        {:db  (waiting-for-server-response-state db) ;(assoc db :query-loading? true) ;(on-query-started db)
          ;:get-request {:uri "http://localhost:8080/artists" ; "/artists"
          ;              :handler #(do ;; probably need to json/read-str now:
          ;                          (js/console.log "received artists endpoint: "  %)
          ;                          (js/console.log "received some artists: " (count (get (js->clj % :keywordize-keys true) "artists"))))}}))))
 
                                        ;:handler #(dispatch [::artists-names-retrieved %])}}))
-         :post-request {:uri     "http://localhost:8080/query" ;; "http://landschaften-service.herokuapp.com/query" ; "https://landschaften-service.herokuapp.com/query" ; "/query"
+         :post-request {:uri     url ;; "http://localhost:8080/query" ;; "http://landschaften-service.herokuapp.com/query" ; "https://landschaften-service.herokuapp.com/query" ; "/query"
                         ;:params  {:constraints (->query-constraints db)}
 
                         ;; don't seem to be sending proper concept constraints?
@@ -313,7 +320,7 @@
         (js/console.log "constraints updated since search")
         {:db (waiting-for-server-response-state db)
          ;:post-request {:uri "/query"
-         :post-request {:uri "https://landschaften-service.herokuapp.com/query"
+         :post-request {:uri  "https://landschaften-service.herokuapp.com/query"
                         :params {:constraints (->query-constraints db)}
                         ;; need to pull out the paintings
                         :handler #(dispatch [::save-search-query-succeeded (create-group (:paintings %))])}})

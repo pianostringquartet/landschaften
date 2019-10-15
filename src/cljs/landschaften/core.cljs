@@ -9,6 +9,8 @@
   (:import goog.History))
 
 
+;(goog-define service "http://landschaften-service.herokuapp.com")
+
 (defn mount-components []
   (rf/clear-subscription-cache!)
   (r/render [views/root-component] (.getElementById js/document "app")))

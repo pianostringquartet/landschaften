@@ -84,8 +84,7 @@
                    :source-map "target/cljsbuild/public/js/app.js.map"
                    :optimizations :advanced
                    :pretty-print false
-                   :closure-warnings
-                   {:externs-validation :off :non-standard-jsdoc :off}
+                   :closure-warnings {:externs-validation :off :non-standard-jsdoc :off}
                    :externs ["react/externs/react.js"]}}}}
                :aot :all
                :uberjar-name "landschaften.jar"
@@ -109,7 +108,7 @@
                     :plugins      [[com.jakemccrary/lein-test-refresh "0.24.1"]
                                    [lein-doo "0.1.10"]
                                    [lein-cljsbuild "1.1.7"]
-                                   [lein-figwheel "0.5.19"] ;; added back
+                                   [lein-figwheel "0.5.19"]
                                    [org.clojure/clojurescript "1.10.339"]]
                     :cljsbuild
                     {:builds
@@ -131,7 +130,13 @@
                                                        :num-tests 10}}
                         :closure-defines
                               {"re_frame.trace.trace_enabled_QMARK_" true
-                               "day8.re_frame.tracing.trace_enabled_QMARK_"  true}
+                               "day8.re_frame.tracing.trace_enabled_QMARK_"  true
+                               "goog.DEBUG" true
+                               landschaften.config/service-url "http://localhost:8080"}
+                               ;landschaften.explore.explore-events/service "http://localhost:8080"}
+                               ;"landschaften.explore.explore_events" ~service}
+
+
                         :preloads [day8.re-frame-10x.preload]}}}}
                     :doo {:build "test"}
                     :source-paths ["env/dev/clj"]
