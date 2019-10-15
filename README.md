@@ -11,9 +11,11 @@ Then save your search results and compare different groups of paintings.
 How similar are the works of Michelangelo and Manet?  
 
 
-![](landschaften_explore.png) 
+![](landschaften_explore_2.png) 
 
-![](landschaften_compare.png)
+![](landschaften_compare_2.png)
+
+
 
 
 ### What
