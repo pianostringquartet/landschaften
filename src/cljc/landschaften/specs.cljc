@@ -76,7 +76,7 @@
 
 
 (s/def ::group-name string?)
-(s/def ::paintings (s/coll-of ::painting))
+(s/def ::paintings (s/nilable (s/coll-of ::painting))) ;; a group can have no paintings
 
 (s/def ::genre-constraints (s/coll-of ::genre))
 (s/def ::school-constraints (s/coll-of ::school))
@@ -114,12 +114,6 @@
 (s/def ::all-timeframes (s/coll-of ::timeframe))
 (s/def ::all-concepts (s/coll-of string?))
 (s/def ::all-artists (s/coll-of string?))
-
-(s/def ::selected-types (s/coll-of ::genre))
-(s/def ::selected-schools (s/coll-of ::school))
-(s/def ::selected-timeframes (s/coll-of ::timeframe))
-(s/def ::selected-concepts (s/coll-of string?))
-(s/def ::selected-artists (s/coll-of string?))
 
 (s/def ::current-group-name (s/nilable string?))
 

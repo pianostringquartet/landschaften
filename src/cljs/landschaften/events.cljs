@@ -7,7 +7,12 @@
             [landschaften.helpers :as helpers]
             [cljs.spec.alpha :as s]
             [clojure.walk :refer [keywordize-keys]]
-            [ghostwheel.core :refer [check >defn >defn- >fdef => | <- ?]]))
+            [ghostwheel.core :refer [check >defn >defn- >fdef => | <- ?]]
+            [landschaften.config :refer [service-url]]))
+
+
+(def ARTISTS-ENDPOINT (str service-url "/artists"))
+(def CONCEPTS-ENDPOINT (str service-url "/concepts"))
 
 
 ;; ------------------------------------------------------
@@ -19,6 +24,7 @@
   [a-spec db]
   (when-not (s/valid? a-spec db)
     (throw (ex-info (str "spec check failed: " (s/explain-str a-spec db)) {}))))
+
 
 ;; ------------------------------------------------------
 ;; Persisting data
@@ -67,12 +73,9 @@
   (fn post-request-handler
     [{uri :uri params :params handler :handler error-handler :error-handler
       :or {error-handler default-error-handler}}]
-    (POST uri {
-               :params params ;"{\"constraints\": [ {\"column\": \"timeframe\", \"values\": [\"1501-1550\"]}, {\"column\": \"school\", \"values\": [\"French\", \"Italian\", \"Spanish\", \"German\"]}, {\"column\": \"name\", \"values\": [\"scarf\", \"deer\"]}]}" ; params ; needed still?
+    (POST uri {:params params
                :handler handler
                :error-handler error-handler
-               ;:header
-
                :format :text
                :response-format :json})))
 
@@ -101,16 +104,10 @@
          :dispatch-n (list [::retrieve-artists-names]
                            [::retrieve-concepts])})))
 
-;(reg-event-fx
-;  ::retrieve-artists-names
-;  (fn query [cofx _]
-;    {:get-request {:uri "http://localhost:8080/artists" ; "/artists"
-;                   :handler #(dispatch [::artists-names-retrieved (:artists %)])}})) ;:handler #(dispatch [::artists-names-retrieved %])}}))
-
 (reg-event-fx
   ::retrieve-artists-names
   (fn query [cofx _]
-    {:get-request {:uri "http://localhost:8080/artists" ; "/artists"
+    {:get-request {:uri ARTISTS-ENDPOINT
                    :handler #(do
                                (let [r (keywordize-keys %)]
                                  (js/console.log "artists endpoint: r: " (str r))
@@ -119,17 +116,8 @@
 (reg-event-fx
   ::retrieve-concepts
   (fn query [cofx _]
-      {:get-request {:uri "http://localhost:8080/concepts" ; "/concepts"
-                     :handler #(do
-                                 (let [r (keywordize-keys %)]
-                                   (dispatch [::concepts-retrieved (:conceptNames r)])))}}));:handler #(dispatch [::concepts-retrieved %])}}))
-
-
-#_(reg-event-fx
-    ::retrieve-concepts
-    (fn query [cofx _]
-      {:get-request {:uri "http://localhost:8080/concepts" ; "/concepts"
-                     :handler #(dispatch [::concepts-retrieved (:conceptNames %)])}}));:handler #(dispatch [::concepts-retrieved %])}}))
+      {:get-request {:uri CONCEPTS-ENDPOINT
+                     :handler #(dispatch [::concepts-retrieved (:conceptNames (keywordize-keys %))])}}))
 
 
 (reg-event-db

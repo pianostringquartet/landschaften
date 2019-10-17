@@ -2,15 +2,14 @@
   (:require [re-frame.core :refer [dispatch reg-event-db reg-sub]]
             [cljs.spec.alpha :as s]
             [landschaften.specs :as specs]
+            [ghostwheel.core :refer [check >defn >defn- >fdef => | <- ?]]
             [landschaften.helpers :as helpers]))
-
 
 
 (reg-sub
   ::mobile-search?
   (fn mobile-search? [db] ; show 'search' controls vs 'results' paintings on mobile
     (:mobile-search? db)))
-
 
 (reg-sub
   ::active-accordion-constraint
@@ -56,24 +55,24 @@
 ;; Currently selected constraints
 ;; ------------------------------------------------------
 
-(reg-sub
-  ::types
-  (fn types [db _]
-      {:post [(s/valid? ::specs/genre-constraints %)]}
-      (:selected-types db)))
 
-(reg-sub
-  ::school-constraints
-  (fn schools [db _]
-    {:post [(s/valid? ::specs/school-constraints %)]}
-    (:selected-schools db)))
+(>defn selected-genres-sub [db _]
+  [any? any? => ::specs/genre-constraints]
+  (:selected-genres db))
 
-(reg-sub
-  ::timeframe-constraints
-  (fn timeframes [db _]
-    {:post [(s/valid? ::specs/timeframe-constraints %)]}
-    (:selected-timeframes db)))
+(reg-sub ::types selected-genres-sub)
 
+(>defn selected-schools-sub [db _]
+  [any? any? => ::specs/school-constraints]
+  (:selected-schools db))
+
+(reg-sub ::school-constraints selected-schools-sub)
+
+(>defn selected-timeframes-sub [db _]
+  [any? any? => ::specs/timeframe-constraints]
+  (:selected-timeframes db))
+
+(reg-sub ::timeframe-constraints selected-timeframes-sub)
 
 (reg-sub
   ::concept-constraints
@@ -88,24 +87,19 @@
     (:selected-artists db)))
 
 
-
-
 ;;; ------------------------------------------------------
 ;;; Groups (selected constraints, retrieved paintings)
 ;;; ------------------------------------------------------
-
 
 (reg-sub
   ::save-group-popover-showing?
   (fn save-group-popover-showing? [db _]
     (:show-group-name-prompt? db)))
 
-
 (reg-sub
   ::group-name
   (fn group-name [db _]
     (:current-group-name db)))
-
 
 (reg-sub
   ::paintings
@@ -114,7 +108,6 @@
       (if current-paintings
         (helpers/sort-by-author current-paintings)
         []))))
-
 
 (reg-sub
   ::query-loading?

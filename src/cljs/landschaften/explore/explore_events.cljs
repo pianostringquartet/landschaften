@@ -11,8 +11,7 @@
             [landschaften.config :refer [service-url]]))
 
 
-;(def env (load-config :merge [(source/from-system-props)
-;                              (source/from-env)]))
+(def QUERY-ENDPOINT (str service-url "/query"))
 
 ;; ------------------------------------------------------
 ;; High level 'app states'
@@ -58,78 +57,35 @@
   [db]
   (remove
     #(empty? (:values %))
-    #{{:column "type" :values (into [] (db :selected-types))}
+    #{{:column "type" :values (into [] (db :selected-genres))}
       {:column "school" :values (into [] (db :selected-schools))}
       {:column "timeframe" :values (into [] (db :selected-timeframes))}
       {:column "author" :values (into [] (db :selected-artists))}
       {:column "name" :values (into [] (db :selected-concepts))}}))
 
 
-
-(defn pull [json]
-  (:paintings
-    (js->clj
-      (.parse js/JSON json)
-      :keywordize-keys true)))
-
-
+(defn query-post-request [db handler-fn]
+  {:post-request {:uri QUERY-ENDPOINT
+                  :params  (js/JSON.stringify (clj->js {:constraints (->query-constraints db)}))
+                  :handler handler-fn}})
 
 (reg-event-fx
   ::query-started
   (fn query [cofx _]
-    (let [db (:db cofx)
-          ;url (str (env :service-url) "/query")]
-          url (str service-url "/query")]
-          ;url (str (System/getenv "SERVICE_URL") "/query")]
-          ;url (str ("") "/query")]
-      (do
-        (js/console.log "query-started DISPATCHED!")
-        (js/console.log "query-started url: " url)
-        {:db  (waiting-for-server-response-state db) ;(assoc db :query-loading? true) ;(on-query-started db)
-         ;:get-request {:uri "http://localhost:8080/artists" ; "/artists"
-         ;              :handler #(do ;; probably need to json/read-str now:
-         ;                          (js/console.log "received artists endpoint: "  %)
-         ;                          (js/console.log "received some artists: " (count (get (js->clj % :keywordize-keys true) "artists"))))}}))))
+    (let [db (:db cofx)]
+      (merge {:db  (waiting-for-server-response-state db)}
+             (query-post-request db #(dispatch [::query-succeeded (:paintings (keywordize-keys %))]))))))
 
-                                       ;:handler #(dispatch [::artists-names-retrieved %])}}))
-         :post-request {:uri     url ;; "http://localhost:8080/query" ;; "http://landschaften-service.herokuapp.com/query" ; "https://landschaften-service.herokuapp.com/query" ; "/query"
-                        ;:params  {:constraints (->query-constraints db)}
-
-                        ;; don't seem to be sending proper concept constraints?
-                        :params  (.stringify js/JSON (clj->js {:constraints (->query-constraints db)}))
-                        :handler #(do
-                                    (let [r (:paintings (keywordize-keys %))]
-                                      (js/console.log "received from query endpoint, keywordize-keys: " r)
-                                      (js/console.log "received from query endpoint, keywordize-keys: " (str r))
-                                      (dispatch [::query-succeeded r])))}})))) ; (get (js->clj % :keywordize-keys true) "paintings")]))}}))));:handler #(dispatch [::query-succeeded (:paintings %)])}}))))
-                        ;:handler #(dispatch [::query-succeeded %])}}))))
-
-
-;(>defn on-query-succeeded [db paintings]
-; [::specs/app-db ::specs/paintings => ::specs/app-db]
-; (-> db
-;     (assoc :paintings paintings)
-;     (query-succeeded-state)))
-
-(>defn on-query-succeeded! [db paintings]
-  [::specs/app-db any? => ::specs/app-db]
-  (let [x (-> db
-              (assoc :paintings paintings)
-              (query-succeeded-state))]
-    (do
-      (js/console.log "x: " x)
-      x)))
-
-
+(defn on-query-succeeded [db paintings]
+ (-> db
+     (assoc :paintings paintings)
+     (query-succeeded-state)))
 
 (reg-event-db
   ::query-succeeded
   core-events/check-and-persist-interceptors
   (fn query-succeeded [db [_ paintings]]
-      (do
-        (js/console.log "about to call on-query-succeeded")
-        (js/console.log (s/explain ::specs/paintings paintings))
-        (on-query-succeeded! db paintings))))
+    (on-query-succeeded db paintings)))
 
 
 ;; ------------------------------------------------------
@@ -144,7 +100,7 @@
   ::update-selected-types
   core-events/check-and-persist-interceptors
   (fn update-selected-types [db [_ selected-types]]
-    (constraints-updated-since-search (assoc db :selected-types selected-types))))
+    (constraints-updated-since-search (assoc db :selected-genres selected-types))))
 
 
 (reg-event-db
@@ -182,7 +138,6 @@
   (fn [db [_ selected-concept]]
     (constraints-updated-since-search (remove-selected-concept db selected-concept))))
 
-
 (reg-event-db
   ::toggle-concept-selection
   core-events/check-and-persist-interceptors
@@ -216,7 +171,7 @@
   core-events/check-and-persist-interceptors
   (fn selections-cleared [db _]
     (-> db
-        (assoc :selected-types #{})
+        (assoc :selected-genres #{})
         (assoc :selected-schools #{})
         (assoc :selected-timeframes #{})
         (assoc :selected-concepts #{})
@@ -232,7 +187,6 @@
   ::active-accordion-constraint-updated
   (fn active-accordion-constraint-updated-handler [db [_ new-active-accordion]]
     (active-accordion-constraint-updated db new-active-accordion)))
-
 
 
 ;; ------------------------------------------------------
@@ -272,12 +226,11 @@
   (assoc-in db [:saved-groups (:group-name group)] group))
 
 ;; Make a group's constraints the top-level constraints,
-;; its paintings the top-level paintings, etc.
 (>defn set-current-group [db group]
   [::specs/app-db ::specs/group => ::specs/app-db]
   (-> db
       (assoc :paintings (:paintings group))
-      (assoc :selected-types (:type-constraints group))
+      (assoc :selected-genres (:genre-constraints group))
       (assoc :selected-schools (:school-constraints group))
       (assoc :selected-timeframes (:timeframe-constraints group))
       (assoc :selected-concepts (:concept-constraints group))
@@ -303,34 +256,23 @@
         ;; the process is same as if hadn't had to make query.
         (save-search-no-query-required new-group))))
 
-
-
 (>defn start-save-search! [db new-group-name]
   [::specs/app-db string? => map?]
   (let [;; Want selected constraints etc. from time of save-search query's start
         create-group (fn [paintings] {:group-name new-group-name
                                       :paintings paintings
-                                      :type-constraints (:selected-types db)
+                                      :genre-constraints (:selected-genres db)
                                       :school-constraints (:selected-schools db)
                                       :timeframe-constraints (:selected-timeframes db)
                                       :concept-constraints (:selected-concepts db)
                                       :artist-constraints (:selected-artists db)})]
     (if (:constraints-updated-since-search? db)
-      (do
-        (js/console.log "constraints updated since search")
-        {:db (waiting-for-server-response-state db)
-         ;:post-request {:uri "/query"
-         :post-request {:uri  "https://landschaften-service.herokuapp.com/query"
-                        :params {:constraints (->query-constraints db)}
-                        ;; need to pull out the paintings
-                        :handler #(dispatch [::save-search-query-succeeded (create-group (:paintings %))])}})
-                        ;:handler #(dispatch [::save-search-query-succeeded (create-group %)])}})
+      (merge {:db (waiting-for-server-response-state db)}
+             (query-post-request db #(dispatch [::save-search-query-succeeded (create-group (:paintings %))])))
       ;; If don't need to search, then just immediately save group etc.
       ;; :loading?, :constraints-updated-since-search? etc. should all already be false.
-      (do
-        (js/console.log "constraints not updated since search")
-        {:db (save-search-no-query-required (explore-ready-state db)
-                                            (create-group (:paintings db)))}))))
+      {:db (save-search-no-query-required (explore-ready-state db)
+                                          (create-group (:paintings db)))})))
 
 
 (reg-event-fx
@@ -390,7 +332,6 @@
 ;; ------------------------------------------------------
 ;; Examining a single painting
 ;; ------------------------------------------------------
-
 
 (reg-event-db
   ::done-button-clicked

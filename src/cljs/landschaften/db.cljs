@@ -46,7 +46,7 @@
    :all-timeframes                    (apply disj specs/TIMEFRAMES excluded-timeframes)
    :all-concepts                      #{}                   ; retrieved from backend during initialization
    :all-artists                       #{}                   ; retrieved from backend during initialization
-   :selected-types                    #{}
+   :selected-genres                    #{}
    :selected-schools                  #{}
    :selected-timeframes               #{}
    :selected-concepts                 #{}
@@ -68,7 +68,7 @@
 (def demo-db
   (-> fresh-db
       (assoc :paintings                         manet/manet-sample-paintings)
-      (assoc :selected-types                    manet/manet-type-constraints)
+      (assoc :selected-genres                    manet/manet-type-constraints)
       (assoc :selected-schools                  manet/manet-school-constraints)
       (assoc :selected-timeframes               manet/manet-timeframe-constraints)
       (assoc :selected-concepts                 manet/manet-concept-constraints)

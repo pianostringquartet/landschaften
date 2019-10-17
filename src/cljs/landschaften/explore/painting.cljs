@@ -66,7 +66,6 @@
     (goog.string/format "%.2f" value)]])
 
 
-
 (>defn concept-table [painting selected-concepts]
   [::specs/painting ::specs/concept-constraints => vector?]
   (let [concepts (take 15 (reverse (sort-by :value (:concepts painting))))]
@@ -90,7 +89,6 @@
    [info painting]
    [concept-table painting selected-concepts]
    [rc/label :style {:color "lightGrey"} :label "Click to add as search term"]])
-
 
 
 (>defn painting-details-desktop

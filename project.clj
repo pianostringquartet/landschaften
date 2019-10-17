@@ -41,8 +41,6 @@
                  [expound "0.7.1"]
                  [re-com "2.4.0"]
                  [day8.re-frame/tracing-stubs "0.5.1"]
-
-                 ;; should only be in dev?
                  [gnl/ghostwheel "0.3.8"]
                  [gnl/ghostwheel.tracer "0.3.8"]
                  [day8.re-frame/test "0.1.5"]
@@ -51,8 +49,7 @@
                  [reagent-material-ui "0.2.5"]
                  [cljsjs/chartjs "2.8.0-0"]
                  [cljsjs/semantic-ui-react "0.84.0-0"]]
-
-
+  
   :min-lein-version "2.0.0"
   :source-paths ["src/clj" "src/cljs" "src/cljc" "src/script"]
   :test-paths ["test/clj"]
@@ -133,10 +130,6 @@
                                "day8.re_frame.tracing.trace_enabled_QMARK_"  true
                                "goog.DEBUG" true
                                landschaften.config/service-url "http://localhost:8080"}
-                               ;landschaften.explore.explore-events/service "http://localhost:8080"}
-                               ;"landschaften.explore.explore_events" ~service}
-
-
                         :preloads [day8.re-frame-10x.preload]}}}}
                     :doo {:build "test"}
                     :source-paths ["env/dev/clj"]
