@@ -98,20 +98,17 @@
   [(inject-cofx :user-session)] ; an interceptor
   (fn initialize-app [cofx _]
     (let [persisted-db (:user-session cofx)]
-      ;(if (s/valid? ::specs/app-db persisted-db)
-        ;{:db persisted-db}
-        {:db         db/demo-db
-         :dispatch-n (list [::retrieve-artists-names]
-                           [::retrieve-concepts])})))
+      (if (s/valid? ::specs/app-db persisted-db)
+        {:db persisted-db}
+       {:db         db/demo-db
+        :dispatch-n (list [::retrieve-artists-names]
+                          [::retrieve-concepts])}))))
 
 (reg-event-fx
   ::retrieve-artists-names
   (fn query [cofx _]
     {:get-request {:uri ARTISTS-ENDPOINT
-                   :handler #(do
-                               (let [r (keywordize-keys %)]
-                                 (js/console.log "artists endpoint: r: " (str r))
-                                 (dispatch [::artists-names-retrieved (:artists r)])))}}))
+                   :handler #(dispatch [::artists-names-retrieved (:artists (keywordize-keys %))])}}))
 
 (reg-event-fx
   ::retrieve-concepts
