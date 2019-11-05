@@ -1,6 +1,5 @@
 (ns landschaften.compare.chart
   (:require [reagent.core :as r]
-            [re-frame.core :refer [subscribe dispatch]]
             [clojure.spec.alpha :as s]
             [landschaften.specs :as specs]
             [landschaften.view-utils :as utils]
@@ -71,6 +70,8 @@
 
 
 ;; TODO: cleanup, simplify into smaller, well-named functions
+;; NOV 2019: THIS CALCULATION REQUIRES DATA TOO LARGE TO HOLD IN CLIENT
+;; AND SO MUCH BE CALCULATED ON THE SERVER
 (>defn compared-groups->radar-chart-data!
   "Returns the two groups' data in a Chart.js Radar-chart-friendly form.
 

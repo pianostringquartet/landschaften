@@ -1,7 +1,6 @@
 (ns landschaften.explore.paintings
   (:require [reagent-material-ui.core :as ui]
             [landschaften.explore.explore-events :as explore-events]
-            [landschaften.specs :as specs]
             [landschaften.explore.painting :as examine]
             [re-frame.core :refer [dispatch]]
             [clojure.spec.alpha :as s]
@@ -12,8 +11,7 @@
 
 (def DISPLAY-MAX-N-PAINTINGS 50)
 
-(>defn tile! [painting]
-  [::specs/painting => vector?]
+(defn tile! [painting]
   [ui/GridTile
    {:key (:jpg painting)}
    [:img {:src (:jpg painting)
@@ -22,7 +20,6 @@
 
 (defn grid [current-painting paintings show-max? n-columns]
   {:pre [(pos? n-columns)
-         (s/nilable (s/valid? ::specs/painting current-painting))
          (boolean? show-max?)]}
   [:div
    (when show-max?
@@ -37,8 +34,7 @@
   (clojure.string/join " " [n (if (= n 1) "PAINTING" "PAINTINGS") "FOUND"]))
 
 
-(>defn paintings-grid [current-painting paintings show-max? n-columns]
-  [(s/nilable ::specs/painting) ::specs/paintings boolean? int? => vector?]
+(defn paintings-grid [current-painting paintings show-max? n-columns]
   [:> semantic-ui/slist {:relaxed true}
    [:> semantic-ui/slist-item
     [rc/title :label (paintings-found (count paintings))]]

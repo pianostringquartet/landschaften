@@ -62,6 +62,8 @@
      3]))
 
 
+;; CALCULATIONS SHOULD BE DONE IN CALC-SUB,
+;; AND POSSIBLY EVEN ON SERVER
 (>defn similarity-measurement
   "Progress bar displaying error-rate between two datasets as a percentage."
   [variance max-variance]
@@ -100,6 +102,8 @@
       [labeled-variance variance max-variance])]])
 
 
+;; radar-chart should JUST RECEIVE A SUB,
+;; WHOSE VALUE HAS ALREADY BEEN CALCULATED ON THE SERVER
 (defn radar-chart [compared-groups]
   [:> semantic-ui/slist-item
    ;; Workaround: force Chart.js to re-render, don't use React lifecycle methods

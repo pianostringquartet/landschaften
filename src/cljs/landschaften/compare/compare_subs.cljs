@@ -68,8 +68,7 @@
     (update painting :concepts scramble)))
 
 
-(>defn max-variance [paintings-1 paintings-2]
-       [::specs/paintings ::specs/paintings => ::stats/variance]
+(defn max-variance [paintings-1 paintings-2]
        (stats/variance
          ;; scramble to ensure that no concepts are shared in common
          (variance-calculation-ready-data (map scramble-concept-names paintings-1))

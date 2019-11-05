@@ -35,15 +35,30 @@
 ;; BUG?: When fn used in interceptor chain,
 ;; Ghostwheel thinks `state` is [event-id, event-handler's received argument]
 ;; -- but printing `state` shows `state` is app-db as expected.
+
+
+
+;; don't yet .setItem; just test size
 (defn ->localstore! [state]
-  (.setItem js/localStorage ls-auth-key state))
+  ;(let [state (range 0 100000)]
+  ;  (do
+  ;    (js/console.log "->localstore! called")
+  ;    (js/console.log "characters: " (count (str state)))
+  ;    (js/console.log "bytes: " (* 2 (count (str state)))))))
+    (js/localStorage.setItem ls-auth-key state))
+    ;(.setItem js/localStorage ls-auth-key state)))
 
-
+;; TODO: use different interceptors for granular local-storage updates;
+;; i.e. only persist what has changed
+;; e.g. don't re-store paintings in local-storage if no query was made
+;; ... Could have several keys in local-storage: e.g. :paintings, :constraints
+;; NOT NEEDED IF switching from maps->ids speeds up local-storage writing process.
 (reg-cofx
   :user-session
   (fn user-session [cofx _]
     (let [data-from-local-storage (cljs.reader/read-string
                                     (some->> (.getItem js/localStorage ls-auth-key)))]
+      ;; cofx's :user-session key is then used in `reg-event-fx ::initialize-app`
       (assoc cofx :user-session data-from-local-storage))))
 
 
@@ -55,7 +70,8 @@
 
 (def persist (after ->localstore!))
 
-(def check-and-persist-interceptors [spec? persist])
+;(def check-and-persist-interceptors [spec? persist])
+(def check-and-persist-interceptors [persist])
 
 
 ;; ------------------------------------------------------

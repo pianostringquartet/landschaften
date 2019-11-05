@@ -3,7 +3,6 @@
             [ajax.core :refer [POST GET]]
             [landschaften.events :as core-events]
             [landschaften.specs :as specs]
-            [landschaften.view-specs :as view-specs]
             [landschaften.helpers :as helpers]
             [cljs.spec.alpha :as s]
             [clojure.walk :refer [keywordize-keys]]
@@ -69,12 +68,16 @@
                   :params  (js/JSON.stringify (clj->js {:constraints (->query-constraints db)}))
                   :handler handler-fn}})
 
+;; better?: don't keywordize keys, or use a more efficient approach than clojure.walk;
+;; keywords do not provide little advantage over string keys, and require that we crawl and transform 1000s+ keys
 (reg-event-fx
   ::query-started
   (fn query [cofx _]
     (let [db (:db cofx)]
       (merge {:db  (waiting-for-server-response-state db)}
              (query-post-request db #(dispatch [::query-succeeded (:paintings (keywordize-keys %))]))))))
+             ; don't keywordize keys -- how much speed is gained?
+             ;(query-post-request db #(dispatch [::query-succeeded (:paintings %)]))))))
 
 (defn on-query-succeeded [db paintings]
  (-> db
@@ -98,33 +101,33 @@
 
 (reg-event-db
   ::update-selected-types
-  core-events/check-and-persist-interceptors
+  ;core-events/check-and-persist-interceptors
   (fn update-selected-types [db [_ selected-types]]
     (constraints-updated-since-search (assoc db :selected-genres selected-types))))
 
 
 (reg-event-db
   ::update-selected-schools
-  core-events/check-and-persist-interceptors
+  ;core-events/check-and-persist-interceptors
   (fn update-selected-schools [db [_ selected-schools]]
     (constraints-updated-since-search (assoc db :selected-schools selected-schools))))
 
 
 (reg-event-db
   ::update-selected-timeframes
-  core-events/check-and-persist-interceptors
+  ;core-events/check-and-persist-interceptors
   (fn update-selected-timeframes [db [_ selected-timeframes]]
     (constraints-updated-since-search (assoc db :selected-timeframes selected-timeframes))))
 
 
-(>defn update-selected-concepts [db selected-concept]
-  [::specs/app-db string? => ::specs/app-db]
+(defn update-selected-concepts [db selected-concept]
+  ;[::specs/app-db string? => ::specs/app-db]
   (update db :selected-concepts conj selected-concept))
 
 
 (reg-event-db
   ::update-selected-concepts
-  core-events/check-and-persist-interceptors
+  ;core-events/check-and-persist-interceptors
   (fn [db [_ selected-concept]]
     (constraints-updated-since-search (update-selected-concepts db selected-concept))))
 
@@ -134,13 +137,13 @@
 
 (reg-event-db
   ::remove-selected-concept
-  core-events/check-and-persist-interceptors
+  ;core-events/check-and-persist-interceptors
   (fn [db [_ selected-concept]]
     (constraints-updated-since-search (remove-selected-concept db selected-concept))))
 
 (reg-event-db
   ::toggle-concept-selection
-  core-events/check-and-persist-interceptors
+  ;core-events/check-and-persist-interceptors
   (fn toggle-concept-selection [db [_ concept]]
     (constraints-updated-since-search
       (let [currently-selected-concepts (db :selected-concepts)]
@@ -151,7 +154,7 @@
 
 (reg-event-db
   ::update-selected-artists
-  core-events/check-and-persist-interceptors
+  ;core-events/check-and-persist-interceptors
   (fn update-selected-artists [db [_ selected-artist]]
     (constraints-updated-since-search (update db :selected-artists conj selected-artist))))
 
@@ -161,14 +164,14 @@
 
 (reg-event-db
   ::remove-selected-artist
-  core-events/check-and-persist-interceptors
+  ;core-events/check-and-persist-interceptors
   (fn remove-selected-artist-handler [db [_ selected-artist]]
     (constraints-updated-since-search (remove-selected-artist db selected-artist))))
 
 
 (reg-event-db
   ::selections-cleared
-  core-events/check-and-persist-interceptors
+  ;core-events/check-and-persist-interceptors
   (fn selections-cleared [db _]
     (-> db
         (assoc :selected-genres #{})
@@ -179,8 +182,7 @@
         (constraints-updated-since-search))))
 
 
-(>defn active-accordion-constraint-updated [db new-active-accordion]
-  [::specs/app-db (s/nilable ::view-specs/accordion-constraints) => ::specs/app-db]
+(defn active-accordion-constraint-updated [db new-active-accordion]
   (assoc db :active-accordion-constraint new-active-accordion))
 
 (reg-event-db
@@ -200,7 +202,7 @@
 
 (reg-event-db
   ::hide-save-group-popover
-  core-events/check-and-persist-interceptors
+  ;core-events/check-and-persist-interceptors
   (fn hide-save-group-popover [db _]
     (toggle-save-group-popover-showing db false)))
 
@@ -222,12 +224,14 @@
 
 ;; Adds group to :saved-groups
 (>defn save-group [db group]
-  [::specs/app-db ::specs/group => ::specs/app-db]
+  ;[::specs/app-db ::specs/group => ::specs/app-db]
+  [any? ::specs/group => any?]
   (assoc-in db [:saved-groups (:group-name group)] group))
 
 ;; Make a group's constraints the top-level constraints,
 (>defn set-current-group [db group]
-  [::specs/app-db ::specs/group => ::specs/app-db]
+  [any? ::specs/group => any?]
+  ; [::specs/app-db ::specs/group => ::specs/app-db]
   (-> db
       (assoc :paintings (:paintings group))
       (assoc :selected-genres (:genre-constraints group))
@@ -239,7 +243,8 @@
 
 
 (>defn save-search-no-query-required [db new-group]
-  [::specs/app-db ::specs/group => ::specs/app-db]
+  ;[::specs/app-db ::specs/group => ::specs/app-db]
+  [any? ::specs/group => any?]
   (-> db
       (explore-ready-state)
       (save-group new-group)
@@ -256,8 +261,8 @@
         ;; the process is same as if hadn't had to make query.
         (save-search-no-query-required new-group))))
 
-(>defn start-save-search! [db new-group-name]
-  [::specs/app-db string? => map?]
+(defn start-save-search! [db new-group-name]
+  ;[::specs/app-db string? => map?]
   (let [;; Want selected constraints etc. from time of save-search query's start
         create-group (fn [paintings] {:group-name new-group-name
                                       :paintings paintings
@@ -283,8 +288,8 @@
 
 ;; Retrieve the group from saved-groups,
 ;; then set as current group.
-(>defn switch-group! [db group]
-  [::specs/app-db ::specs/group => ::specs/app-db]
+(defn switch-group! [db group]
+  ;[::specs/app-db ::specs/group => ::specs/app-db]
   (set-current-group db group))
 
 
@@ -300,8 +305,8 @@
         (switch-group! db group)))))
 
 
-(>defn remove-compare-group-name [db group-name]
-  [::specs/app-db string? => ::specs/app-db]
+(defn remove-compare-group-name [db group-name]
+  ;[::specs/app-db string? => ::specs/app-db]
   (assoc db :compared-group-names (remove #{group-name} (:compared-group-names db))))
 
 
@@ -310,8 +315,8 @@
 ;; Do not modify top-level paintings, constraints etc.
 ;; If user deleted the current-group,
 ;; then app will be in same state as if had made a search and not yet saved anything.
-(>defn remove-group! [db group-name]
-  [::specs/app-db string? => ::specs/app-db]
+(defn remove-group! [db group-name]
+  ;[::specs/app-db string? => ::specs/app-db]
   (let [updated-saved-groups (dissoc (:saved-groups db) group-name)
         maybe-remove-current-group-name (fn [db] (if (= group-name (:current-group-name db))
                                                    (assoc db :current-group-name nil)
@@ -335,7 +340,7 @@
 
 (reg-event-db
   ::done-button-clicked
-  core-events/check-and-persist-interceptors
+  ;core-events/check-and-persist-interceptors
   (fn done-button-clicked [db _]
     (-> db
         (assoc :examining? false)
@@ -344,7 +349,7 @@
 
 (reg-event-db
   ::painting-tile-clicked
-  core-events/check-and-persist-interceptors
+  ;core-events/check-and-persist-interceptors
   (fn painting-tile-clicked [db [_ painting]]
     (-> db
         (assoc :current-painting painting)
@@ -353,14 +358,14 @@
 
 (reg-event-db
   ::toggle-painting-modal
-  core-events/check-and-persist-interceptors
+  ;core-events/check-and-persist-interceptors
   (fn toggle-painting-modal [db _]
     (update db :show-painting-modal? not)))
 
 
 (reg-event-db
   ::toggle-image-zoomed
-  core-events/check-and-persist-interceptors
+  ;core-events/check-and-persist-interceptors
   (fn toggle-image-zoomed [db _]
     (update db :image-zoomed? not)))
 
@@ -395,7 +400,7 @@
 
 (reg-event-db
   ::go-to-next-painting
-  core-events/check-and-persist-interceptors
+  ;core-events/check-and-persist-interceptors
   (fn [db _] (next-painting db)))
 
 
