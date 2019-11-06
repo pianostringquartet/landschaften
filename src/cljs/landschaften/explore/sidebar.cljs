@@ -134,7 +134,7 @@
 
 (defn desktop-sidebar [paintings]
   (let [concepts-frequencies [:> semantic-ui/grid {:padded true}
-                              [utils/table-with-header "Frequency (%) of concepts in these paintings: " paintings]]
+                              [utils/table-with-header "Frequency (%) of concepts in these paintings: "]] ;paintings]]
         components (if (> (count paintings) 0)
                      (concat sidebar-components
                              (list concepts-frequencies))

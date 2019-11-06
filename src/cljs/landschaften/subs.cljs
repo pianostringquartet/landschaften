@@ -33,3 +33,13 @@
   (fn saved-groups [db _]
     {:post [(s/valid? map? %)]}
     (:saved-groups db)))
+
+
+(reg-sub
+  ::saved-groups-names
+  (fn saved-groups-names [db _]
+    (keys (:saved-groups db))))
+
+
+;; temporary: eventually each group / query-result
+;; will have its own server-side-calculated concept-frequency-data

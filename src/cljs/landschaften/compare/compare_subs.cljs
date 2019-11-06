@@ -4,7 +4,9 @@
             [landschaften.view-utils :as utils]
             [landschaften.specs :as specs]
             [landschaften.compare.variance :as stats]
-            [ghostwheel.core :refer [check >defn >defn- >fdef => | <- ?]]))
+            [ghostwheel.core :refer [check >defn >defn- >fdef => | <- ?]]
+            [landschaften.compare.chart :as chart]
+            [landschaften.db :as db]))
 
 
 ;; ------------------------------------------------------
@@ -83,7 +85,6 @@
     (when (<= 2 (count groups))
       (max-variance (:paintings (first groups)) (:paintings (second groups))))))
 
-
 (reg-sub
   ::show-n-chart-points
   (fn show-n-chart-points [db _]
@@ -96,3 +97,39 @@
   (fn concept-certainty-above [db _]
     {:post [(float? %)]}
     (:concept-certainty-above db)))
+
+
+;;; NEW SUBS:
+
+;; takes in variance, max-variance
+;; replaces the calcs done in the similarity-measurement component
+;; if variance etc. not used separately,
+;; then remove and just keep this
+;; HOLLOWED OUT IN PREP FOR SERVER SIDE CALCULATING
+(reg-sub
+  ::similarity
+  :<- [::variance]
+  :<- [::max-variance]
+  (fn similarity-measurement [[variance max-variance] _]
+    66.88
+    #_(do
+        (js/console.log "variance: " variance)
+        (js/console.log "max-variance: " max-variance)
+        (when-not (or (zero? variance) (zero? max-variance))
+          (let [as-percent (* 100 (/ variance max-variance))]
+            (- 100 as-percent))))))
+
+
+(reg-sub
+  ::radar-chart-data
+  :<- [::compared-groups]
+  (fn radar-chart-data [compared-groups _]
+    (when (and
+            (not (empty? compared-groups))
+            (<= 2 (count compared-groups)))
+      (chart/compared-groups->radar-chart-data!))
+    #_(chart/compared-groups->radar-chart-data!
+        (first compared-groups)
+        (second compared-groups)
+        db/SHOW-N-CHARTPOINTS
+        db/CONCEPT-CERTAINTY-ABOVE)))

@@ -33,7 +33,7 @@
        (reverse)
        (take n-many)))
 
-
+;; returns vector, where first elem is string ?
 (defn count->percent [[concept-name concept-count] total]
   {:post [vector? (string? (first %))]}
   [concept-name (->> (/ concept-count total)
@@ -92,15 +92,22 @@
       ^{:key (first datum)} (sem-table-row (first datum) (second datum)))]])
 
 
-(defn concept-frequency-table [paintings n-many certainty-above]
-  [sem-table (paintings->frequency-percent-data paintings n-many certainty-above)])
+;; this calculation will now be done on the server side,
+;; and attached to each group / query-set
+;; ... but don't change this until you have the :frequencies feature,
+;; and have replaced ::paintings with ::painting_ids
+;(defn concept-frequency-table [paintings n-many certainty-above]
+;  [sem-table (paintings->frequency-percent-data paintings n-many certainty-above)])
 
+;; LATER REPLACE WITH (sem-table (:concept-frequencies result-set))
+(defn concept-frequency-table [];paintings n-many certainty-above]
+  [sem-table [["love" 95.123] ["joy" 86.456] ["pain" 45.789]]])
 
-(>defn table-with-header [header paintings]
-  [string? ::specs/paintings => vector?]
+(>defn table-with-header [header] ;paintings]
+  [string? => vector?]
   [:> semantic-ui/slist-item
    {:header  header
     :content {:content (r/as-component ^{:key header}
-                                       [concept-frequency-table paintings db/SHOW-N-CHARTPOINTS db/CONCEPT-CERTAINTY-ABOVE])}}])
+                                       [concept-frequency-table])}}]) ;paintings db/SHOW-N-CHARTPOINTS db/CONCEPT-CERTAINTY-ABOVE])}}])
 
 ;(check)
