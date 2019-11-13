@@ -110,6 +110,24 @@
         []))))
 
 (reg-sub
+  ::painting-ids
+  (fn paintings [db _]
+    (let [current-painting-ids (:painting-ids db)]
+      (if current-painting-ids
+        current-painting-ids
+        []))))
+
+(>defn concept-frequencies-sub-handler [db]
+  [any? => ::specs/concept-frequencies]
+  (:concept-frequencies db))
+
+;; what does this RETURN? CF is a vector of whose members are vectors like [name, frequency]
+(reg-sub
+  ::concept-frequencies
+  (fn concept-frequencies [db _]
+   (concept-frequencies-sub-handler db)))
+
+(reg-sub
   ::query-loading?
   (fn query-loading? [db _]
     (:query-loading? db)))

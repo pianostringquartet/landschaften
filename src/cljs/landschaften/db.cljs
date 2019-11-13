@@ -14,6 +14,8 @@
 ;; TICKET: https://trello.com/c/L6WNYBxd
 (def SHOW-N-CHARTPOINTS 15)
 
+(def DISPLAY-MAX-N-PAINTINGS 50)
+
 (def CONCEPT-CERTAINTY-ABOVE 0.85)
 
 (def excluded-timeframes
@@ -35,6 +37,10 @@
    ;; EXAMINE
    :current-painting                  nil
    :paintings                         #{}
+
+   :painting-ids                      #{}
+   :concept-frequencies               []
+
    ::search-result-paintings          #{}
    :show-painting-modal?              false
    :image-zoomed?                     false
@@ -46,7 +52,7 @@
    :all-timeframes                    (apply disj specs/TIMEFRAMES excluded-timeframes)
    :all-concepts                      #{}                   ; retrieved from backend during initialization
    :all-artists                       #{}                   ; retrieved from backend during initialization
-   :selected-genres                    #{}
+   :selected-genres                   #{}
    :selected-schools                  #{}
    :selected-timeframes               #{}
    :selected-concepts                 #{}
@@ -67,13 +73,15 @@
 ;; A db for demos.
 (def demo-db
   (-> fresh-db
-      (assoc :paintings                         manet/manet-sample-paintings)
-      (assoc :selected-genres                    manet/manet-type-constraints)
-      (assoc :selected-schools                  manet/manet-school-constraints)
-      (assoc :selected-timeframes               manet/manet-timeframe-constraints)
-      (assoc :selected-concepts                 manet/manet-concept-constraints)
-      (assoc :selected-artists                  manet/manet-artist-constraints)
-      (assoc :current-group-name                manet/manet-people-group-name)
-      (assoc :saved-groups                      {manet-people-group-name   manet/manet-example-group
-                                                 cezanne-people-group-name cezanne/cezanne-example-group})
-      (assoc :compared-group-names              [manet-people-group-name cezanne-people-group-name])))
+      (assoc :paintings manet/manet-sample-paintings)
+      (assoc :painting-ids manet/manet-sample-painting-ids)
+      (assoc :concept-frequencies manet/manet-sample-concept-frequencies)
+      (assoc :selected-genres manet/manet-type-constraints)
+      (assoc :selected-schools manet/manet-school-constraints)
+      (assoc :selected-timeframes manet/manet-timeframe-constraints)
+      (assoc :selected-concepts manet/manet-concept-constraints)
+      (assoc :selected-artists manet/manet-artist-constraints)
+      (assoc :current-group-name manet/manet-people-group-name)
+      (assoc :saved-groups {manet-people-group-name   manet/manet-example-group
+                            cezanne-people-group-name cezanne/cezanne-example-group})
+      (assoc :compared-group-names [manet-people-group-name cezanne-people-group-name])))

@@ -13,40 +13,48 @@
 ;; Getting frequencies of concepts
 ;; ------------------------------------------------------
 
-(>defn frequencies-of-concepts-with-certainty-above [paintings certainty-above]
-  [::specs/paintings float? => map?]
-  (let [high-certainty-concepts (fn [{:keys [concepts]}]
-                                  (filter #(> (:value %) certainty-above) concepts))]
-    (->> paintings
-         (mapcat high-certainty-concepts)
-         (map :name)
-         (frequencies))))
+#_(>defn frequencies-of-concepts-with-certainty-above [paintings certainty-above]
+    [::specs/paintings float? => map?]
+    (let [high-certainty-concepts (fn [{:keys [concepts]}]
+                                    (filter #(> (:value %) certainty-above) concepts))]
+      (->> paintings
+           (mapcat high-certainty-concepts)
+           (map :name)
+           (frequencies))))
 
 
-(>defn paintings->concepts-frequencies
-  "Return the n-many concepts' frequencies,
+#_(>defn paintings->concepts-frequencies
+    "Return the n-many concepts' frequencies,
   where each concept's certainty is above certainty-above."
-  [paintings n-many certainty-above]
-  [::specs/paintings int? float? => (s/coll-of vector?)]
-  (->> (frequencies-of-concepts-with-certainty-above paintings certainty-above)
-       (sort-by second)
-       (reverse)
-       (take n-many)))
+    [paintings n-many certainty-above]
+    [::specs/paintings int? float? => (s/coll-of vector?)]
+    (->> (frequencies-of-concepts-with-certainty-above paintings certainty-above)
+         (sort-by second)
+         (reverse)
+         (take n-many)))
 
 ;; returns vector, where first elem is string ?
-(defn count->percent [[concept-name concept-count] total]
+#_(defn count->percent [[concept-name concept-count] total]
+    {:post [vector? (string? (first %))]}
+    [concept-name (->> (/ concept-count total)
+                       (double)
+                       (* 100)
+                       (goog.string/format "%.1f")
+                       (js/parseFloat))])
+
+(defn count->percent [[concept-name concept-count]]
   {:post [vector? (string? (first %))]}
-  [concept-name (->> (/ concept-count total)
-                     (double)
-                     (* 100)
+  [concept-name (->> concept-count
+                     ;(double)
+                     ;(* 100)
                      (goog.string/format "%.1f")
                      (js/parseFloat))])
 
 
-(>defn paintings->frequency-percent-data [paintings n-many certainty-above]
-  [::specs/paintings int? float? => (s/coll-of vector?)]
-  (->> (paintings->concepts-frequencies paintings n-many certainty-above)
-       (mapv #(count->percent % (count paintings)))))
+#_(>defn paintings->frequency-percent-data [paintings n-many certainty-above]
+    [::specs/paintings int? float? => (s/coll-of vector?)]
+    (->> (paintings->concepts-frequencies paintings n-many certainty-above)
+         (mapv #(count->percent % (count paintings)))))
 
 
 ;; ------------------------------------------------------
@@ -99,15 +107,15 @@
 ;(defn concept-frequency-table [paintings n-many certainty-above]
 ;  [sem-table (paintings->frequency-percent-data paintings n-many certainty-above)])
 
-;; LATER REPLACE WITH (sem-table (:concept-frequencies result-set))
-(defn concept-frequency-table [];paintings n-many certainty-above]
-  [sem-table [["love" 95.123] ["joy" 86.456] ["pain" 45.789]]])
+(>defn concept-frequency-table [concept-frequencies]
+  [::specs/concept-frequencies => vector?]
+  [sem-table (take db/SHOW-N-CHARTPOINTS concept-frequencies)])
 
-(>defn table-with-header [header] ;paintings]
-  [string? => vector?]
+(>defn table-with-header [header concept-frequencies]
+  [string? ::specs/concept-frequencies => vector?]
   [:> semantic-ui/slist-item
    {:header  header
     :content {:content (r/as-component ^{:key header}
-                                       [concept-frequency-table])}}]) ;paintings db/SHOW-N-CHARTPOINTS db/CONCEPT-CERTAINTY-ABOVE])}}])
+                                       [concept-frequency-table concept-frequencies])}}]) ;paintings db/SHOW-N-CHARTPOINTS db/CONCEPT-CERTAINTY-ABOVE])}}])
 
 ;(check)

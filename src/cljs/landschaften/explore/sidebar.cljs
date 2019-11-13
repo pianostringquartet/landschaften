@@ -8,6 +8,7 @@
             [landschaften.explore.constraints :as constraints]
             [landschaften.view-utils :as utils]
             [landschaften.semantic-ui :as semantic-ui]
+            [landschaften.specs :as specs]
             [ghostwheel.core :refer [check >defn >defn- >fdef => | <- ?]]))
 
 
@@ -132,9 +133,10 @@
         [saved-groups-buttons]))
 
 
-(defn desktop-sidebar [paintings]
+(>defn desktop-sidebar [paintings concept-frequencies]
+  [::specs/paintings ::specs/concept-frequencies => vector?]
   (let [concepts-frequencies [:> semantic-ui/grid {:padded true}
-                              [utils/table-with-header "Frequency (%) of concepts in these paintings: "]] ;paintings]]
+                              [utils/table-with-header "Frequency (%) of concepts in these paintings: " concept-frequencies]] ;paintings]]
         components (if (> (count paintings) 0)
                      (concat sidebar-components
                              (list concepts-frequencies))

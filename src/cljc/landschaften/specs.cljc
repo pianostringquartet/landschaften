@@ -58,25 +58,31 @@
 (s/def ::concept (s/keys :req-un [::name ::value]))
 (s/def ::concepts (s/coll-of ::concept))
 
-(s/def ::painting (s/keys :req-un [
-                                   ;::date
-                                   ::school
+(s/def ::painting (s/keys :req-un [::school
                                    ::genre
                                    ::title
-                                   ;::form
                                    ::author
                                    ::timeframe
                                    ::jpg
                                    ::concepts]))
 
+(s/def ::painting-ids (s/coll-of int?))
 
 ;; -------------------------
 ;; GROUP SPEC
 ;; -------------------------
 
-
 (s/def ::group-name string?)
-(s/def ::paintings (s/nilable (s/coll-of ::painting))) ;; a group can have no paintings
+
+;; look up the clojure spec regex logic for describing a collection
+;(s/def ::concept-frequency (s/coll-of ))
+
+(s/def ::concept-frequencies (s/coll-of vector?))
+
+;; FIX: a group should ALWAYS have a set of painting-ids;
+;; but that set can EMPTY
+(s/def ::paintings (s/nilable (s/coll-of ::painting)))
+;; ^^^ group will now contain ::painting-ids instead of ::paintings
 
 (s/def ::genre-constraints (s/coll-of ::genre))
 (s/def ::school-constraints (s/coll-of ::school))
@@ -86,6 +92,8 @@
 
 (s/def ::group (s/keys :req-un [::group-name
                                 ::paintings
+                                ::painting-ids
+                                ::concept-frequencies
                                 ::genre-constraints
                                 ::school-constraints
                                 ::timeframe-constraints
@@ -125,6 +133,13 @@
 (s/def ::app-db
   (s/keys :req-un [::current-painting
                    ::examining?
+
+                   ;; must app-db ALWAYS have concept-frequencies key,
+                   ;; and can that concept-frequencies key sometimes be null?
+                   ;::concept-frequencies
+                   ;::painting-ids
+                   ;::paintings
+
                    ::show-painting-modal?
                    ::image-zoomed?
                    ::query-loading?
@@ -137,3 +152,14 @@
                    ::show-group-name-prompt?
                    ::saved-groups
                    ::compared-group-names]))
+
+
+;; -------------------------
+;; API SPECS
+;; -------------------------
+
+(s/def ::paintingIds (s/coll-of int?))
+
+(s/def ::paintings-response (s/keys :req-un [::paintings
+                                             ::paintingIds
+                                             ::conceptFrequencies]))

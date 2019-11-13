@@ -12,6 +12,8 @@
 
 (def QUERY-ENDPOINT (str service-url "/query"))
 
+
+
 ;; ------------------------------------------------------
 ;; High level 'app states'
 ;; ------------------------------------------------------
@@ -34,7 +36,7 @@
 (defn query-succeeded-state [db]
   (-> db
       (assoc :constraints-updated-since-search? false)
-      (assoc :current-group-name nil) ; i.e. we're no longer looking at any group specifically
+      (assoc :current-group-name nil)                       ; i.e. we're no longer looking at any group specifically
       (explore-ready-state)))
 
 ;; We are currently waiting for server's response
@@ -44,7 +46,6 @@
       (assoc :query-loading? true)
       (assoc :examining? false)
       (assoc :show-group-name-prompt? false)))
-
 
 
 ;; ------------------------------------------------------
@@ -64,9 +65,20 @@
 
 
 (defn query-post-request [db handler-fn]
-  {:post-request {:uri QUERY-ENDPOINT
+  {:post-request {:uri     QUERY-ENDPOINT
                   :params  (js/JSON.stringify (clj->js {:constraints (->query-constraints db)}))
                   :handler handler-fn}})
+
+(>defn on-query-request-succeeded! [response-map]
+  [::specs/paintings-response => nil?]
+  (let [paintings           (:paintings response-map)
+        painting-ids        (:paintingIds response-map)     ;; haskell string
+        concept-frequencies (:conceptFrequencies response-map)]
+                            ;[["fake" 90.99 "real" 77.77 "hello" 88.8]]]
+    (do
+      (js/console.log "on-query-request-succeeded: response-map: " response-map)
+      (js/console.log "on-query-request-succeeded: response-map: " (str (:conceptFrequencies response-map)))
+      (dispatch [::query-succeeded paintings painting-ids concept-frequencies]))))
 
 ;; better?: don't keywordize keys, or use a more efficient approach than clojure.walk;
 ;; keywords do not provide little advantage over string keys, and require that we crawl and transform 1000s+ keys
@@ -74,21 +86,24 @@
   ::query-started
   (fn query [cofx _]
     (let [db (:db cofx)]
-      (merge {:db  (waiting-for-server-response-state db)}
-             (query-post-request db #(dispatch [::query-succeeded (:paintings (keywordize-keys %))]))))))
-             ; don't keywordize keys -- how much speed is gained?
-             ;(query-post-request db #(dispatch [::query-succeeded (:paintings %)]))))))
+      (merge {:db (waiting-for-server-response-state db)}
+             (query-post-request db #(on-query-request-succeeded! (keywordize-keys %)))))))
+; don't keywordize keys -- how much speed is gained?
+;(query-post-request db #(dispatch [::query-succeeded (:paintings %)]))))))
 
-(defn on-query-succeeded [db paintings]
- (-> db
-     (assoc :paintings paintings)
-     (query-succeeded-state)))
+(>defn on-query-succeeded [db paintings painting-ids concept-frequencies]
+  [any? any? (s/coll-of int?) vector? => any?]
+  (-> db
+      (assoc :paintings paintings)
+      (assoc :painting-ids painting-ids)
+      (assoc :concept-frequencies concept-frequencies)
+      (query-succeeded-state)))
 
 (reg-event-db
   ::query-succeeded
   core-events/check-and-persist-interceptors
-  (fn query-succeeded [db [_ paintings]]
-    (on-query-succeeded db paintings)))
+  (fn query-succeeded [db [_ paintings painting-ids concept-frequencies]]
+    (on-query-succeeded db paintings painting-ids concept-frequencies)))
 
 
 ;; ------------------------------------------------------
@@ -234,6 +249,8 @@
   ; [::specs/app-db ::specs/group => ::specs/app-db]
   (-> db
       (assoc :paintings (:paintings group))
+      (assoc :concept-frequencies (:concept-frequencies group))
+      (assoc :painting-ids (:painting-ids group))
       (assoc :selected-genres (:genre-constraints group))
       (assoc :selected-schools (:school-constraints group))
       (assoc :selected-timeframes (:timeframe-constraints group))
@@ -242,13 +259,15 @@
       (assoc :current-group-name (:group-name group))))
 
 
-(>defn save-search-no-query-required [db new-group]
+(>defn save-search-no-query-required! [db new-group]
   ;[::specs/app-db ::specs/group => ::specs/app-db]
   [any? ::specs/group => any?]
-  (-> db
-      (explore-ready-state)
-      (save-group new-group)
-      (set-current-group new-group)))
+  (do
+    (js/console.log "save-search-no-query-required! called")
+    (-> db
+        (explore-ready-state)
+        (save-group new-group)
+        (set-current-group new-group))))
 
 
 (reg-event-db
@@ -259,31 +278,49 @@
         (query-succeeded-state)
         ;; Once we've retrieved paintings from backend for new group,
         ;; the process is same as if hadn't had to make query.
-        (save-search-no-query-required new-group))))
+        (save-search-no-query-required! new-group))))
+
+(>defn create-group [db new-group-name paintings painting-ids concept-frequencies]
+  [any? string? ::specs/paintings (s/coll-of int?) vector? => ::specs/group]
+  {:group-name            new-group-name
+   :paintings             paintings
+   :painting-ids          painting-ids
+   :concept-frequencies   concept-frequencies
+   :genre-constraints     (:selected-genres db)
+   :school-constraints    (:selected-schools db)
+   :timeframe-constraints (:selected-timeframes db)
+   :concept-constraints   (:selected-concepts db)
+   :artist-constraints    (:selected-artists db)})
+
+
+(>defn on-save-search-query-succeeded! [db new-group-name response-map]
+  [any? string? ::specs/paintings-response => nil?]
+  (do
+    (js/console.log "on-save-search-query-succeeded: response-map: " response-map)
+    (js/console.log "on-save-search-query-succeeded: response-map: " (str (:conceptFrequencies response-map)))
+    (dispatch [::save-search-query-succeeded (create-group db
+                                                           new-group-name
+                                                           (:paintings response-map)
+                                                           (:paintingIds response-map)
+                                                           (:conceptFrequencies response-map))])))
 
 (defn start-save-search! [db new-group-name]
-  ;[::specs/app-db string? => map?]
-  (let [;; Want selected constraints etc. from time of save-search query's start
-        create-group (fn [paintings] {:group-name new-group-name
-                                      :paintings paintings
-                                      :genre-constraints (:selected-genres db)
-                                      :school-constraints (:selected-schools db)
-                                      :timeframe-constraints (:selected-timeframes db)
-                                      :concept-constraints (:selected-concepts db)
-                                      :artist-constraints (:selected-artists db)})]
-    (if (:constraints-updated-since-search? db)
-      (merge {:db (waiting-for-server-response-state db)}
-             (query-post-request db #(dispatch [::save-search-query-succeeded (create-group (:paintings %))])))
-      ;; If don't need to search, then just immediately save group etc.
-      ;; :loading?, :constraints-updated-since-search? etc. should all already be false.
-      {:db (save-search-no-query-required (explore-ready-state db)
-                                          (create-group (:paintings db)))})))
+  (if (:constraints-updated-since-search? db)
+    (merge {:db (waiting-for-server-response-state db)}
+           (query-post-request db #(on-save-search-query-succeeded! db new-group-name (keywordize-keys %))))
+    ;; If don't need to search, then just immediately save group etc.
+    ;; :loading?, :constraints-updated-since-search? etc. should all already be false.
+    {:db (save-search-no-query-required! (explore-ready-state db)
+                                         (create-group db new-group-name
+                                                       (:paintings db)
+                                                       (:painting-ids db)
+                                                       (:concept-frequencies db)))}))
 
 
 (reg-event-fx
   ::save-search
   (fn start-save-search-handler [cofx [_ new-group-name]]
-   (start-save-search! (:db cofx) new-group-name)))
+    (start-save-search! (:db cofx) new-group-name)))
 
 
 ;; Retrieve the group from saved-groups,
@@ -317,7 +354,7 @@
 ;; then app will be in same state as if had made a search and not yet saved anything.
 (defn remove-group! [db group-name]
   ;[::specs/app-db string? => ::specs/app-db]
-  (let [updated-saved-groups (dissoc (:saved-groups db) group-name)
+  (let [updated-saved-groups            (dissoc (:saved-groups db) group-name)
         maybe-remove-current-group-name (fn [db] (if (= group-name (:current-group-name db))
                                                    (assoc db :current-group-name nil)
                                                    db))]

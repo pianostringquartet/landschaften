@@ -3,6 +3,7 @@
             [re-frame.core :refer [subscribe dispatch]]
             [re-com.core :as rc]
             [landschaften.subs :as subs]
+            [landschaften.specs :as specs]
             [landschaften.compare.compare-subs :as compare-subs]
             [landschaften.compare.compare-events :as compare-events]
             [landschaften.compare.chart :as chart]
@@ -10,6 +11,7 @@
             [landschaften.semantic-ui :as semantic-ui]
             [ghostwheel.core :refer [check >defn >defn- >fdef => | <- ?]]
             [cljs.spec.alpha :as s]))
+
 
 ;; ------------------------------------------------------
 ;; Comparing groups' (dis)similarity
@@ -54,7 +56,8 @@
 ;; for building the
 ;; just need names of groups to compare
 ;; don't need saved-groups, just saved-group-NAMES
-(defn compare-group-buttons [saved-groups-names compared-group-names]
+(>defn compare-group-buttons! [saved-groups-names compared-group-names]
+  [(s/coll-of string?) (s/coll-of string?) => vector?]
   (when-not (empty? saved-groups-names)
     [utils/bubble-table
      (map #(compare-group-button! % (into #{} compared-group-names))
@@ -86,83 +89,77 @@
   [(s/coll-of string?) (s/coll-of string?) => vector?]
   [:> semantic-ui/slist
    [:> semantic-ui/slist-item
-    [compare-group-buttons saved-groups-names compared-groups-names]]
+    [compare-group-buttons! saved-groups-names compared-groups-names]]
    [:> semantic-ui/slist-item [clear-button!]]])
 
 
 (>defn compare-sidebar [similarity saved-groups-names compared-groups-names]
-  [float? (s/coll-of string?) (s/coll-of string?) => vector?]
+  [(s/nilable float?) (s/coll-of string?) (s/coll-of string?) => vector?]
   [:> semantic-ui/slist
    [:> semantic-ui/slist-item [compare-screen-buttons saved-groups-names compared-groups-names]]
    [:> semantic-ui/slist-item (when similarity [labeled-variance similarity])]])
 
-
-(defn radar-chart []
+(defn radar-chart [compared-groups]
   [:> semantic-ui/slist-item
    ;; Workaround: force Chart.js to re-render, don't use React lifecycle methods
-   ^{:key (rand-int 999)}
-   (let [radar-chart-data (subscribe [::compare-subs/radar-chart-data])]
-     (when @radar-chart-data
-       [chart/radar-chart @radar-chart-data]))])
+   (when (<= 2 (count compared-groups))
+     ^{:key (rand-int 999)}
+     [chart/radar-chart
+        (chart/compared-groups->radar-chart-data (first compared-groups) (second compared-groups))])])
 
-;; instead of taking groups,
-;; should just take compared-
-;;
-(>defn accordion-frequency-tables [group-names]
-  [(s/coll-of string?) => vector?]
+(>defn accordion-frequency-tables [groups]
+  [(s/coll-of ::specs/group) => vector?]
   (let [->accordion-panel
-        (fn [group-name]
-          {:key     group-name
-           :title   {:content group-name}
+        (fn [group]
+          {:key     (:group-name group)
+           :title   {:content (:group-name group)}
            ;; need to feed this just (:frequencies result-set)
-           :content {:content (r/as-component [utils/concept-frequency-table])}})] ;(:paintings group)])}})]
+           :content {:content (r/as-component [utils/concept-frequency-table (:concept-frequencies group)])}})] ;(:paintings group)])}})]
     [:> semantic-ui/accordion
-     {:panels (mapv ->accordion-panel group-names)}]))
+     {:panels (mapv ->accordion-panel groups)}]))
 
 
-(defn mobile-compare-screen [similarity saved-groups compared-group-names]
+(>defn mobile-compare-screen [similarity saved-group-names compared-group-names compared-groups]
+  [(s/nilable float?) (s/coll-of string?) (s/coll-of string?) (s/coll-of ::specs/group) => vector?]
   [:> semantic-ui/slist
    [:> semantic-ui/slist-item [clear-button!]]
-   [:> semantic-ui/slist-item [compare-group-buttons (keys saved-groups) compared-group-names]]
-   [:> semantic-ui/slist-item (when similarity [radar-chart])]
+   [:> semantic-ui/slist-item [compare-group-buttons! saved-group-names compared-group-names]]
+   [:> semantic-ui/slist-item (when similarity [radar-chart compared-groups])]
    [:> semantic-ui/slist-item (when similarity [labeled-variance similarity])]
    [:> semantic-ui/slist-item
     (if (empty? compared-group-names)
       [rc/label :label "Select some saved searches to start comparing."]
-      [accordion-frequency-tables compared-group-names])]])
+      [accordion-frequency-tables compared-groups])]])
 
 
-(>defn desktop-compare-screen [similarity saved-groups-names compared-groups-names]
-  [float? (s/coll-of string?) (s/coll-of string?) => vector?]
+(>defn desktop-compare-screen [similarity saved-groups-names compared-groups-names compared-groups]
+  [(s/nilable float?) (s/coll-of string?) (s/coll-of string?) (s/coll-of ::specs/group) => vector?]
   [:> semantic-ui/grid {:columns 2 :centered true}
    [:> semantic-ui/grid-column {:width 10}
-    (when similarity [radar-chart])
-    ;; (empty? compared-groups) IS ACTUALLY A CHECK LIKE "CAN COMPARE?"
-    (when (empty? compared-groups-names)
+    (when similarity [radar-chart compared-groups])
+    (when (empty? compared-groups)
       [:> semantic-ui/grid {:centered true :padded true :relaxed true :columns 1}
        [:> semantic-ui/grid-column
         [rc/label :label "Select some saved searches to start comparing."]]])]
    [:> semantic-ui/grid-column {:width 6}
-     [compare-sidebar similarity
-                      saved-groups-names
-                      compared-groups-names] ;(map :group-name compared-groups)]
-     [:> semantic-ui/slist {:horizontal true :relaxed true :padded true}
-      (for [group-name compared-groups-names]
-        [utils/table-with-header group-name])]]])
+    [compare-sidebar similarity saved-groups-names compared-groups-names]
+    [:> semantic-ui/slist {:horizontal true :relaxed true :padded true}
+     (for [group compared-groups]
+       ^{:key (:group-name group)}                          ; needed
+       [utils/table-with-header (:group-name group) (:concept-frequencies group)])]]])
 
-
-;; Later you WILL need the actual groups, not just the names
 (defn compare-screen []
-  (let [similarity (subscribe [::compare-subs/similarity])
-        ;compared-groups (subscribe [::compare-subs/compared-groups])
+  (let [similarity           (subscribe [::compare-subs/similarity])
         compared-group-names (subscribe [::compare-subs/compared-group-names])
-        saved-group-names (subscribe [::subs/saved-groups-names])]
-        ;saved-groups    (subscribe [::subs/saved-groups])]
+        compared-groups      (subscribe [::compare-subs/compared-groups])
+        saved-group-names    (subscribe [::subs/saved-groups-names])]
     [:> semantic-ui/slist
      [:> semantic-ui/responsive {:max-width 799}
-      [mobile-compare-screen @similarity @saved-group-names @compared-group-names]]
+      [mobile-compare-screen @similarity @saved-group-names @compared-group-names @compared-groups]]
      [:> semantic-ui/responsive {:min-width 800}
       [desktop-compare-screen @similarity
-                              @saved-group-names @compared-group-names]]]))
+       @saved-group-names
+       @compared-group-names
+       @compared-groups]]]))
 
 ;(check)

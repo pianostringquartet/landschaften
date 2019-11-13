@@ -3,10 +3,12 @@
             [re-com.core :as rc]
             [landschaften.explore.explore-subs :as explore-subs]
             [landschaften.events :as core-events]
+            [landschaften.specs :as specs]
             [landschaften.explore.paintings :as paintings]
             [landschaften.explore.sidebar :as sidebar]
-            [landschaften.semantic-ui :as semantic-ui]))
-
+            [landschaften.semantic-ui :as semantic-ui]
+            [ghostwheel.core :refer [check >defn >defn- >fdef => | <- ?]]
+            [cljs.spec.alpha :as s]))
 
 ;; ------------------------------------------------------
 ;; Explore paintings
@@ -19,12 +21,13 @@
    :level :level3])
 
 
-(defn explore
+(>defn explore
   "Find paintings satisfying constraints"
-  [current-painting paintings show-max? n-columns]
+  [current-painting paintings paintings-count show-max? n-columns]
+  [(s/nilable ::specs/painting) ::specs/paintings int? boolean? int? => vector?]
   (if (empty? paintings)
     [no-paintings-found]
-    [paintings/paintings-grid current-painting paintings show-max? n-columns]))
+    [paintings/paintings-grid current-painting paintings paintings-count show-max? n-columns]))
 
 
 (defn loading-modal [loading?]
@@ -32,7 +35,9 @@
    [:> semantic-ui/loader {:size "big"} "Loading..."]])
 
 
-(defn search-or-results-button [search?]
+;(>defn search-or-results-button [search?]
+(>defn search-or-results-button! [search?]
+  [boolean? => vector?]
   (let [toggle #(dispatch [::core-events/toggle-mobile-search])]
     [:> semantic-ui/button-group
      [:> semantic-ui/button {:compact true :positive search? :on-click toggle}
@@ -42,31 +47,39 @@
       "paintings"]]))
 
 
-(defn mobile-explore-panel [current-painting paintings show-slideshow? search?]
+(defn mobile-explore-panel [current-painting paintings paintings-count show-slideshow? search?]
   [:> semantic-ui/grid {:columns 1 :centered true :padded true}
    [:> semantic-ui/slist {:relaxed true}
     [:> semantic-ui/slist-item
-     [search-or-results-button search?]]
+     [search-or-results-button! search?]]
     (if search?
       [:> semantic-ui/slist-item [sidebar/mobile-sidebar]]
-      [:> semantic-ui/slist-item [explore current-painting paintings show-slideshow? 2]])]])
+      [:> semantic-ui/slist-item [explore current-painting paintings paintings-count show-slideshow? 2]])]])
 
 
-(defn desktop-explore-panel [current-painting paintings show-slideshow?]
+(>defn desktop-explore-panel [current-painting paintings paintings-count show-slideshow? concept-frequencies]
+  [(s/nilable ::specs/current-painting) ::specs/paintings int? boolean? ::specs/concept-frequencies => vector?]
   [:> semantic-ui/grid {:columns 2}
-   [:> semantic-ui/grid-column [explore current-painting paintings show-slideshow? 3]]
-   [:> semantic-ui/grid-column [sidebar/desktop-sidebar paintings]]])
+   [:> semantic-ui/grid-column [explore current-painting paintings paintings-count show-slideshow? 3]]
+   ;; sidebar only needs concept-frequencies
+   [:> semantic-ui/grid-column [sidebar/desktop-sidebar paintings concept-frequencies]]])
 
 
 (defn explore-panel []
   (let [paintings            (subscribe [::explore-subs/paintings])
         current-painting     (subscribe [::explore-subs/current-painting])
+        concept-frequencies  (subscribe [::explore-subs/concept-frequencies])
+        painting-ids         (subscribe [::explore-subs/painting-ids])
         show-painting-modal? (subscribe [::explore-subs/show-painting-modal?])
         loading?             (subscribe [::explore-subs/query-loading?])
         mobile-search?       (subscribe [::explore-subs/mobile-search?])]
     [:> semantic-ui/slist
      [loading-modal @loading?]
      [:> semantic-ui/responsive {:max-width 799}
-      [mobile-explore-panel @current-painting @paintings @show-painting-modal? @mobile-search?]]
+      [mobile-explore-panel @current-painting @paintings (count @painting-ids) @show-painting-modal? @mobile-search?]]
      [:> semantic-ui/responsive {:min-width 800}
-      [desktop-explore-panel @current-painting @paintings @show-painting-modal?]]]))
+      [desktop-explore-panel @current-painting
+                             @paintings
+                             (count @painting-ids)
+                             @show-painting-modal?
+                             @concept-frequencies]]]))
