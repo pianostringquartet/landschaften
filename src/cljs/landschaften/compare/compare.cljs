@@ -29,7 +29,7 @@
    "CLEAR"])
 
 
-;; give heavier alpha ('a'), i.e. less transparent
+;; heavier alpha ('a'), i.e. less transparent
 (def color-1 "rgba(255, 99, 132, 0.7)")
 (def color-2 "rgba(54, 162, 235, 0.7)")
 
@@ -53,9 +53,6 @@
      group-name]))
 
 
-;; for building the
-;; just need names of groups to compare
-;; don't need saved-groups, just saved-group-NAMES
 (>defn compare-group-buttons! [saved-groups-names compared-group-names]
   [(s/coll-of string?) (s/coll-of string?) => vector?]
   (when-not (empty? saved-groups-names)
@@ -64,8 +61,6 @@
           saved-groups-names)
      3]))
 
-;; CALCULATIONS SHOULD BE DONE IN CALC-SUB,
-;; AND POSSIBLY EVEN ON SERVER
 (>defn similarity-measurement
   "Progress bar displaying error-rate between two datasets as a percentage."
   [similarity]
@@ -99,6 +94,7 @@
    [:> semantic-ui/slist-item [compare-screen-buttons saved-groups-names compared-groups-names]]
    [:> semantic-ui/slist-item (when similarity [labeled-variance similarity])]])
 
+
 (defn radar-chart [compared-groups]
   [:> semantic-ui/slist-item
    ;; Workaround: force Chart.js to re-render, don't use React lifecycle methods
@@ -106,6 +102,7 @@
      ^{:key (rand-int 999)}
      [chart/radar-chart
         (chart/compared-groups->radar-chart-data (first compared-groups) (second compared-groups))])])
+
 
 (>defn accordion-frequency-tables [groups]
   [(s/coll-of ::specs/group) => vector?]
@@ -147,6 +144,7 @@
      (for [group compared-groups]
        ^{:key (:group-name group)}                          ; needed
        [utils/table-with-header (:group-name group) (:concept-frequencies group)])]]])
+
 
 (defn compare-screen []
   (let [similarity           (subscribe [::compare-subs/similarity])

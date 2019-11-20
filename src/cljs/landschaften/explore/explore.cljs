@@ -35,7 +35,6 @@
    [:> semantic-ui/loader {:size "big"} "Loading..."]])
 
 
-;(>defn search-or-results-button [search?]
 (>defn search-or-results-button! [search?]
   [boolean? => vector?]
   (let [toggle #(dispatch [::core-events/toggle-mobile-search])]
@@ -57,6 +56,13 @@
       [:> semantic-ui/slist-item [explore current-painting paintings paintings-count show-slideshow? 2]])]])
 
 
+;(>defn desktop-explore-panel [current-painting paintings paintings-count show-slideshow? concept-frequencies]
+;  [(s/nilable ::specs/current-painting) ::specs/paintings int? boolean? ::specs/concept-frequencies => vector?]
+;  [:> semantic-ui/grid {:columns 2}
+;   [:> semantic-ui/grid-column [explore current-painting paintings paintings-count show-slideshow? 3]]
+;   ;; sidebar only needs concept-frequencies
+;   [:> semantic-ui/grid-column [sidebar/desktop-sidebar paintings concept-frequencies]]])
+
 (>defn desktop-explore-panel [current-painting paintings paintings-count show-slideshow? concept-frequencies]
   [(s/nilable ::specs/current-painting) ::specs/paintings int? boolean? ::specs/concept-frequencies => vector?]
   [:> semantic-ui/grid {:columns 2}
@@ -64,22 +70,25 @@
    ;; sidebar only needs concept-frequencies
    [:> semantic-ui/grid-column [sidebar/desktop-sidebar paintings concept-frequencies]]])
 
+(def log js/console.log)
 
 (defn explore-panel []
-  (let [paintings            (subscribe [::explore-subs/paintings])
-        current-painting     (subscribe [::explore-subs/current-painting])
-        concept-frequencies  (subscribe [::explore-subs/concept-frequencies])
-        painting-ids         (subscribe [::explore-subs/painting-ids])
-        show-painting-modal? (subscribe [::explore-subs/show-painting-modal?])
-        loading?             (subscribe [::explore-subs/query-loading?])
-        mobile-search?       (subscribe [::explore-subs/mobile-search?])]
-    [:> semantic-ui/slist
-     [loading-modal @loading?]
-     [:> semantic-ui/responsive {:max-width 799}
-      [mobile-explore-panel @current-painting @paintings (count @painting-ids) @show-painting-modal? @mobile-search?]]
-     [:> semantic-ui/responsive {:min-width 800}
-      [desktop-explore-panel @current-painting
-                             @paintings
-                             (count @painting-ids)
-                             @show-painting-modal?
-                             @concept-frequencies]]]))
+  (let [paintings               (subscribe [::explore-subs/paintings])
+        current-painting        (subscribe [::explore-subs/current-painting])
+        concept-frequencies     (subscribe [::explore-subs/concept-frequencies])
+        painting-ids            (subscribe [::explore-subs/painting-ids])
+        show-painting-modal?    (subscribe [::explore-subs/show-painting-modal?])
+        loading?                (subscribe [::explore-subs/query-loading?])
+        mobile-search?          (subscribe [::explore-subs/mobile-search?])
+        current-painting-window (subscribe [::explore-subs/current-painting-window])]
+      [:> semantic-ui/slist
+       [loading-modal @loading?]
+       [:> semantic-ui/responsive {:max-width 799}
+        [mobile-explore-panel @current-painting @paintings (count @painting-ids) @show-painting-modal? @mobile-search?]]
+       [:> semantic-ui/responsive {:min-width 800}
+        [desktop-explore-panel
+         @current-painting
+         (or @current-painting-window @paintings) ;; default to all paintings if windows not relevant
+         (count @painting-ids)
+         @show-painting-modal?
+         @concept-frequencies]]]))

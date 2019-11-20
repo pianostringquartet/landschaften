@@ -9,9 +9,25 @@
             [ghostwheel.core :refer [check >defn >defn- >fdef => | <- ?]]))
 
 
-(>defn info [painting]
+;; when user clicks on :artist, should trigger ::add-artist event
+;(>defn info [painting]
+;  [::specs/painting => vector?]
+;  (let [->ui-label      (fn [[k v]] [rc/label :label (str v ": " (k painting))])
+;        info-categories {:title     "title"
+;                         :author    "artist"
+;                         :date      "date"
+;                         :timeframe "timeframe"
+;                         :genre      "genre"
+;                         :school    "school"}]
+;    [rc/v-box :children (mapv ->ui-label info-categories)]))
+
+
+;; works :)
+(>defn info! [painting]
   [::specs/painting => vector?]
-  (let [->ui-label      (fn [[k v]] [rc/label :label (str v ": " (k painting))])
+  (let [->ui-label      (fn [[k v]] [rc/label :label (str v ": " (k painting))
+                                              :on-click #(when (= k :author)
+                                                           (dispatch [::explore-events/update-selected-artists (k painting)]))])
         info-categories {:title     "title"
                          :author    "artist"
                          :date      "date"
@@ -46,8 +62,7 @@
   [:> semantic-ui/icon
    {:name "caret left" :size "big" :on-click #(dispatch [::explore-events/go-to-previous-painting painting])}])
 
-
-(>defn next-button-button! [painting]
+(>defn next-painting-button! [painting]
   [::specs/painting => vector?]
   [:> semantic-ui/icon
    {:name "caret right" :size "big" :on-click #(dispatch [::explore-events/go-to-next-painting painting])}])
@@ -86,7 +101,7 @@
 (>defn painting-details-info [painting selected-concepts]
   [::specs/painting ::specs/concept-constraints => vector?]
   [:div
-   [info painting]
+   [info! painting]
    [concept-table painting selected-concepts]
    [rc/label :style {:color "lightGrey"} :label "Click to add as search term"]])
 
@@ -99,7 +114,7 @@
    [:> semantic-ui/grid-column {:width 1} [prev-painting-button! painting]]
    [:> semantic-ui/grid-column {:width 8} [painting-details-image (:jpg painting) zoomed?]]
    [:> semantic-ui/grid-column {:width 6} [painting-details-info painting selected-concepts]]
-   [:> semantic-ui/grid-column {:width 1} [next-button-button! painting]]])
+   [:> semantic-ui/grid-column {:width 1} [next-painting-button! painting]]])
 
 
 (>defn painting-details-mobile
@@ -114,7 +129,7 @@
    [:> semantic-ui/grid-column {:width 1}
     [:> semantic-ui/slist
       [prev-painting-button! painting]
-      [next-button-button! painting]]]
+      [next-painting-button! painting]]]
    [:> semantic-ui/grid-column {:width 6} [painting-details-info painting selected-concepts]]])
 
 

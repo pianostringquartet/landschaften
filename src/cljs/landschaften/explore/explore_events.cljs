@@ -7,7 +7,8 @@
             [cljs.spec.alpha :as s]
             [clojure.walk :refer [keywordize-keys]]
             [ghostwheel.core :refer [check >defn >defn- >fdef => | <- ?]]
-            [landschaften.config :refer [service-url]]))
+            [landschaften.config :refer [service-url]]
+            [landschaften.explore.explore-subs :as explore-subs]))
 
 
 (def QUERY-ENDPOINT (str service-url "/query"))
@@ -37,7 +38,9 @@
   (-> db
       (assoc :constraints-updated-since-search? false)
       (assoc :current-group-name nil)                       ; i.e. we're no longer looking at any group specifically
+      (assoc :current-painting-window-index 0) ; set us back to beginning of windows
       (explore-ready-state)))
+
 
 ;; We are currently waiting for server's response
 ;; i.e. show loading modal but not group name prompt etc.
@@ -412,9 +415,37 @@
 ;; ------------------------------------------------------
 
 
+;(>defn previous-painting [db]
+;  [::specs/app-db => ::specs/app-db]
+;  (let [paintings        (helpers/sort-by-author (:paintings db))
+;        current-painting (:current-painting db)
+;        prev-slide       (or (last (take-while #(not= % current-painting) paintings))
+;                             (last paintings))]
+;    (assoc db :current-painting prev-slide)))
+;
+;
+;(reg-event-db
+;  ::go-to-previous-painting
+;  (fn [db _] (previous-painting db)))
+;
+;
+;(>defn next-painting [db]
+;  [::specs/app-db => ::specs/app-db]
+;  (let [paintings        (helpers/sort-by-author (:paintings db))
+;        current-painting (:current-painting db)
+;        next-slide       (or (second (drop-while #(not= % current-painting) paintings))
+;                             (first paintings))]
+;    (assoc db :current-painting next-slide)))
+
+
+;; L
+
 (>defn previous-painting [db]
   [::specs/app-db => ::specs/app-db]
-  (let [paintings        (helpers/sort-by-author (:paintings db))
+  ;; what if this is called when :paintings=nil ?
+  (let [;paintings        (helpers/sort-by-author (:paintings db))
+        paintings (explore-subs/get-current-painting-window (:paintings db)
+                                                            (get db :current-painting-window-index 0))
         current-painting (:current-painting db)
         prev-slide       (or (last (take-while #(not= % current-painting) paintings))
                              (last paintings))]
@@ -428,7 +459,9 @@
 
 (>defn next-painting [db]
   [::specs/app-db => ::specs/app-db]
-  (let [paintings        (helpers/sort-by-author (:paintings db))
+  (let [;paintings        (helpers/sort-by-author (:paintings db))
+        paintings (explore-subs/get-current-painting-window (:paintings db)
+                                                            (get db :current-painting-window-index 0))
         current-painting (:current-painting db)
         next-slide       (or (second (drop-while #(not= % current-painting) paintings))
                              (first paintings))]
@@ -439,6 +472,46 @@
   ::go-to-next-painting
   ;core-events/check-and-persist-interceptors
   (fn [db _] (next-painting db)))
+
+
+(defn previous-painting-window [db]
+  (let [windows-count (count (explore-subs/get-painting-windows db))
+        new-window-index (dec (:current-painting-window-index db))
+        x (if (neg? new-window-index)
+            (dec windows-count) ; i.e. highest index
+            new-window-index)]
+    ;; If decremented to a negative number, then should just go to last window.
+    (do
+      (js/console.log "previous-painting-window: x: " x)
+      (assoc db :current-painting-window-index x #_(if (neg? new-window-index)
+                                                     windows-count
+                                                     new-window-index)))))
+
+(reg-event-db
+  ::go-to-previous-painting-window
+  (fn [db _] (previous-painting-window db)))
+
+
+;; but careful -- can't go beyond length of windows-list
+(defn next-painting-window [db]
+  (let [windows-count (count (explore-subs/get-painting-windows db))
+        highest-index (dec windows-count)
+        new-window-index (inc (:current-painting-window-index db))
+    ;; If incremented index to greater than number of windows, then go back to first window.
+        x (if (< highest-index new-window-index)
+            0
+            new-window-index)]
+    (do
+      (js/console.log "next-painting-window: x: " x)
+      (assoc db :current-painting-window-index x #_(if (< windows-count new-window-index)
+                                                       0
+                                                       new-window-index)))))
+
+;(update db :current-painting-window-index inc))
+
+(reg-event-db
+  ::go-to-next-painting-window
+  (fn [db _] (next-painting-window db)))
 
 
 ;; TODO: Update functions to satisfy Ghostwheel's check

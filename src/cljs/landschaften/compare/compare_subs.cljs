@@ -62,18 +62,6 @@
         (into {} (:concept-frequencies (second groups)))))))
 
 
-#_(defn scramble-concept-names [painting]
-    {:post [(s/valid? ::specs/painting %)]}
-    (let [scramble (fn [concept-set]
-                     (->> concept-set
-                          (map (fn [concept]
-                                 (update concept :name #(str "#" %))))
-                          (into #{})))]
-      (update painting :concepts scramble)))
-
-
-;(defn max-variance [paintings-1 paintings-2]
-
 (defn max-variance [group-1 group-2]
   (stats/variance
     ;; scramble to ensure that no concepts are shared in common
@@ -98,11 +86,6 @@
   :<- [::variance]
   :<- [::max-variance]
   (fn similarity-measurement [[variance max-variance] _]
-    ;66.88
-    (do
-      (js/console.log "variance: " variance)
-      (js/console.log "max-variance: " max-variance)
-      (when-not (or (or (zero? variance) (zero? max-variance))
-                    (or (nil? variance) (nil? max-variance)))
-        (let [as-percent (* 100 (/ variance max-variance))]
-          (- 100 as-percent))))))
+    (when (and (some? variance) (some? max-variance))
+      (let [as-percent (* 100 (/ variance max-variance))]
+        (- 100 as-percent)))))
