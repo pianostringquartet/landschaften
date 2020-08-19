@@ -35,18 +35,8 @@
 ;; BUG?: When fn used in interceptor chain,
 ;; Ghostwheel thinks `state` is [event-id, event-handler's received argument]
 ;; -- but printing `state` shows `state` is app-db as expected.
-
-
-
-;; don't yet .setItem; just test size
 (defn ->localstore! [state]
-  ;(let [state (range 0 100000)]
-  ;  (do
-  ;    (js/console.log "->localstore! called")
-  ;    (js/console.log "characters: " (count (str state)))
-  ;    (js/console.log "bytes: " (* 2 (count (str state)))))))
     (js/localStorage.setItem ls-auth-key state))
-    ;(.setItem js/localStorage ls-auth-key state)))
 
 ;; TODO: use different interceptors for granular local-storage updates;
 ;; i.e. only persist what has changed

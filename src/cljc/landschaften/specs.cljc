@@ -74,15 +74,9 @@
 
 (s/def ::group-name string?)
 
-;; look up the clojure spec regex logic for describing a collection
-;(s/def ::concept-frequency (s/coll-of ))
-
 (s/def ::concept-frequencies (s/coll-of vector?))
 
-;; FIX: a group should ALWAYS have a set of painting-ids;
-;; but that set can EMPTY
 (s/def ::paintings (s/nilable (s/coll-of ::painting)))
-;; ^^^ group will now contain ::painting-ids instead of ::paintings
 
 (s/def ::genre-constraints (s/coll-of ::genre))
 (s/def ::school-constraints (s/coll-of ::school))
@@ -133,13 +127,6 @@
 (s/def ::app-db
   (s/keys :req-un [::current-painting
                    ::examining?
-
-                   ;; must app-db ALWAYS have concept-frequencies key,
-                   ;; and can that concept-frequencies key sometimes be null?
-                   ;::concept-frequencies
-                   ;::painting-ids
-                   ;::paintings
-
                    ::show-painting-modal?
                    ::image-zoomed?
                    ::query-loading?

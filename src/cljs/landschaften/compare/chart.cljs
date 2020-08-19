@@ -47,6 +47,7 @@
   (into [] (into #{} (flatten [(map first frequency-data-1)
                                (map first frequency-data-2)]))))
 
+
 ;; more like: "order by provided list of labels, adding absent labels"
 (>defn add-missing-labels
   "Given frequency-data and an ordered collection of labels,

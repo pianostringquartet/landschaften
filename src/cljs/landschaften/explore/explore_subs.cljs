@@ -19,7 +19,6 @@
     (:active-accordion-constraint db)))
 
 
-
 ;; ------------------------------------------------------
 ;; Constraint choices
 ;; ------------------------------------------------------
@@ -119,19 +118,11 @@
         []))))
 
 
-;; REPEATS LOGIC FROM get-current-painting-window...
 (defn get-painting-windows [db]
   (let [paintings (:paintings db)]
     (when (some? paintings)
       (partition-all WINDOW-SIZE paintings))))
 
-;;; do you really need this sub anywhere else?
-;(reg-sub
-;  ::painting-windows
-;  get-painting-windows)
-
-;; ALWAYS have a current-pt-window
-;; EVEN IF THERE'S JUST ONE WINDOW
 
 (>defn get-current-painting-window [paintings current-window-index]
   [(s/nilable ::specs/paintings) int? => (s/nilable ::specs/paintings)]
@@ -140,32 +131,22 @@
          current-window-index)))
 
 
-;; ALWAYS PRESENT, unless there are no paintings at all
 (reg-sub
   ::current-painting-window
   (fn current-painting-window-sub-handler [db]
-    (let [current-painting-window-index (get db :current-painting-window-index 0)
-          painting-windows              (get-painting-windows db)
-          x                             (nth painting-windows current-painting-window-index)]
-      (do
-        (js/console.log "::current-painting-window: current-painting-window-index: " current-painting-window-index)
-        (js/console.log "::current-painting-window: painting-windows: " painting-windows)
-        (js/console.log "::current-painting-window: x: " x)
-        (get-current-painting-window (:paintings db) (get db :current-painting-window-index 0))))))
-;(nth painting-windows current-painting-window-index)))))
+    (get-current-painting-window (:paintings db) (get db :current-painting-window-index 0))))
 
 
-;; e.g. "the current-painting window shows paintings 100-125 out of 500 total paintings"
-
+;; e.g. "Showing paintings 100-125 of 500 total paintings"
 (>defn current-painting-window-shows [db]
   [any? => string?]
   (let [current-window-index     (get db :current-painting-window-index 0)
         current-window-count     (count (get-current-painting-window (:paintings db) current-window-index))
-        ;n-many-previous-windows current-window-index
         previous-paintings-count (* WINDOW-SIZE current-window-index)
         window-starts-at         (inc previous-paintings-count)
         window-ends-at           (+ current-window-count previous-paintings-count)]
     (str window-starts-at "-" window-ends-at)))
+
 
 (reg-sub
   ::current-painting-window-shows
@@ -173,27 +154,15 @@
     (current-painting-window-shows db)))
 
 
-
-;#_(fn [db]
-;      (let [current-painting-window-grouping (inc (get db :current-painting-window-index 0))]
-;        (* WINDOW-SIZE current-painting-window-grouping))))
-
-
-;# pts in current painting window
-;+ # of pts in all previous painting windows
-
-
-
 ;; ONLY FOR DECIDING TO SHOW UI BUTTONS
-(>defn use-painting-windows?! [db]
+(>defn use-painting-windows? [db]
   [any? => boolean?]
-  (let [r (<= 2 (count (get-painting-windows db)))]
-    (js/console.log "use-painting-windows?: " r)
-    r))
+  (<= 2 (count (get-painting-windows db))))
+
 
 (reg-sub
   ::show-painting-windows?
-  use-painting-windows?!)
+  use-painting-windows?)
 
 
 (reg-sub
