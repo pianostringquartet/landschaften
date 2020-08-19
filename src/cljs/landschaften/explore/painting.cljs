@@ -9,20 +9,6 @@
             [ghostwheel.core :refer [check >defn >defn- >fdef => | <- ?]]))
 
 
-;; when user clicks on :artist, should trigger ::add-artist event
-;(>defn info [painting]
-;  [::specs/painting => vector?]
-;  (let [->ui-label      (fn [[k v]] [rc/label :label (str v ": " (k painting))])
-;        info-categories {:title     "title"
-;                         :author    "artist"
-;                         :date      "date"
-;                         :timeframe "timeframe"
-;                         :genre      "genre"
-;                         :school    "school"}]
-;    [rc/v-box :children (mapv ->ui-label info-categories)]))
-
-
-;; works :)
 (>defn info! [painting]
   [::specs/painting => vector?]
   (let [->ui-label      (fn [[k v]] [rc/label :label (str v ": " (k painting))

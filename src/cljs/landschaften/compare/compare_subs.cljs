@@ -44,11 +44,12 @@
     (:show-n-chart-points db)))
 
 
-(reg-sub
-  ::concept-certainty-above
-  (fn concept-certainty-above [db _]
-    {:post [(float? %)]}
-    (:concept-certainty-above db)))
+;; where is this used?
+;(reg-sub
+;  ::concept-certainty-above
+;  (fn concept-certainty-above [db _]
+;    {:post [(float? %)]}
+;    (:concept-certainty-above db)))
 
 
 (reg-sub

@@ -5,13 +5,12 @@
             [ghostwheel.core :refer [check >defn >defn- >fdef => | <- ?]]
             [landschaften.helpers :as helpers]))
 
-
+; TODO: Allow user to choose window size
 (def WINDOW-SIZE 15)
-;(def WINDOW-SIZE 48)
 
 (reg-sub
   ::mobile-search?
-  (fn mobile-search? [db]                                   ; show 'search' controls vs 'results' paintings on mobile
+  (fn mobile-search? [db] ; show 'search' controls vs 'results' paintings on mobile
     (:mobile-search? db)))
 
 (reg-sub
@@ -120,10 +119,6 @@
         []))))
 
 
-
-;; a coll is partitioned into 2 or more parts: xs -> [xs1, xs2, ...]
-;; and a window is an index in that list, e.g.: first window =
-
 ;; REPEATS LOGIC FROM get-current-painting-window...
 (defn get-painting-windows [db]
   (let [paintings (:paintings db)]
@@ -134,7 +129,6 @@
 ;(reg-sub
 ;  ::painting-windows
 ;  get-painting-windows)
-
 
 ;; ALWAYS have a current-pt-window
 ;; EVEN IF THERE'S JUST ONE WINDOW

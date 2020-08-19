@@ -12,31 +12,27 @@
             [landschaften.db :as db]))
 
 
-
 (defn tile! [painting]
   [ui/GridTile
    {:key (:jpg painting)}
    [:img {:src (:jpg painting)
           :on-click #(dispatch [::explore-events/painting-tile-clicked painting])}]])
 
+
 (>defn prev-painting-window-button! []
   [ => vector?]
   [:> semantic-ui/icon
    {:name "caret left"
     :size "big"
-    :on-click #(do
-                 (js/console.log "prev-painting-window-button! pressed")
-                 (dispatch [::explore-events/go-to-previous-painting-window]))}])
+    :on-click #(dispatch [::explore-events/go-to-previous-painting-window])}])
+
 
 (>defn next-painting-window-button! []
   [ => vector?]
   [:> semantic-ui/icon
-   ;; DISPATCHES: go-to-next-painting-window
    {:name "caret right"
     :size "big"
-    :on-click #(do
-                 (js/console.log "next-painting-window-button! pressed")
-                 (dispatch [::explore-events/go-to-next-painting-window]))}])
+    :on-click #(dispatch [::explore-events/go-to-next-painting-window])}])
 
 
 (defn grid [current-painting paintings show-max? n-columns]
@@ -59,7 +55,6 @@
     [rc/title :label (str "Paintings " current-painting-window-shows " of sampled " total)])
 
 
-;; NEEDS: current-painting, window-paintings, total-paintings, show-max?, n-columns?
 (>defn paintings-grid [current-painting paintings paintings-count show-max? n-columns]
   [(s/nilable ::specs/painting) ::specs/paintings int? boolean? int? => vector?]
   (let [retrieved-paintings (subscribe [::explore-subs/paintings])

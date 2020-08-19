@@ -39,7 +39,3 @@
   ::saved-groups-names
   (fn saved-groups-names [db _]
     (keys (:saved-groups db))))
-
-
-;; temporary: eventually each group / query-result
-;; will have its own server-side-calculated concept-frequency-data
