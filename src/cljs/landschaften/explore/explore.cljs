@@ -56,21 +56,12 @@
       [:> semantic-ui/slist-item [explore current-painting paintings paintings-count show-slideshow? 2]])]])
 
 
-;(>defn desktop-explore-panel [current-painting paintings paintings-count show-slideshow? concept-frequencies]
-;  [(s/nilable ::specs/current-painting) ::specs/paintings int? boolean? ::specs/concept-frequencies => vector?]
-;  [:> semantic-ui/grid {:columns 2}
-;   [:> semantic-ui/grid-column [explore current-painting paintings paintings-count show-slideshow? 3]]
-;   ;; sidebar only needs concept-frequencies
-;   [:> semantic-ui/grid-column [sidebar/desktop-sidebar paintings concept-frequencies]]])
-
 (>defn desktop-explore-panel [current-painting paintings paintings-count show-slideshow? concept-frequencies]
   [(s/nilable ::specs/current-painting) ::specs/paintings int? boolean? ::specs/concept-frequencies => vector?]
   [:> semantic-ui/grid {:columns 2}
    [:> semantic-ui/grid-column [explore current-painting paintings paintings-count show-slideshow? 3]]
-   ;; sidebar only needs concept-frequencies
    [:> semantic-ui/grid-column [sidebar/desktop-sidebar paintings concept-frequencies]]])
 
-(def log js/console.log)
 
 (defn explore-panel []
   (let [paintings               (subscribe [::explore-subs/paintings])

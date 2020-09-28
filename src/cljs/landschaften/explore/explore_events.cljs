@@ -66,6 +66,7 @@
       {:column "name" :values (into [] (db :selected-concepts))}}))
 
 
+;; TODO: Add proper error handling, notify the user that request failed
 (defn query-post-request [db handler-fn]
   {:post-request {:uri     QUERY-ENDPOINT
                   :params  (js/JSON.stringify (clj->js {:constraints (->query-constraints db)}))
@@ -178,6 +179,7 @@
 (defn remove-selected-artist [db artist]
   (update db :selected-artists disj artist))
 
+
 (reg-event-db
   ::remove-selected-artist
   ;core-events/check-and-persist-interceptors
@@ -200,6 +202,7 @@
 
 (defn active-accordion-constraint-updated [db new-active-accordion]
   (assoc db :active-accordion-constraint new-active-accordion))
+
 
 (reg-event-db
   ::active-accordion-constraint-updated
@@ -238,10 +241,12 @@
         (assoc-in [:saved-groups group-name] updated-group)
         (assoc :current-group updated-group))))
 
+
 ;; Adds group to :saved-groups
 (>defn save-group [db group]
   [any? ::specs/group => any?]
   (assoc-in db [:saved-groups (:group-name group)] group))
+
 
 ;; Make a group's constraints the top-level constraints,
 (>defn set-current-group [db group]

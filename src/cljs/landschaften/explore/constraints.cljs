@@ -85,14 +85,17 @@
       (reset! search-val user-input)
       (reset! result-set (suggestions user-input options 6)))))
 
+
 (defn get-result [semantic-ui-object]
   {:post [(string? %)]}
   (get-in (js->clj semantic-ui-object) ["result" "title"]))
+
 
 (defn on-result-select [text-val-atom dispatch-event]
   (do
     (dispatch-event)
     (reset! text-val-atom "")))
+
 
 (defn concept-typeahead []
   (let [text-val (r/atom "")
